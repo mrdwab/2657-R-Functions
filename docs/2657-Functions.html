@@ -5,7 +5,200 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-<title>concat.split</title>
+<title>concat.split</h1>
+
+<h2>What It Does</h2>
+
+<p>The <code>concat.split</code> function takes a column with multiple values, splits the values into separate columns, and returns a new <code>data.frame</code>.</p>
+
+<h2>Arguments</h2>
+
+<ul>
+<li><code>data</code>: is the source <code>data.frame</code></li>
+<li><code>split.col</code>: the variable that needs to be split</li>
+<li><code>mode</code>: can be either <code>binary</code> or <code>value</code> (where <code>binary</code> is default and it recodes values to <code>1</code> or <code>NA</code>)</li>
+<li><code>sep</code>: the character separating each value (defaults to <code>&quot;,&quot;</code>) </li>
+<li><code>drop.col</code>: logical (whether to remove the original variable from the output or not; defaults to <code>TRUE</code>).</li>
+</ul>
+
+<h2>The Function</h2>
+
+<pre><code class="r">concat.split = function(data, split.col, mode = NULL, sep = &quot;,&quot;, 
+    drop.col = FALSE) {
+
+    if (is.numeric(split.col)) 
+        split.col = split.col else split.col = which(colnames(data) %in% split.col)
+
+    a = as.character(data[, split.col])
+    b = strsplit(a, sep)
+
+    if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
+        what = &quot;string&quot;
+        ncol = max(unlist(lapply(b, function(i) length(i))))
+    } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
+        what = &quot;numeric&quot;
+        ncol = max(as.numeric(unlist(b)))
+    }
+
+    m = matrix(nrow = nrow(data), ncol = ncol)
+    v = vector(&quot;list&quot;, nrow(data))
+
+    if (identical(what, &quot;string&quot;)) {
+        temp = as.data.frame(t(sapply(b, &quot;[&quot;, 1:ncol)))
+        names(temp) = paste(names(data[split.col]), &quot;_&quot;, 1:ncol, sep = &quot;&quot;)
+        temp1 = cbind(data, temp)
+    } else if (identical(what, &quot;numeric&quot;)) {
+        for (i in 1:nrow(data)) {
+            v[[i]] = as.numeric(strsplit(a, sep)[[i]])
+        }
+
+        temp = v
+
+        for (i in 1:nrow(data)) {
+            m[i, temp[[i]]] = temp[[i]]
+        }
+
+        m = data.frame(m)
+        names(m) = paste(names(data[split.col]), &quot;_&quot;, 1:ncol, sep = &quot;&quot;)
+
+        if (is.null(mode) || identical(mode, &quot;binary&quot;)) {
+            temp1 = cbind(data, replace(m, m != &quot;NA&quot;, 1))
+        } else if (identical(mode, &quot;value&quot;)) {
+            temp1 = cbind(data, m)
+        }
+    }
+
+    if (isTRUE(drop.col)) 
+        temp1[-split.col] else temp1
+
+}
+</code></pre>
+
+<h2>Examples</h2>
+
+<p>First load some data from a CSV stored at <a href="http://github.com">github</a>. The URL is an HTTPS, so we need to use <code>getURL</code> from <code>RCurl</code>.</p>
+
+<pre><code class="r">require(RCurl)
+</code></pre>
+
+<pre><code class="no-highlight">## Loading required package: RCurl
+</code></pre>
+
+<pre><code class="no-highlight">## Loading required package: bitops
+</code></pre>
+
+<pre><code class="r">baseURL = c(&quot;https://raw.github.com/mrdwab/2657-R-Functions/master/&quot;)
+temp = getURL(paste0(baseURL, &quot;data/concatenated-cells.csv&quot;))
+concat.test = read.csv(textConnection(temp))
+rm(temp)
+
+# How big is the dataset?
+dim(concat.test)
+</code></pre>
+
+<pre><code class="no-highlight">## [1] 48  3
+</code></pre>
+
+<pre><code class="r"># Just show me the first few rows
+head(concat.test)
+</code></pre>
+
+<pre><code class="no-highlight">##     Name     Likes                   Siblings
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery
+## 3   Dana 1,2,4,5,6                     Pierce
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard
+## 5 Ramona   1,2,5,6           Snyder , Joann ,
+## 6 Kelley   1,2,5,6          James , Roxanne ,
+</code></pre>
+
+<p>Notice that the data have been entered in a very silly manner. Let&#39;s split it up!</p>
+
+<pre><code class="r"># Split up the second column, selecting by column number
+head(concat.split(concat.test, 2))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name     Likes                   Siblings Likes_1 Likes_2 Likes_3
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega       1       1      NA
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1      NA
+## 3   Dana 1,2,4,5,6                     Pierce       1       1      NA
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1       1      NA
+## 5 Ramona   1,2,5,6           Snyder , Joann ,       1       1      NA
+## 6 Kelley   1,2,5,6          James , Roxanne ,       1       1      NA
+##   Likes_4 Likes_5 Likes_6
+## 1       1       1       1
+## 2       1       1       1
+## 3       1       1       1
+## 4       1       1       1
+## 5      NA       1       1
+## 6      NA       1       1
+</code></pre>
+
+<pre><code class="r"># ... or by name, and drop the offensive first column
+head(concat.split(concat.test, &quot;Likes&quot;, drop.col = TRUE))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name                   Siblings Likes_1 Likes_2 Likes_3 Likes_4
+## 1   Boyd Reynolds , Albert , Ortega       1       1      NA       1
+## 2  Rufus  Cohen , Bert , Montgomery       1       1      NA       1
+## 3   Dana                     Pierce       1       1      NA       1
+## 4 Carole Colon , Michelle , Ballard       1       1      NA       1
+## 5 Ramona           Snyder , Joann ,       1       1      NA      NA
+## 6 Kelley          James , Roxanne ,       1       1      NA      NA
+##   Likes_5 Likes_6
+## 1       1       1
+## 2       1       1
+## 3       1       1
+## 4       1       1
+## 5       1       1
+## 6       1       1
+</code></pre>
+
+<pre><code class="r"># Retain the original values
+head(concat.split(concat.test, 2, mode = &quot;value&quot;, drop.col = TRUE))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name                   Siblings Likes_1 Likes_2 Likes_3 Likes_4
+## 1   Boyd Reynolds , Albert , Ortega       1       2      NA       4
+## 2  Rufus  Cohen , Bert , Montgomery       1       2      NA       4
+## 3   Dana                     Pierce       1       2      NA       4
+## 4 Carole Colon , Michelle , Ballard       1       2      NA       4
+## 5 Ramona           Snyder , Joann ,       1       2      NA      NA
+## 6 Kelley          James , Roxanne ,       1       2      NA      NA
+##   Likes_5 Likes_6
+## 1       5       6
+## 2       5       6
+## 3       5       6
+## 4       5       6
+## 5       5       6
+## 6       5       6
+</code></pre>
+
+<pre><code class="r"># Let&#39;s try splitting some strings... Same syntax
+head(concat.split(concat.test, 3, drop.col = TRUE))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name     Likes Siblings_1 Siblings_2  Siblings_3
+## 1   Boyd 1,2,4,5,6  Reynolds     Albert       Ortega
+## 2  Rufus 1,2,4,5,6     Cohen       Bert   Montgomery
+## 3   Dana 1,2,4,5,6     Pierce       &lt;NA&gt;        &lt;NA&gt;
+## 4 Carole 1,2,4,5,6     Colon   Michelle      Ballard
+## 5 Ramona   1,2,5,6    Snyder      Joann         &lt;NA&gt;
+## 6 Kelley   1,2,5,6     James    Roxanne         &lt;NA&gt;
+</code></pre>
+
+<h2>To Do</h2>
+
+<ul>
+<li>Modify the function so that you can split multiple columns in one go?</li>
+<li>Strip whitespace from string output.</li>
+</ul>
+
+<h2>References</h2>
+
+<p>See: <a href="http://stackoverflow.com/q/10100887/1270695">http://stackoverflow.com/q/10100887/1270695</a></p>
+
+<h1>row.extractor</title>
 
 <base target="_blank"/>
 
@@ -257,7 +450,7 @@ pre .vhdl .literal { color: rgb(163, 21, 21); }
 
 <h1>concat.split</h1>
 
-<h2>What it does</h2>
+<h2>What It Does</h2>
 
 <p>The <code>concat.split</code> function takes a column with multiple values, splits the values into separate columns, and returns a new <code>data.frame</code>.</p>
 
@@ -444,9 +637,163 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 <li>Strip whitespace from string output.</li>
 </ul>
 
-<h2>Reference</h2>
+<h2>References</h2>
 
 <p>See: <a href="http://stackoverflow.com/q/10100887/1270695">http://stackoverflow.com/q/10100887/1270695</a></p>
+
+<h1>row.extractor</h1>
+
+<h2>What It Does</h2>
+
+<p>The <code>row.extractor</code> function takes a <code>data.frame</code> and extracts rows with the <code>min</code>, <code>median</code>, or <code>max</code> values of a given variable, or extracts rows with specific quantiles of a given variable.</p>
+
+<h2>Arguments</h2>
+
+<ul>
+<li><code>data</code>: the source <code>data.frame</code></li>
+<li><code>extract.by</code>: the column which will be used as the reference for extraction</li>
+<li><code>what</code>: options are <code>min</code> (for all rows matching the minimum value), <code>median</code> (for the median row or rows), <code>max</code> (for all rows matching the maximum value), or <code>all</code> (for <code>min</code>, <code>median</code>, and <code>max</code>); alternatively, a numeric vector can be specified with the desired quantiles, for instance <code>c(0, .25, .5, .75, 1)</code></li>
+</ul>
+
+<h2>The Function</h2>
+
+<pre><code class="r">row.extractor = function(data, extract.by, what = &quot;all&quot;) {
+
+    if (is.numeric(extract.by)) {
+        extract.by = extract.by
+    } else if (is.numeric(extract.by) != 0) {
+        extract.by = which(colnames(data) %in% &quot;extract.by&quot;)
+    }
+
+    if (is.character(what)) {
+        which.median = function(data, extract.by) {
+            a = data[, extract.by]
+            if (length(a)%%2 != 0) {
+                which(a == median(a))
+            } else if (length(a)%%2 == 0) {
+                b = sort(a)[c(length(a)/2, length(a)/2 + 1)]
+                c(max(which(a == b[1])), min(which(a == b[2])))
+            }
+        }
+
+        X1 = data[which(data[extract.by] == min(data[extract.by])), ]  # min
+        X2 = data[which(data[extract.by] == max(data[extract.by])), ]  # max
+        X3 = data[which.median(data, extract.by), ]  # median
+
+        if (identical(what, &quot;min&quot;)) {
+            X1
+        } else if (identical(what, &quot;max&quot;)) {
+            X2
+        } else if (identical(what, &quot;median&quot;)) {
+            X3
+        } else if (identical(what, &quot;all&quot;)) {
+            rbind(X1, X3, X2)
+        }
+    } else if (is.numeric(what)) {
+        which.quantile &lt;- function(data, extract.by, what, na.rm = FALSE) {
+
+            x = data[, extract.by]
+
+            if (!na.rm &amp; any(is.na(x))) 
+                return(rep(NA_integer_, length(what)))
+
+            o &lt;- order(x)
+            n &lt;- sum(!is.na(x))
+            o &lt;- o[seq_len(n)]
+
+            nppm &lt;- n * what - 0.5
+            j &lt;- floor(nppm)
+            h &lt;- ifelse((nppm == j) &amp; ((j%%2L) == 0L), 0, 1)
+            j &lt;- j + h
+
+            j[j == 0] &lt;- 1
+            o[j]
+        }
+        data[which.quantile(data, extract.by, what), ]  # quantile
+    }
+}
+</code></pre>
+
+<h2>Examples</h2>
+
+<pre><code class="r"># Make up some data
+set.seed(1)
+dat = data.frame(V1 = 1:50, V2 = rnorm(50), V3 = round(abs(rnorm(50)), 
+    digits = 2), V4 = sample(1:30, 50, replace = TRUE))
+# Get a sumary of the data
+summary(dat)
+</code></pre>
+
+<pre><code class="no-highlight">##        V1             V2               V3              V4       
+##  Min.   : 1.0   Min.   :-2.215   Min.   :0.000   Min.   : 2.00  
+##  1st Qu.:13.2   1st Qu.:-0.372   1st Qu.:0.347   1st Qu.: 8.25  
+##  Median :25.5   Median : 0.129   Median :0.590   Median :13.00  
+##  Mean   :25.5   Mean   : 0.100   Mean   :0.774   Mean   :14.80  
+##  3rd Qu.:37.8   3rd Qu.: 0.728   3rd Qu.:1.175   3rd Qu.:20.75  
+##  Max.   :50.0   Max.   : 1.595   Max.   :2.400   Max.   :29.00  
+</code></pre>
+
+<pre><code class="r"># Get the rows corresponding to the &#39;min&#39;, &#39;median&#39;, and &#39;max&#39; of &#39;V4&#39;
+row.extractor(dat, 4)
+</code></pre>
+
+<pre><code class="no-highlight">##    V1      V2   V3 V4
+## 28 28 -1.4708 0.00  2
+## 47 47  0.3646 1.28 13
+## 29 29 -0.4782 0.07 13
+## 11 11  1.5118 2.40 29
+## 14 14 -2.2147 0.03 29
+## 18 18  0.9438 1.47 29
+## 19 19  0.8212 0.15 29
+## 50 50  0.8811 0.47 29
+</code></pre>
+
+<pre><code class="r"># Get the &#39;min&#39; rows only, referenced by the variable name
+row.extractor(dat, &quot;V4&quot;, &quot;min&quot;)
+</code></pre>
+
+<pre><code class="no-highlight">##    V1     V2 V3 V4
+## 28 28 -1.471  0  2
+</code></pre>
+
+<pre><code class="r"># Get the &#39;median&#39; rows only. Notice that there are two rows since we have
+# an even number of cases and true median is the mean of the two central
+# sorted values
+row.extractor(dat, &quot;V4&quot;, &quot;median&quot;)
+</code></pre>
+
+<pre><code class="no-highlight">##    V1      V2   V3 V4
+## 47 47  0.3646 1.28 13
+## 29 29 -0.4782 0.07 13
+</code></pre>
+
+<pre><code class="r"># Get the rows corresponding to the deciles of &#39;V3&#39;
+row.extractor(dat, &quot;V3&quot;, seq(0.1, 1, 0.1))
+</code></pre>
+
+<pre><code class="no-highlight">##    V1       V2   V3 V4
+## 10 10 -0.30539 0.14 22
+## 26 26 -0.05613 0.29 16
+## 39 39  1.10003 0.37 13
+## 41 41 -0.16452 0.54 10
+## 30 30  0.41794 0.59 26
+## 44 44  0.55666 0.70  5
+## 37 37 -0.39429 1.06 21
+## 49 49 -0.11235 1.22 14
+## 34 34 -0.05381 1.52 19
+## 11 11  1.51178 2.40 29
+</code></pre>
+
+<h2>To Do</h2>
+
+<ul>
+<li>None</li>
+</ul>
+
+<h2>References</h2>
+
+<p><code>which.quantile</code> function by <a href="http://stackoverflow.com/users/755257/cbeleites">cbeleites</a><br/><br/>
+See: <a href="http://stackoverflow.com/q/10256503/1270695">http://stackoverflow.com/q/10256503/1270695</a></p>
 
 </body>
 
