@@ -1,0 +1,118 @@
+% concat.split
+% Ananda Mahto
+% 04 May 2012
+
+concat.split
+============
+
+What it does
+------------
+
+The `concat.split` function takes a column with multiple values, splits the values into separate columns, and returns a new `data.frame`.
+
+Arguments
+---------
+
+* `data`: is the source `data.frame`
+* `split.col`: the variable that needs to be split
+* `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`)
+* `sep`: the character separating each value (defaults to `","`) 
+* `drop.col`: logical (whether to remove the original variable from the output or not; defaults to `TRUE`).
+
+The Function
+------------
+
+```{r the_function}
+concat.split = function(data, split.col, mode=NULL, 
+                        sep=",", drop.col=FALSE) {
+
+  if (is.numeric(split.col)) split.col = split.col
+  else split.col = which(colnames(data) %in% split.col)
+  
+  a = as.character(data[ , split.col])
+  b = strsplit(a, sep)
+  
+  if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
+    what = "string"
+    ncol = max(unlist(lapply(b, function(i) length(i))))
+  } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
+    what = "numeric"
+    ncol = max(as.numeric(unlist(b)))
+  }
+  
+  m = matrix(nrow = nrow(data), ncol = ncol)
+  v = vector("list", nrow(data))
+  
+  if (identical(what, "string")) {
+    temp = as.data.frame(t(sapply(b, '[', 1:ncol)))
+    names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep="")
+    temp1 = cbind(data, temp)
+  } else if (identical(what, "numeric")) {
+    for (i in 1:nrow(data)) {
+      v[[i]] = as.numeric(strsplit(a, sep)[[i]])
+    }
+    
+    temp = v
+    
+    for (i in 1:nrow(data)) {
+      m[i, temp[[i]]] = temp[[i]]
+    }
+    
+    m = data.frame(m)
+    names(m) = paste(names(data[split.col]), "_", 1:ncol, sep="")
+    
+    if (is.null(mode) || identical(mode, "binary")) {
+      temp1 = cbind(data, replace(m, m != "NA", 1))
+    } else if (identical(mode, "value")) {
+      temp1 = cbind(data, m)
+    }
+  } 
+  
+  if (isTRUE(drop.col)) temp1[-split.col]
+  else temp1
+  
+}
+
+```
+
+Examples
+--------
+
+First load some data from a CSV stored at [github](http://github.com). The URL is an HTTPS, so we need to use `getURL` from `RCurl`.
+
+```{r data_loading}
+require(RCurl)
+baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+temp = getURL(paste0(baseURL, "data/concatenated-cells.csv"))
+concat.test = read.csv(textConnection(temp))
+rm(temp)
+
+# How big is the dataset?
+dim(concat.test)
+# Just show me the first few rows
+head(concat.test)
+```
+
+Notice that the data have been entered in a very silly manner. Let's split it up!
+
+```{r examples}
+# Split up the second column, selecting by column number
+head(concat.split(concat.test, 2))
+# ... or by name, and drop the offensive first column
+head(concat.split(concat.test, "Likes", drop.col=TRUE))
+# Retain the original values
+head(concat.split(concat.test, 2, mode="value", drop.col=TRUE))
+# Let's try splitting some strings... Same syntax
+head(concat.split(concat.test, 3, drop.col=TRUE))
+```
+
+To Do
+-----
+
+* Modify the function so that you can split multiple columns in one go?
+* Strip whitespace from string output.
+
+Reference
+---------
+
+See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10100887/1270695)
