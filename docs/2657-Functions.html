@@ -198,6 +198,8 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 
 <p>See: <a href="http://stackoverflow.com/q/10100887/1270695">http://stackoverflow.com/q/10100887/1270695</a></p>
 
+<p>\newpage</p>
+
 <h1>df.sorter</h1>
 
 <h2>What it Does</h2>
@@ -212,7 +214,7 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 
 <ul>
 <li>Defaults to <code>names(data)</code>, which keeps the variables in the original order.</li>
-<li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable name; partial name matching also works (see examples).</li>
+<li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable name; partial name matching also works, but requires that the partial match identifies similar columns uniquely (see examples).</li>
 <li>Basic subsetting can also be done using <code>var.order</code> simply by omitting the variables you want to drop.</li>
 </ul></li>
 <li><code>col.sort</code>: the columns <em>within</em> which there is data that need to be sorted.
@@ -258,83 +260,138 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 
 <h2>Examples</h2>
 
-<pre><code class="r"># Get some data
-library(foreign)
-temp = &quot;http://www.ats.ucla.edu/stat/stata/modules/kidshtwt.dta&quot;
-kidshtwt = read.dta(temp); rm(temp)
-# Preview the data
-kidshtwt
+<pre><code class="r"># Make up some data
+set.seed(1)
+dat = data.frame(id = rep(1:5, each = 3), times = rep(1:3, 5), measure1 = rnorm(15), 
+    score1 = sample(300, 15), code1 = replicate(15, paste(sample(LETTERS[1:5], 
+        3), sep = &quot;&quot;, collapse = &quot;&quot;)), measure2 = rnorm(15), score2 = sample(150:300, 
+        15), code2 = replicate(15, paste(sample(LETTERS[1:5], 3), sep = &quot;&quot;, 
+        collapse = &quot;&quot;)))
+# Preview your data
+dat
 </code></pre>
 
-<pre><code class="no-highlight">##   famid birth ht1 ht2 wt1 wt2
-## 1     1     1 2.8 3.4  19  28
-## 2     1     2 2.9 3.8  21  28
-## 3     1     3 2.2 2.9  20  23
-## 4     2     1 2.0 3.2  25  30
-## 5     2     2 1.8 2.8  20  33
-## 6     2     3 1.9 2.4  22  33
-## 7     3     1 2.2 3.3  22  28
-## 8     3     2 2.3 3.4  20  30
-## 9     3     3 2.1 2.9  22  31
+<pre><code class="no-highlight">##    id times measure1 score1 code1 measure2 score2 code2
+## 1   1     1  -0.6265    145   DAB  -0.7075    299   CEB
+## 2   1     2   0.1836    180   DCB   0.3646    224   ECD
+## 3   1     3  -0.8356    148   EBA   0.7685    222   DAE
+## 4   2     1   1.5953     56   AED  -0.1123    175   DBA
+## 5   2     2   0.3295    245   CEB   0.8811    260   DAC
+## 6   2     3  -0.8205    198   EBD   0.3981    216   DCA
+## 7   3     1   0.4874    234   BCA  -0.6120    300   CEA
+## 8   3     2   0.7383     32   CDA   0.3411    179   CAD
+## 9   3     3   0.5758    212   EBC  -1.1294    182   BEC
+## 10  4     1  -0.3054    120   BED   1.4330    234   CDE
+## 11  4     2   1.5118    239   EDB   1.9804    231   CAB
+## 12  4     3   0.3898    188   DEB  -0.3672    160   DBE
+## 13  5     1  -0.6212    226   DBA  -1.0441    154   EDB
+## 14  5     2  -2.2147    159   DAC   0.5697    238   BDE
+## 15  5     3   1.1249    152   AED  -0.1351    277   DCE
 </code></pre>
 
-<pre><code class="r"># Notice that for &#39;var.order&#39; you do not have to use full names
-df.sorter(kidshtwt, var.order = c(&quot;fam&quot;, &quot;bir&quot;, &quot;wt&quot;, &quot;ht&quot;))
+<pre><code class="r"># Change the variable order, grouping related columns Note that you do not
+# need to specify full variable names, just enough that the variables can
+# be uniquely identified
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;ti&quot;, &quot;cod&quot;, &quot;mea&quot;, &quot;sco&quot;)))
 </code></pre>
 
-<pre><code class="no-highlight">##   famid birth wt1 wt2 ht1 ht2
-## 1     1     1  19  28 2.8 3.4
-## 2     1     2  21  28 2.9 3.8
-## 3     1     3  20  23 2.2 2.9
-## 4     2     1  25  30 2.0 3.2
-## 5     2     2  20  33 1.8 2.8
-## 6     2     3  22  33 1.9 2.4
-## 7     3     1  22  28 2.2 3.3
-## 8     3     2  20  30 2.3 3.4
-## 9     3     3  22  31 2.1 2.9
+<pre><code class="no-highlight">##   id times code1 code2 measure1 measure2 score1 score2
+## 1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
+## 2  1     2   DCB   ECD   0.1836   0.3646    180    224
+## 3  1     3   EBA   DAE  -0.8356   0.7685    148    222
+## 4  2     1   AED   DBA   1.5953  -0.1123     56    175
+## 5  2     2   CEB   DAC   0.3295   0.8811    245    260
+## 6  2     3   EBD   DCA  -0.8205   0.3981    198    216
 </code></pre>
 
-<pre><code class="r">df.sorter(kidshtwt, var.order = c(&quot;fam&quot;, &quot;bir&quot;, &quot;wt&quot;, &quot;ht&quot;),
-          col.sort = c(&quot;birth&quot;, &quot;famid&quot;)) # Use full names here
+<pre><code class="r"># Same output, but with a more awkward syntax
+head(df.sorter(dat, var.order = c(1, 2, 5, 8, 3, 6, 4, 7)))
 </code></pre>
 
-<pre><code class="no-highlight">##   famid birth wt1 wt2 ht1 ht2
-## 1     1     1  19  28 2.8 3.4
-## 4     2     1  25  30 2.0 3.2
-## 7     3     1  22  28 2.2 3.3
-## 2     1     2  21  28 2.9 3.8
-## 5     2     2  20  33 1.8 2.8
-## 8     3     2  20  30 2.3 3.4
-## 3     1     3  20  23 2.2 2.9
-## 6     2     3  22  33 1.9 2.4
-## 9     3     3  22  31 2.1 2.9
+<pre><code class="no-highlight">##   id times code1 code2 measure1 measure2 score1 score2
+## 1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
+## 2  1     2   DCB   ECD   0.1836   0.3646    180    224
+## 3  1     3   EBA   DAE  -0.8356   0.7685    148    222
+## 4  2     1   AED   DBA   1.5953  -0.1123     56    175
+## 5  2     2   CEB   DAC   0.3295   0.8811    245    260
+## 6  2     3   EBD   DCA  -0.8205   0.3981    198    216
 </code></pre>
 
-<pre><code class="r">df.sorter(kidshtwt, var.order = c(1:4),   # Drop the &#39;wt&#39; columns
-          col.sort = c(2, 1))                   # Sort by &#39;ht1&#39;
+<pre><code class="r"># As above, but sorted by &#39;times&#39; and then &#39;id&#39;
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;cod&quot;, &quot;mea&quot;, &quot;sco&quot;), 
+    col.sort = c(2, 1)))
 </code></pre>
 
-<pre><code class="no-highlight">##   famid birth ht1 ht2
-## 1     1     1 2.8 3.4
-## 4     2     1 2.0 3.2
-## 7     3     1 2.2 3.3
-## 2     1     2 2.9 3.8
-## 5     2     2 1.8 2.8
-## 8     3     2 2.3 3.4
-## 3     1     3 2.2 2.9
-## 6     2     3 1.9 2.4
-## 9     3     3 2.1 2.9
+<pre><code class="no-highlight">##    id times code1 code2 measure1 measure2 score1 score2
+## 1   1     1   DAB   CEB  -0.6265  -0.7075    145    299
+## 4   2     1   AED   DBA   1.5953  -0.1123     56    175
+## 7   3     1   BCA   CEA   0.4874  -0.6120    234    300
+## 10  4     1   BED   CDE  -0.3054   1.4330    120    234
+## 13  5     1   DBA   EDB  -0.6212  -1.0441    226    154
+## 2   1     2   DCB   ECD   0.1836   0.3646    180    224
+</code></pre>
+
+<pre><code class="r"># Drop &#39;measure1&#39; and &#39;measure2&#39;, sort by &#39;times&#39;, and &#39;score1&#39;
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;sco&quot;, &quot;cod&quot;), col.sort = c(2, 
+    3)))
+</code></pre>
+
+<pre><code class="no-highlight">##    id times score1 score2 code1 code2
+## 4   2     1     56    175   AED   DBA
+## 10  4     1    120    234   BED   CDE
+## 1   1     1    145    299   DAB   CEB
+## 13  5     1    226    154   DBA   EDB
+## 7   3     1    234    300   BCA   CEA
+## 8   3     2     32    179   CDA   CAD
+</code></pre>
+
+<pre><code class="r"># As above, but using names
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;sco&quot;, &quot;cod&quot;), col.sort = c(&quot;times&quot;, 
+    &quot;score1&quot;)))
+</code></pre>
+
+<pre><code class="no-highlight">##    id times score1 score2 code1 code2
+## 4   2     1     56    175   AED   DBA
+## 10  4     1    120    234   BED   CDE
+## 1   1     1    145    299   DAB   CEB
+## 13  5     1    226    154   DBA   EDB
+## 7   3     1    234    300   BCA   CEA
+## 8   3     2     32    179   CDA   CAD
+</code></pre>
+
+<pre><code class="r"># Just sort by columns, first by &#39;times&#39; then by &#39;id&#39;
+head(df.sorter(dat, col.sort = c(&quot;times&quot;, &quot;id&quot;)))
+</code></pre>
+
+<pre><code class="no-highlight">##    id times measure1 score1 code1 measure2 score2 code2
+## 1   1     1  -0.6265    145   DAB  -0.7075    299   CEB
+## 4   2     1   1.5953     56   AED  -0.1123    175   DBA
+## 7   3     1   0.4874    234   BCA  -0.6120    300   CEA
+## 10  4     1  -0.3054    120   BED   1.4330    234   CDE
+## 13  5     1  -0.6212    226   DBA  -1.0441    154   EDB
+## 2   1     2   0.1836    180   DCB   0.3646    224   ECD
+</code></pre>
+
+<pre><code class="r">head(df.sorter(dat, col.sort = c(&quot;code1&quot;)))  # Sorting by character values
+</code></pre>
+
+<pre><code class="no-highlight">##    id times measure1 score1 code1 measure2 score2 code2
+## 4   2     1   1.5953     56   AED  -0.1123    175   DBA
+## 15  5     3   1.1249    152   AED  -0.1351    277   DCE
+## 7   3     1   0.4874    234   BCA  -0.6120    300   CEA
+## 10  4     1  -0.3054    120   BED   1.4330    234   CDE
+## 8   3     2   0.7383     32   CDA   0.3411    179   CAD
+## 5   2     2   0.3295    245   CEB   0.8811    260   DAC
 </code></pre>
 
 <h2>To Do</h2>
 
 <ul>
-<li>Add an option to sort increasing or decreasing&mdash;at the moment, not supported.</li>
+<li>Add an option to sort ascending or descending&mdash;at the moment, not supported.</li>
+<li>Modify the <code>grep</code> function for <code>var.order</code> to only match strings from the start of a variable name.</li>
 </ul>
 
-<h2>References</h2>
-
-<p>Demonstration data accessed from UCLA&#39;s Academic Tecnhology Services <a href="http://www.ats.ucla.edu/stat/stata/modules/reshapel.htm"><em>Stata Learning Module: Reshaping data wide to long</em></a>.</p>
+<p>\newpage</p>
 
 <h1>row.extractor</title>
 
@@ -586,6 +643,8 @@ pre .vhdl .literal { color: rgb(163, 21, 21); }
 <p>% 2657 Functions<br/>
 % Ananda Mahto</p>
 
+<p>\newpage</p>
+
 <h1>concat.split</h1>
 
 <h2>What it Does</h2>
@@ -779,6 +838,8 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 
 <p>See: <a href="http://stackoverflow.com/q/10100887/1270695">http://stackoverflow.com/q/10100887/1270695</a></p>
 
+<p>\newpage</p>
+
 <h1>df.sorter</h1>
 
 <h2>What it Does</h2>
@@ -793,7 +854,7 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 
 <ul>
 <li>Defaults to <code>names(data)</code>, which keeps the variables in the original order.</li>
-<li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable name; partial name matching also works (see examples).</li>
+<li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable name; partial name matching also works, but requires that the partial match identifies similar columns uniquely (see examples).</li>
 <li>Basic subsetting can also be done using <code>var.order</code> simply by omitting the variables you want to drop.</li>
 </ul></li>
 <li><code>col.sort</code>: the columns <em>within</em> which there is data that need to be sorted.
@@ -839,83 +900,138 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 
 <h2>Examples</h2>
 
-<pre><code class="r"># Get some data
-library(foreign)
-temp = &quot;http://www.ats.ucla.edu/stat/stata/modules/kidshtwt.dta&quot;
-kidshtwt = read.dta(temp); rm(temp)
-# Preview the data
-kidshtwt
+<pre><code class="r"># Make up some data
+set.seed(1)
+dat = data.frame(id = rep(1:5, each = 3), times = rep(1:3, 5), measure1 = rnorm(15), 
+    score1 = sample(300, 15), code1 = replicate(15, paste(sample(LETTERS[1:5], 
+        3), sep = &quot;&quot;, collapse = &quot;&quot;)), measure2 = rnorm(15), score2 = sample(150:300, 
+        15), code2 = replicate(15, paste(sample(LETTERS[1:5], 3), sep = &quot;&quot;, 
+        collapse = &quot;&quot;)))
+# Preview your data
+dat
 </code></pre>
 
-<pre><code class="no-highlight">##   famid birth ht1 ht2 wt1 wt2
-## 1     1     1 2.8 3.4  19  28
-## 2     1     2 2.9 3.8  21  28
-## 3     1     3 2.2 2.9  20  23
-## 4     2     1 2.0 3.2  25  30
-## 5     2     2 1.8 2.8  20  33
-## 6     2     3 1.9 2.4  22  33
-## 7     3     1 2.2 3.3  22  28
-## 8     3     2 2.3 3.4  20  30
-## 9     3     3 2.1 2.9  22  31
+<pre><code class="no-highlight">##    id times measure1 score1 code1 measure2 score2 code2
+## 1   1     1  -0.6265    145   DAB  -0.7075    299   CEB
+## 2   1     2   0.1836    180   DCB   0.3646    224   ECD
+## 3   1     3  -0.8356    148   EBA   0.7685    222   DAE
+## 4   2     1   1.5953     56   AED  -0.1123    175   DBA
+## 5   2     2   0.3295    245   CEB   0.8811    260   DAC
+## 6   2     3  -0.8205    198   EBD   0.3981    216   DCA
+## 7   3     1   0.4874    234   BCA  -0.6120    300   CEA
+## 8   3     2   0.7383     32   CDA   0.3411    179   CAD
+## 9   3     3   0.5758    212   EBC  -1.1294    182   BEC
+## 10  4     1  -0.3054    120   BED   1.4330    234   CDE
+## 11  4     2   1.5118    239   EDB   1.9804    231   CAB
+## 12  4     3   0.3898    188   DEB  -0.3672    160   DBE
+## 13  5     1  -0.6212    226   DBA  -1.0441    154   EDB
+## 14  5     2  -2.2147    159   DAC   0.5697    238   BDE
+## 15  5     3   1.1249    152   AED  -0.1351    277   DCE
 </code></pre>
 
-<pre><code class="r"># Notice that for &#39;var.order&#39; you do not have to use full names
-df.sorter(kidshtwt, var.order = c(&quot;fam&quot;, &quot;bir&quot;, &quot;wt&quot;, &quot;ht&quot;))
+<pre><code class="r"># Change the variable order, grouping related columns Note that you do not
+# need to specify full variable names, just enough that the variables can
+# be uniquely identified
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;ti&quot;, &quot;cod&quot;, &quot;mea&quot;, &quot;sco&quot;)))
 </code></pre>
 
-<pre><code class="no-highlight">##   famid birth wt1 wt2 ht1 ht2
-## 1     1     1  19  28 2.8 3.4
-## 2     1     2  21  28 2.9 3.8
-## 3     1     3  20  23 2.2 2.9
-## 4     2     1  25  30 2.0 3.2
-## 5     2     2  20  33 1.8 2.8
-## 6     2     3  22  33 1.9 2.4
-## 7     3     1  22  28 2.2 3.3
-## 8     3     2  20  30 2.3 3.4
-## 9     3     3  22  31 2.1 2.9
+<pre><code class="no-highlight">##   id times code1 code2 measure1 measure2 score1 score2
+## 1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
+## 2  1     2   DCB   ECD   0.1836   0.3646    180    224
+## 3  1     3   EBA   DAE  -0.8356   0.7685    148    222
+## 4  2     1   AED   DBA   1.5953  -0.1123     56    175
+## 5  2     2   CEB   DAC   0.3295   0.8811    245    260
+## 6  2     3   EBD   DCA  -0.8205   0.3981    198    216
 </code></pre>
 
-<pre><code class="r">df.sorter(kidshtwt, var.order = c(&quot;fam&quot;, &quot;bir&quot;, &quot;wt&quot;, &quot;ht&quot;),
-          col.sort = c(&quot;birth&quot;, &quot;famid&quot;)) # Use full names here
+<pre><code class="r"># Same output, but with a more awkward syntax
+head(df.sorter(dat, var.order = c(1, 2, 5, 8, 3, 6, 4, 7)))
 </code></pre>
 
-<pre><code class="no-highlight">##   famid birth wt1 wt2 ht1 ht2
-## 1     1     1  19  28 2.8 3.4
-## 4     2     1  25  30 2.0 3.2
-## 7     3     1  22  28 2.2 3.3
-## 2     1     2  21  28 2.9 3.8
-## 5     2     2  20  33 1.8 2.8
-## 8     3     2  20  30 2.3 3.4
-## 3     1     3  20  23 2.2 2.9
-## 6     2     3  22  33 1.9 2.4
-## 9     3     3  22  31 2.1 2.9
+<pre><code class="no-highlight">##   id times code1 code2 measure1 measure2 score1 score2
+## 1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
+## 2  1     2   DCB   ECD   0.1836   0.3646    180    224
+## 3  1     3   EBA   DAE  -0.8356   0.7685    148    222
+## 4  2     1   AED   DBA   1.5953  -0.1123     56    175
+## 5  2     2   CEB   DAC   0.3295   0.8811    245    260
+## 6  2     3   EBD   DCA  -0.8205   0.3981    198    216
 </code></pre>
 
-<pre><code class="r">df.sorter(kidshtwt, var.order = c(1:4),   # Drop the &#39;wt&#39; columns
-          col.sort = c(2, 1))                   # Sort by &#39;ht1&#39;
+<pre><code class="r"># As above, but sorted by &#39;times&#39; and then &#39;id&#39;
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;cod&quot;, &quot;mea&quot;, &quot;sco&quot;), 
+    col.sort = c(2, 1)))
 </code></pre>
 
-<pre><code class="no-highlight">##   famid birth ht1 ht2
-## 1     1     1 2.8 3.4
-## 4     2     1 2.0 3.2
-## 7     3     1 2.2 3.3
-## 2     1     2 2.9 3.8
-## 5     2     2 1.8 2.8
-## 8     3     2 2.3 3.4
-## 3     1     3 2.2 2.9
-## 6     2     3 1.9 2.4
-## 9     3     3 2.1 2.9
+<pre><code class="no-highlight">##    id times code1 code2 measure1 measure2 score1 score2
+## 1   1     1   DAB   CEB  -0.6265  -0.7075    145    299
+## 4   2     1   AED   DBA   1.5953  -0.1123     56    175
+## 7   3     1   BCA   CEA   0.4874  -0.6120    234    300
+## 10  4     1   BED   CDE  -0.3054   1.4330    120    234
+## 13  5     1   DBA   EDB  -0.6212  -1.0441    226    154
+## 2   1     2   DCB   ECD   0.1836   0.3646    180    224
+</code></pre>
+
+<pre><code class="r"># Drop &#39;measure1&#39; and &#39;measure2&#39;, sort by &#39;times&#39;, and &#39;score1&#39;
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;sco&quot;, &quot;cod&quot;), col.sort = c(2, 
+    3)))
+</code></pre>
+
+<pre><code class="no-highlight">##    id times score1 score2 code1 code2
+## 4   2     1     56    175   AED   DBA
+## 10  4     1    120    234   BED   CDE
+## 1   1     1    145    299   DAB   CEB
+## 13  5     1    226    154   DBA   EDB
+## 7   3     1    234    300   BCA   CEA
+## 8   3     2     32    179   CDA   CAD
+</code></pre>
+
+<pre><code class="r"># As above, but using names
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;sco&quot;, &quot;cod&quot;), col.sort = c(&quot;times&quot;, 
+    &quot;score1&quot;)))
+</code></pre>
+
+<pre><code class="no-highlight">##    id times score1 score2 code1 code2
+## 4   2     1     56    175   AED   DBA
+## 10  4     1    120    234   BED   CDE
+## 1   1     1    145    299   DAB   CEB
+## 13  5     1    226    154   DBA   EDB
+## 7   3     1    234    300   BCA   CEA
+## 8   3     2     32    179   CDA   CAD
+</code></pre>
+
+<pre><code class="r"># Just sort by columns, first by &#39;times&#39; then by &#39;id&#39;
+head(df.sorter(dat, col.sort = c(&quot;times&quot;, &quot;id&quot;)))
+</code></pre>
+
+<pre><code class="no-highlight">##    id times measure1 score1 code1 measure2 score2 code2
+## 1   1     1  -0.6265    145   DAB  -0.7075    299   CEB
+## 4   2     1   1.5953     56   AED  -0.1123    175   DBA
+## 7   3     1   0.4874    234   BCA  -0.6120    300   CEA
+## 10  4     1  -0.3054    120   BED   1.4330    234   CDE
+## 13  5     1  -0.6212    226   DBA  -1.0441    154   EDB
+## 2   1     2   0.1836    180   DCB   0.3646    224   ECD
+</code></pre>
+
+<pre><code class="r">head(df.sorter(dat, col.sort = c(&quot;code1&quot;)))  # Sorting by character values
+</code></pre>
+
+<pre><code class="no-highlight">##    id times measure1 score1 code1 measure2 score2 code2
+## 4   2     1   1.5953     56   AED  -0.1123    175   DBA
+## 15  5     3   1.1249    152   AED  -0.1351    277   DCE
+## 7   3     1   0.4874    234   BCA  -0.6120    300   CEA
+## 10  4     1  -0.3054    120   BED   1.4330    234   CDE
+## 8   3     2   0.7383     32   CDA   0.3411    179   CAD
+## 5   2     2   0.3295    245   CEB   0.8811    260   DAC
 </code></pre>
 
 <h2>To Do</h2>
 
 <ul>
-<li>Add an option to sort increasing or decreasing&mdash;at the moment, not supported.</li>
+<li>Add an option to sort ascending or descending&mdash;at the moment, not supported.</li>
+<li>Modify the <code>grep</code> function for <code>var.order</code> to only match strings from the start of a variable name.</li>
 </ul>
 
-<h2>References</h2>
-
-<p>Demonstration data accessed from UCLA&#39;s Academic Tecnhology Services <a href="http://www.ats.ucla.edu/stat/stata/modules/reshapel.htm"><em>Stata Learning Module: Reshaping data wide to long</em></a>.</p>
+<p>\newpage</p>
 
 <h1>row.extractor</h1>
 
@@ -926,8 +1042,8 @@ df.sorter(kidshtwt, var.order = c(&quot;fam&quot;, &quot;bir&quot;, &quot;wt&quo
 <h2>Arguments</h2>
 
 <ul>
-<li><code>data</code>: the source <code>data.frame</code></li>
-<li><code>extract.by</code>: the column which will be used as the reference for extraction</li>
+<li><code>data</code>: the source <code>data.frame</code>.</li>
+<li><code>extract.by</code>: the column which will be used as the reference for extraction; can be specified either by the column number or the variable name.</li>
 <li><code>what</code>: options are <code>min</code> (for all rows matching the minimum value), <code>median</code> (for the median row or rows), <code>max</code> (for all rows matching the maximum value), or <code>all</code> (for <code>min</code>, <code>median</code>, and <code>max</code>); alternatively, a numeric vector can be specified with the desired quantiles, for instance <code>c(0, .25, .5, .75, 1)</code></li>
 </ul>
 
@@ -1059,12 +1175,6 @@ row.extractor(dat, &quot;V3&quot;, seq(0.1, 1, 0.1))
 ## 34 34 -0.05381 1.52 19
 ## 11 11  1.51178 2.40 29
 </code></pre>
-
-<h2>To Do</h2>
-
-<ul>
-<li>None</li>
-</ul>
 
 <h2>References</h2>
 
