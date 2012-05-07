@@ -7,17 +7,17 @@
 
 <title>concat.split</h1>
 
-<h2>What It Does</h2>
+<h2>What it Does</h2>
 
 <p>The <code>concat.split</code> function takes a column with multiple values, splits the values into separate columns, and returns a new <code>data.frame</code>.</p>
 
 <h2>Arguments</h2>
 
 <ul>
-<li><code>data</code>: is the source <code>data.frame</code></li>
-<li><code>split.col</code>: the variable that needs to be split</li>
-<li><code>mode</code>: can be either <code>binary</code> or <code>value</code> (where <code>binary</code> is default and it recodes values to <code>1</code> or <code>NA</code>)</li>
-<li><code>sep</code>: the character separating each value (defaults to <code>&quot;,&quot;</code>) </li>
+<li><code>data</code>: the source <code>data.frame</code>.</li>
+<li><code>split.col</code>: the variable that needs to be split; can be specified either by the column number or the variable name.</li>
+<li><code>mode</code>: can be either <code>binary</code> or <code>value</code> (where <code>binary</code> is default and it recodes values to <code>1</code> or <code>NA</code>).</li>
+<li><code>sep</code>: the character separating each value (defaults to <code>&quot;,&quot;</code>).</li>
 <li><code>drop.col</code>: logical (whether to remove the original variable from the output or not; defaults to <code>TRUE</code>).</li>
 </ul>
 
@@ -197,6 +197,144 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 <h2>References</h2>
 
 <p>See: <a href="http://stackoverflow.com/q/10100887/1270695">http://stackoverflow.com/q/10100887/1270695</a></p>
+
+<h1>df.sorter</h1>
+
+<h2>What it Does</h2>
+
+<p>The <code>df.sorter</code> function allows you to sort a <code>data.frame</code> by columns or rows or both. You can also quickly subset data solums by using the <code>var.order</code> argument.</p>
+
+<h2>Arguments</h2>
+
+<ul>
+<li><code>data</code>: the source <code>data.frame</code>.</li>
+<li><code>var.order</code>: the new order in which you want the variables to appear.
+
+<ul>
+<li>Defaults to <code>names(data)</code>, which keeps the variables in the original order.</li>
+<li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable name; partial name matching also works (see examples).</li>
+<li>Basic subsetting can also be done using <code>var.order</code> simply by omitting the variables you want to drop.</li>
+</ul></li>
+<li><code>col.sort</code>: the columns <em>within</em> which there is data that need to be sorted.
+
+<ul>
+<li>Defaults to <code>NULL</code>, which means no sorting takes place.</li>
+<li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable names; full names must be provided.</li>
+</ul></li>
+</ul>
+
+<blockquote>
+<p>NOTE: If you are sorting both by variables and within the columns, the <code>col.sort</code> order should be based on the location of the columns in the <em>new</em> <code>data.frame</code>, not the original <code>data.frame</code>.</p>
+</blockquote>
+
+<h2>The Function</h2>
+
+<pre><code class="r">df.sorter = function(data, var.order = names(data), col.sort = NULL) {
+
+    if (is.numeric(var.order)) 
+        var.order = colnames(data)[var.order] else var.order = var.order
+
+    a = names(data)
+    b = length(var.order)
+    subs = vector(&quot;list&quot;, b)
+
+    for (i in 1:b) {
+        subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
+    }
+    x = unlist(subs)
+    y = data[, x]
+
+    if (is.null(col.sort)) {
+        y
+    } else if (is.numeric(col.sort)) {
+        col.sort = colnames(y)[col.sort]
+        y[do.call(order, y[col.sort]), ]
+    } else if (!is.numeric(col.sort)) {
+        col.sort = col.sort
+        y[do.call(order, y[col.sort]), ]
+    }
+}
+</code></pre>
+
+<h2>Examples</h2>
+
+<pre><code class="r"># Get some data
+library(foreign)
+temp = &quot;http://www.ats.ucla.edu/stat/stata/modules/kidshtwt.dta&quot;
+kidshtwt = read.dta(temp); rm(temp)
+# Preview the data
+kidshtwt
+</code></pre>
+
+<pre><code class="no-highlight">##   famid birth ht1 ht2 wt1 wt2
+## 1     1     1 2.8 3.4  19  28
+## 2     1     2 2.9 3.8  21  28
+## 3     1     3 2.2 2.9  20  23
+## 4     2     1 2.0 3.2  25  30
+## 5     2     2 1.8 2.8  20  33
+## 6     2     3 1.9 2.4  22  33
+## 7     3     1 2.2 3.3  22  28
+## 8     3     2 2.3 3.4  20  30
+## 9     3     3 2.1 2.9  22  31
+</code></pre>
+
+<pre><code class="r"># Notice that for &#39;var.order&#39; you do not have to use full names
+df.sorter(kidshtwt, var.order = c(&quot;fam&quot;, &quot;bir&quot;, &quot;wt&quot;, &quot;ht&quot;))
+</code></pre>
+
+<pre><code class="no-highlight">##   famid birth wt1 wt2 ht1 ht2
+## 1     1     1  19  28 2.8 3.4
+## 2     1     2  21  28 2.9 3.8
+## 3     1     3  20  23 2.2 2.9
+## 4     2     1  25  30 2.0 3.2
+## 5     2     2  20  33 1.8 2.8
+## 6     2     3  22  33 1.9 2.4
+## 7     3     1  22  28 2.2 3.3
+## 8     3     2  20  30 2.3 3.4
+## 9     3     3  22  31 2.1 2.9
+</code></pre>
+
+<pre><code class="r">df.sorter(kidshtwt, var.order = c(&quot;fam&quot;, &quot;bir&quot;, &quot;wt&quot;, &quot;ht&quot;),
+          col.sort = c(&quot;birth&quot;, &quot;famid&quot;)) # Use full names here
+</code></pre>
+
+<pre><code class="no-highlight">##   famid birth wt1 wt2 ht1 ht2
+## 1     1     1  19  28 2.8 3.4
+## 4     2     1  25  30 2.0 3.2
+## 7     3     1  22  28 2.2 3.3
+## 2     1     2  21  28 2.9 3.8
+## 5     2     2  20  33 1.8 2.8
+## 8     3     2  20  30 2.3 3.4
+## 3     1     3  20  23 2.2 2.9
+## 6     2     3  22  33 1.9 2.4
+## 9     3     3  22  31 2.1 2.9
+</code></pre>
+
+<pre><code class="r">df.sorter(kidshtwt, var.order = c(1:4),   # Drop the &#39;wt&#39; columns
+          col.sort = c(2, 1))                   # Sort by &#39;ht1&#39;
+</code></pre>
+
+<pre><code class="no-highlight">##   famid birth ht1 ht2
+## 1     1     1 2.8 3.4
+## 4     2     1 2.0 3.2
+## 7     3     1 2.2 3.3
+## 2     1     2 2.9 3.8
+## 5     2     2 1.8 2.8
+## 8     3     2 2.3 3.4
+## 3     1     3 2.2 2.9
+## 6     2     3 1.9 2.4
+## 9     3     3 2.1 2.9
+</code></pre>
+
+<h2>To Do</h2>
+
+<ul>
+<li>Add an option to sort increasing or decreasing&mdash;at the moment, not supported.</li>
+</ul>
+
+<h2>References</h2>
+
+<p>Demonstration data accessed from UCLA&#39;s Academic Tecnhology Services <a href="http://www.ats.ucla.edu/stat/stata/modules/reshapel.htm"><em>Stata Learning Module: Reshaping data wide to long</em></a>.</p>
 
 <h1>row.extractor</title>
 
@@ -450,17 +588,17 @@ pre .vhdl .literal { color: rgb(163, 21, 21); }
 
 <h1>concat.split</h1>
 
-<h2>What It Does</h2>
+<h2>What it Does</h2>
 
 <p>The <code>concat.split</code> function takes a column with multiple values, splits the values into separate columns, and returns a new <code>data.frame</code>.</p>
 
 <h2>Arguments</h2>
 
 <ul>
-<li><code>data</code>: is the source <code>data.frame</code></li>
-<li><code>split.col</code>: the variable that needs to be split</li>
-<li><code>mode</code>: can be either <code>binary</code> or <code>value</code> (where <code>binary</code> is default and it recodes values to <code>1</code> or <code>NA</code>)</li>
-<li><code>sep</code>: the character separating each value (defaults to <code>&quot;,&quot;</code>) </li>
+<li><code>data</code>: the source <code>data.frame</code>.</li>
+<li><code>split.col</code>: the variable that needs to be split; can be specified either by the column number or the variable name.</li>
+<li><code>mode</code>: can be either <code>binary</code> or <code>value</code> (where <code>binary</code> is default and it recodes values to <code>1</code> or <code>NA</code>).</li>
+<li><code>sep</code>: the character separating each value (defaults to <code>&quot;,&quot;</code>).</li>
 <li><code>drop.col</code>: logical (whether to remove the original variable from the output or not; defaults to <code>TRUE</code>).</li>
 </ul>
 
@@ -641,9 +779,147 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 
 <p>See: <a href="http://stackoverflow.com/q/10100887/1270695">http://stackoverflow.com/q/10100887/1270695</a></p>
 
+<h1>df.sorter</h1>
+
+<h2>What it Does</h2>
+
+<p>The <code>df.sorter</code> function allows you to sort a <code>data.frame</code> by columns or rows or both. You can also quickly subset data solums by using the <code>var.order</code> argument.</p>
+
+<h2>Arguments</h2>
+
+<ul>
+<li><code>data</code>: the source <code>data.frame</code>.</li>
+<li><code>var.order</code>: the new order in which you want the variables to appear.
+
+<ul>
+<li>Defaults to <code>names(data)</code>, which keeps the variables in the original order.</li>
+<li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable name; partial name matching also works (see examples).</li>
+<li>Basic subsetting can also be done using <code>var.order</code> simply by omitting the variables you want to drop.</li>
+</ul></li>
+<li><code>col.sort</code>: the columns <em>within</em> which there is data that need to be sorted.
+
+<ul>
+<li>Defaults to <code>NULL</code>, which means no sorting takes place.</li>
+<li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable names; full names must be provided.</li>
+</ul></li>
+</ul>
+
+<blockquote>
+<p>NOTE: If you are sorting both by variables and within the columns, the <code>col.sort</code> order should be based on the location of the columns in the <em>new</em> <code>data.frame</code>, not the original <code>data.frame</code>.</p>
+</blockquote>
+
+<h2>The Function</h2>
+
+<pre><code class="r">df.sorter = function(data, var.order = names(data), col.sort = NULL) {
+
+    if (is.numeric(var.order)) 
+        var.order = colnames(data)[var.order] else var.order = var.order
+
+    a = names(data)
+    b = length(var.order)
+    subs = vector(&quot;list&quot;, b)
+
+    for (i in 1:b) {
+        subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
+    }
+    x = unlist(subs)
+    y = data[, x]
+
+    if (is.null(col.sort)) {
+        y
+    } else if (is.numeric(col.sort)) {
+        col.sort = colnames(y)[col.sort]
+        y[do.call(order, y[col.sort]), ]
+    } else if (!is.numeric(col.sort)) {
+        col.sort = col.sort
+        y[do.call(order, y[col.sort]), ]
+    }
+}
+</code></pre>
+
+<h2>Examples</h2>
+
+<pre><code class="r"># Get some data
+library(foreign)
+temp = &quot;http://www.ats.ucla.edu/stat/stata/modules/kidshtwt.dta&quot;
+kidshtwt = read.dta(temp); rm(temp)
+# Preview the data
+kidshtwt
+</code></pre>
+
+<pre><code class="no-highlight">##   famid birth ht1 ht2 wt1 wt2
+## 1     1     1 2.8 3.4  19  28
+## 2     1     2 2.9 3.8  21  28
+## 3     1     3 2.2 2.9  20  23
+## 4     2     1 2.0 3.2  25  30
+## 5     2     2 1.8 2.8  20  33
+## 6     2     3 1.9 2.4  22  33
+## 7     3     1 2.2 3.3  22  28
+## 8     3     2 2.3 3.4  20  30
+## 9     3     3 2.1 2.9  22  31
+</code></pre>
+
+<pre><code class="r"># Notice that for &#39;var.order&#39; you do not have to use full names
+df.sorter(kidshtwt, var.order = c(&quot;fam&quot;, &quot;bir&quot;, &quot;wt&quot;, &quot;ht&quot;))
+</code></pre>
+
+<pre><code class="no-highlight">##   famid birth wt1 wt2 ht1 ht2
+## 1     1     1  19  28 2.8 3.4
+## 2     1     2  21  28 2.9 3.8
+## 3     1     3  20  23 2.2 2.9
+## 4     2     1  25  30 2.0 3.2
+## 5     2     2  20  33 1.8 2.8
+## 6     2     3  22  33 1.9 2.4
+## 7     3     1  22  28 2.2 3.3
+## 8     3     2  20  30 2.3 3.4
+## 9     3     3  22  31 2.1 2.9
+</code></pre>
+
+<pre><code class="r">df.sorter(kidshtwt, var.order = c(&quot;fam&quot;, &quot;bir&quot;, &quot;wt&quot;, &quot;ht&quot;),
+          col.sort = c(&quot;birth&quot;, &quot;famid&quot;)) # Use full names here
+</code></pre>
+
+<pre><code class="no-highlight">##   famid birth wt1 wt2 ht1 ht2
+## 1     1     1  19  28 2.8 3.4
+## 4     2     1  25  30 2.0 3.2
+## 7     3     1  22  28 2.2 3.3
+## 2     1     2  21  28 2.9 3.8
+## 5     2     2  20  33 1.8 2.8
+## 8     3     2  20  30 2.3 3.4
+## 3     1     3  20  23 2.2 2.9
+## 6     2     3  22  33 1.9 2.4
+## 9     3     3  22  31 2.1 2.9
+</code></pre>
+
+<pre><code class="r">df.sorter(kidshtwt, var.order = c(1:4),   # Drop the &#39;wt&#39; columns
+          col.sort = c(2, 1))                   # Sort by &#39;ht1&#39;
+</code></pre>
+
+<pre><code class="no-highlight">##   famid birth ht1 ht2
+## 1     1     1 2.8 3.4
+## 4     2     1 2.0 3.2
+## 7     3     1 2.2 3.3
+## 2     1     2 2.9 3.8
+## 5     2     2 1.8 2.8
+## 8     3     2 2.3 3.4
+## 3     1     3 2.2 2.9
+## 6     2     3 1.9 2.4
+## 9     3     3 2.1 2.9
+</code></pre>
+
+<h2>To Do</h2>
+
+<ul>
+<li>Add an option to sort increasing or decreasing&mdash;at the moment, not supported.</li>
+</ul>
+
+<h2>References</h2>
+
+<p>Demonstration data accessed from UCLA&#39;s Academic Tecnhology Services <a href="http://www.ats.ucla.edu/stat/stata/modules/reshapel.htm"><em>Stata Learning Module: Reshaping data wide to long</em></a>.</p>
+
 <h1>row.extractor</h1>
 
-<h2>What It Does</h2>
+<h2>What it Does</h2>
 
 <p>The <code>row.extractor</code> function takes a <code>data.frame</code> and extracts rows with the <code>min</code>, <code>median</code>, or <code>max</code> values of a given variable, or extracts rows with specific quantiles of a given variable.</p>
 

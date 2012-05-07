@@ -4,7 +4,7 @@
 concat.split
 ============
 
-What It Does
+What it Does
 ------------
 
 The `concat.split` function takes a column with multiple values, splits the values into separate columns, and returns a new `data.frame`.
@@ -12,10 +12,10 @@ The `concat.split` function takes a column with multiple values, splits the valu
 Arguments
 ---------
 
-* `data`: is the source `data.frame`
-* `split.col`: the variable that needs to be split
-* `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`)
-* `sep`: the character separating each value (defaults to `","`) 
+* `data`: the source `data.frame`.
+* `split.col`: the variable that needs to be split; can be specified either by the column number or the variable name.
+* `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`).
+* `sep`: the character separating each value (defaults to `","`).
 * `drop.col`: logical (whether to remove the original variable from the output or not; defaults to `TRUE`).
 
 The Function
@@ -256,10 +256,179 @@ See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10
 
 
 
+df.sorter
+=========
+
+What it Does
+------------
+
+The `df.sorter` function allows you to sort a `data.frame` by columns or rows or both. You can also quickly subset data solums by using the `var.order` argument.
+
+Arguments
+---------
+
+* `data`: the source `data.frame`.
+* `var.order`: the new order in which you want the variables to appear.
+    * Defaults to `names(data)`, which keeps the variables in the original order.
+    * Variables can be referred to either by a vector of their index numbers or by a vector of the variable name; partial name matching also works (see examples).
+    * Basic subsetting can also be done using `var.order` simply by omitting the variables you want to drop.
+* `col.sort`: the columns *within* which there is data that need to be sorted.
+    * Defaults to `NULL`, which means no sorting takes place.
+    * Variables can be referred to either by a vector of their index numbers or by a vector of the variable names; full names must be provided.
+
+> NOTE: If you are sorting both by variables and within the columns, the `col.sort` order should be based on the location of the columns in the *new* `data.frame`, not the original `data.frame`.
+  
+
+The Function
+------------
+
+
+
+```r
+df.sorter = function(data, var.order = names(data), col.sort = NULL) {
+    
+    if (is.numeric(var.order)) 
+        var.order = colnames(data)[var.order] else var.order = var.order
+    
+    a = names(data)
+    b = length(var.order)
+    subs = vector("list", b)
+    
+    for (i in 1:b) {
+        subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
+    }
+    x = unlist(subs)
+    y = data[, x]
+    
+    if (is.null(col.sort)) {
+        y
+    } else if (is.numeric(col.sort)) {
+        col.sort = colnames(y)[col.sort]
+        y[do.call(order, y[col.sort]), ]
+    } else if (!is.numeric(col.sort)) {
+        col.sort = col.sort
+        y[do.call(order, y[col.sort]), ]
+    }
+}
+```
+
+
+
+
+Examples
+--------
+
+
+
+```r
+# Get some data
+library(foreign)
+temp = "http://www.ats.ucla.edu/stat/stata/modules/kidshtwt.dta"
+kidshtwt = read.dta(temp); rm(temp)
+# Preview the data
+kidshtwt
+```
+
+
+
+```
+##   famid birth ht1 ht2 wt1 wt2
+## 1     1     1 2.8 3.4  19  28
+## 2     1     2 2.9 3.8  21  28
+## 3     1     3 2.2 2.9  20  23
+## 4     2     1 2.0 3.2  25  30
+## 5     2     2 1.8 2.8  20  33
+## 6     2     3 1.9 2.4  22  33
+## 7     3     1 2.2 3.3  22  28
+## 8     3     2 2.3 3.4  20  30
+## 9     3     3 2.1 2.9  22  31
+```
+
+
+
+```r
+# Notice that for 'var.order' you do not have to use full names
+df.sorter(kidshtwt, var.order = c("fam", "bir", "wt", "ht"))
+```
+
+
+
+```
+##   famid birth wt1 wt2 ht1 ht2
+## 1     1     1  19  28 2.8 3.4
+## 2     1     2  21  28 2.9 3.8
+## 3     1     3  20  23 2.2 2.9
+## 4     2     1  25  30 2.0 3.2
+## 5     2     2  20  33 1.8 2.8
+## 6     2     3  22  33 1.9 2.4
+## 7     3     1  22  28 2.2 3.3
+## 8     3     2  20  30 2.3 3.4
+## 9     3     3  22  31 2.1 2.9
+```
+
+
+
+```r
+df.sorter(kidshtwt, var.order = c("fam", "bir", "wt", "ht"),
+          col.sort = c("birth", "famid")) # Use full names here
+```
+
+
+
+```
+##   famid birth wt1 wt2 ht1 ht2
+## 1     1     1  19  28 2.8 3.4
+## 4     2     1  25  30 2.0 3.2
+## 7     3     1  22  28 2.2 3.3
+## 2     1     2  21  28 2.9 3.8
+## 5     2     2  20  33 1.8 2.8
+## 8     3     2  20  30 2.3 3.4
+## 3     1     3  20  23 2.2 2.9
+## 6     2     3  22  33 1.9 2.4
+## 9     3     3  22  31 2.1 2.9
+```
+
+
+
+```r
+df.sorter(kidshtwt, var.order = c(1:4),   # Drop the 'wt' columns
+          col.sort = c(2, 1))                   # Sort by 'ht1'
+```
+
+
+
+```
+##   famid birth ht1 ht2
+## 1     1     1 2.8 3.4
+## 4     2     1 2.0 3.2
+## 7     3     1 2.2 3.3
+## 2     1     2 2.9 3.8
+## 5     2     2 1.8 2.8
+## 8     3     2 2.3 3.4
+## 3     1     3 2.2 2.9
+## 6     2     3 1.9 2.4
+## 9     3     3 2.1 2.9
+```
+
+
+
+
+To Do
+-----
+
+* Add an option to sort increasing or decreasing---at the moment, not supported.
+
+References
+----------
+
+Demonstration data accessed from UCLA's Academic Tecnhology Services [*Stata Learning Module: Reshaping data wide to long*](http://www.ats.ucla.edu/stat/stata/modules/reshapel.htm).
+
+
+
 row.extractor
 =============
 
-What It Does
+What it Does
 ------------
 
 The `row.extractor` function takes a `data.frame` and extracts rows with the `min`, `median`, or `max` values of a given variable, or extracts rows with specific quantiles of a given variable.
