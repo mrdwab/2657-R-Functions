@@ -7,7 +7,7 @@ Functions include:
     
 1. concat.split.R
 
-    >> Use to split cells which contain concatenated data into separate columns. Splitted output can retain original values or be recoded as "1" and "NA" to facilitate frequency calculations.
+    >> Use to split cells which contain concatenated data into separate columns. Works with string and numeric data. For numeric data, the splitted output can retain original values or be recoded as "1" and "NA" to facilitate frequency calculations.
 
 2. row.extractor.R
 
