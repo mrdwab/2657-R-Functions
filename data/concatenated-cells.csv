@@ -1,49 +1,49 @@
-Name,Likes,Siblings
-Boyd,"1,2,4,5,6","Reynolds , Albert , Ortega"
-Rufus,"1,2,4,5,6","Cohen , Bert , Montgomery"
-Dana,"1,2,4,5,6",Pierce
-Carole,"1,2,4,5,6","Colon , Michelle , Ballard"
-Ramona,"1,2,5,6","Snyder , Joann ,"
-Kelley,"1,2,5,6","James , Roxanne ,"
-Toby,"1,2,4,5,6","Henderson , Isabel ,"
-Marilyn,"1,2,4,5,6","Little , Vicki , Phillips"
-Derek,"1,2,4,5,6",
-Wilfred,"1,2,5","Klein , Julius , Miles"
-Cesar,"1,2,4,5,6","Knight , Stacey , Quinn"
-Sheldon,"1,2,4,5","Moran , Benny"
-Clifford,"1,2,4,5,6","Mack , Desiree"
-Pablo,"1,2,4,5,6",Craig
-Edith,"1,2,4,5,6","Baldwin , Darryl , Fernandez"
-Loren,"1,2,4,5,6","King , Ervin , Jensen"
-Esther,"1,2,4,5,6","Roberts , Earl "
-Philip,"1,2,4,5,6","Hall , Christian"
-Saul,"1,2,4,5,6","Mendoza , Veronica , Pope"
-Alfred,"1,2,4,5,6","Ortega , Lela , Mckenzie"
-Johnathan,"1,2,4,5,6","Campbell "
-Kelvin,"1,2,4,5,6","Valdez , Wilbert , Moore"
-Sylvia,"1,2,4,5,6","Walsh , Willard , Bradley"
-Luther,"1,2,4,5,6",Elliott
-Ada,"1,2,4,5,6","Holt , Marion , Curry"
-Mercedes,"1,2,4,5,6","Tyler , Aubrey , Caldwell"
-Jerald,"1,2,4,5,6","Spencer , Woodrow , Holmes"
-Winston,"1,2,4,5,6","Evans , Sue , Benson"
-Andrew,"1,2,4,5,6","Foster , Della , Keller"
-Alexis,"1,2,4,5,6","Griffin , Wayne , Perry"
-Lana,"1,2,4,5,6",
-Myra,"1,2,4,5,6","Alexander , Sidney"
-Stacy,"1,2,5,6","Fernandez , Janet , Chapman"
-Natasha,"1,2,5,6","Park , Jean , Fuller"
-Faye,"1,2,5,6","Wolfe , Danny , Banks"
-Miguel,"1,2,5,6","Parks , Ada"
-Tamara,"1,2,5,6","Clark , Dallas , Barton"
-Devin,"1,2,4,5,6","Mathis , Tiffany , Schneider"
-Marcos,"1,2,4,5,6","Scott "
-Gladys,"1,2,5","Mcdonald , Susan , Hudson"
-Crystal,"1,2,5,6","Farmer , Marty , Rodriquez"
-Phyllis,"1,2,5","Rice , Mabel , Wood"
-Kenneth,"1,2,5,6","Brewer , Lynda"
-Marcia,"1,2,5",
-Elbert,"1,2,5,6","Vega , Clark ,"
-Roderick,"1,2,3,4,5","Phelps , Marilyn , Vega"
-Stacey,"1,2,5,6","Curtis , Lindsey , Stone"
-Bennie,"1,2,5,6","Cortez , Shelly , Graves"
+Name,Likes,Siblings,Hates
+Boyd,"1,2,4,5,6","Reynolds , Albert , Ortega",2;4;
+Rufus,"1,2,4,5,6","Cohen , Bert , Montgomery",1;2;3;4;
+Dana,"1,2,4,5,6",Pierce,2;
+Carole,"1,2,4,5,6","Colon , Michelle , Ballard",1;4;
+Ramona,"1,2,5,6","Snyder , Joann ,",1;2;3;
+Kelley,"1,2,5,6","James , Roxanne ,",1;4;
+Toby,"1,2,4,5,6","Henderson , Isabel ,",2;
+Marilyn,"1,2,4,5,6","Little , Vicki , Phillips",1;2;3;4;
+Derek,"1,2,4,5,6",,1;2;3;
+Wilfred,"1,2,5","Klein , Julius , Miles",1;2;3;4;
+Cesar,"1,2,4,5,6","Knight , Stacey , Quinn",4;
+Sheldon,"1,2,4,5","Moran , Benny",1;3;
+Clifford,"1,2,4,5,6","Mack , Desiree",1;3;
+Pablo,"1,2,4,5,6",Craig,1;2;3;
+Edith,"1,2,4,5,6","Baldwin , Darryl , Fernandez",3;4;
+Loren,"1,2,4,5,6","King , Ervin , Jensen",3;
+Esther,"1,2,4,5,6","Roberts , Earl ",1;2;3;4;
+Philip,"1,2,4,5,6","Hall , Christian",1;2;4;
+Saul,"1,2,4,5,6","Mendoza , Veronica , Pope",1;2;3;4;
+Alfred,"1,2,4,5,6","Ortega , Lela , Mckenzie",1;2;3;4;
+Johnathan,"1,2,4,5,6",Campbell ,1;
+Kelvin,"1,2,4,5,6","Valdez , Wilbert , Moore",1;2;3;4;
+Sylvia,"1,2,4,5,6","Walsh , Willard , Bradley",1;2;3;4;
+Luther,"1,2,4,5,6",Elliott,1;2;3;4;
+Ada,"1,2,4,5,6","Holt , Marion , Curry",1;3;4;
+Mercedes,"1,2,4,5,6","Tyler , Aubrey , Caldwell",1;
+Jerald,"1,2,4,5,6","Spencer , Woodrow , Holmes",1;
+Winston,"1,2,4,5,6","Evans , Sue , Benson",2;3;
+Andrew,"1,2,4,5,6","Foster , Della , Keller",1;4;
+Alexis,"1,2,4,5,6","Griffin , Wayne , Perry",4;
+Lana,"1,2,4,5,6",,4;
+Myra,"1,2,4,5,6","Alexander , Sidney",1;4;
+Stacy,"1,2,5,6","Fernandez , Janet , Chapman",3;
+Natasha,"1,2,5,6","Park , Jean , Fuller",2;
+Faye,"1,2,5,6","Wolfe , Danny , Banks",2;3;4;
+Miguel,"1,2,5,6","Parks , Ada",3;
+Tamara,"1,2,5,6","Clark , Dallas , Barton",2;
+Devin,"1,2,4,5,6","Mathis , Tiffany , Schneider",1;4;
+Marcos,"1,2,4,5,6",Scott ,1;3;4;
+Gladys,"1,2,5","Mcdonald , Susan , Hudson",1;2;4;
+Crystal,"1,2,5,6","Farmer , Marty , Rodriquez",2;3;4;
+Phyllis,"1,2,5","Rice , Mabel , Wood",1;4;
+Kenneth,"1,2,5,6","Brewer , Lynda",1;2;3;
+Marcia,"1,2,5",,1;2;4;
+Elbert,"1,2,5,6","Vega , Clark ,",1;4;
+Roderick,"1,2,3,4,5","Phelps , Marilyn , Vega",2;
+Stacey,"1,2,5,6","Curtis , Lindsey , Stone",1;3;4;
+Bennie,"1,2,5,6","Cortez , Shelly , Graves",1;4;

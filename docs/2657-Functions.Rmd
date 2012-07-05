@@ -2,6 +2,8 @@
 % Ananda Mahto
 
 \newpage
+\tableofcontents
+\newpage
 
 concat.split
 ============
@@ -141,6 +143,8 @@ Arguments
 * `col.sort`: the columns *within* which there is data that need to be sorted.
     * Defaults to `NULL`, which means no sorting takes place.
     * Variables can be referred to either by a vector of their index numbers or by a vector of the variable names; full names must be provided.
+* `at.start`: Should the pattern matching be from the start of the variable name?
+    * Defaults to "TRUE".
 
 > NOTE: If you are sorting both by variables and within the columns, the `col.sort` order should be based on the location of the columns in the *new* `data.frame`, not the original `data.frame`.
   
@@ -149,8 +153,7 @@ The Function
 ------------
 
 ```{r df_sorter_function}
-df.sorter = function(data, var.order=names(data), col.sort=NULL ) {
-
+df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE ) {
   if (is.numeric(var.order)) 
     var.order = colnames(data)[var.order]
   else var.order = var.order
@@ -159,9 +162,18 @@ df.sorter = function(data, var.order=names(data), col.sort=NULL ) {
   b = length(var.order)
   subs = vector("list", b)
   
-  for (i in 1:b) {
-    subs[[i]] = sort(grep(var.order[i], a, value=TRUE))
+  if (isTRUE(at.start)) {
+    for (i in 1:b) {
+      subs[[i]] = sort(grep(paste("^", var.order[i],
+                                  sep="", collapse=""),
+                            a, value=TRUE))
+    }  
+  } else if (!isTRUE(at.start)) {
+    for (i in 1:b) {
+      subs[[i]] = sort(grep(var.order[i], a, value=TRUE))
+    }
   }
+  
   x = unlist(subs)
   y = data[ , x ]
   
@@ -175,7 +187,6 @@ df.sorter = function(data, var.order=names(data), col.sort=NULL ) {
     y[do.call(order, y[col.sort]), ]
   }
 }
-
 ```
 
 Examples
@@ -206,13 +217,14 @@ head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c("time
 # Just sort by columns, first by 'times' then by 'id'
 head(df.sorter(dat, col.sort = c("times", "id")))
 head(df.sorter(dat, col.sort = c("code1"))) # Sorting by character values
+# Pattern matching anywhere in the variable name
+head(df.sorter(dat, var.order= "co", at.start=FALSE))
 ```
 
 To Do
 -----
 
 * Add an option to sort ascending or descending---at the moment, not supported.
-* Modify the `grep` function for `var.order` to only match strings from the start of a variable name.
 
 
 

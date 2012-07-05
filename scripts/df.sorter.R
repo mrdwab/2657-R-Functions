@@ -1,4 +1,4 @@
-df.sorter = function(data, var.order=names(data), col.sort=NULL ) {
+df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE ) {
   # Sorts a data.frame by columns or rows or both.
   # Can also subset the data columns by using 'var.order'.
   # Can refer to variables either by names or number.
@@ -25,9 +25,18 @@ df.sorter = function(data, var.order=names(data), col.sort=NULL ) {
   b = length(var.order)
   subs = vector("list", b)
   
-  for (i in 1:b) {
-    subs[[i]] = sort(grep(var.order[i], a, value=TRUE))
+  if (isTRUE(at.start)) {
+    for (i in 1:b) {
+      subs[[i]] = sort(grep(paste("^", var.order[i],
+                                  sep="", collapse=""),
+                            a, value=TRUE))
+    }  
+  } else if (!isTRUE(at.start)) {
+    for (i in 1:b) {
+      subs[[i]] = sort(grep(var.order[i], a, value=TRUE))
+    }
   }
+  
   x = unlist(subs)
   y = data[ , x ]
   

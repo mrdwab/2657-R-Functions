@@ -1,5 +1,5 @@
 multi.freq.table = function(data, sep="", drop=FALSE) {
-  # Takes bolean multiple-response data and tabulates it according
+  # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
   # === EXAMPLES ===

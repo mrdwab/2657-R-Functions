@@ -223,6 +223,11 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 <li>Defaults to <code>NULL</code>, which means no sorting takes place.</li>
 <li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable names; full names must be provided.</li>
 </ul></li>
+<li><code>at.start</code>: Should the pattern matching be from the start of the variable name?
+
+<ul>
+<li>Defaults to &ldquo;TRUE&rdquo;.</li>
+</ul></li>
 </ul>
 
 <blockquote>
@@ -231,8 +236,8 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 
 <h2>The Function</h2>
 
-<pre><code class="r">df.sorter = function(data, var.order = names(data), col.sort = NULL) {
-
+<pre><code class="r">df.sorter = function(data, var.order = names(data), col.sort = NULL, 
+    at.start = TRUE) {
     if (is.numeric(var.order)) 
         var.order = colnames(data)[var.order] else var.order = var.order
 
@@ -240,9 +245,17 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
     b = length(var.order)
     subs = vector(&quot;list&quot;, b)
 
-    for (i in 1:b) {
-        subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
+    if (isTRUE(at.start)) {
+        for (i in 1:b) {
+            subs[[i]] = sort(grep(paste(&quot;^&quot;, var.order[i], sep = &quot;&quot;, collapse = &quot;&quot;), 
+                a, value = TRUE))
+        }
+    } else if (!isTRUE(at.start)) {
+        for (i in 1:b) {
+            subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
+        }
     }
+
     x = unlist(subs)
     y = data[, x]
 
@@ -384,11 +397,23 @@ head(df.sorter(dat, col.sort = c(&quot;times&quot;, &quot;id&quot;)))
 ## 5   2     2   0.3295    245   CEB   0.8811    260   DAC
 </code></pre>
 
+<pre><code class="r"># Pattern matching anywhere in the variable name
+head(df.sorter(dat, var.order = &quot;co&quot;, at.start = FALSE))
+</code></pre>
+
+<pre><code class="no-highlight">##   code1 code2 score1 score2
+## 1   DAB   CEB    145    299
+## 2   DCB   ECD    180    224
+## 3   EBA   DAE    148    222
+## 4   AED   DBA     56    175
+## 5   CEB   DAC    245    260
+## 6   EBD   DCA    198    216
+</code></pre>
+
 <h2>To Do</h2>
 
 <ul>
 <li>Add an option to sort ascending or descending&mdash;at the moment, not supported.</li>
-<li>Modify the <code>grep</code> function for <code>var.order</code> to only match strings from the start of a variable name.</li>
 </ul>
 
 <p>\newpage</p>
@@ -644,7 +669,8 @@ pre .vhdl .literal { color: rgb(163, 21, 21); }
 % Ananda Mahto</p>
 
 <p>\newpage<br/>
-\toc</p>
+\tableofcontents<br/>
+\newpage</p>
 
 <h1>concat.split</h1>
 
@@ -864,6 +890,11 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 <li>Defaults to <code>NULL</code>, which means no sorting takes place.</li>
 <li>Variables can be referred to either by a vector of their index numbers or by a vector of the variable names; full names must be provided.</li>
 </ul></li>
+<li><code>at.start</code>: Should the pattern matching be from the start of the variable name?
+
+<ul>
+<li>Defaults to &ldquo;TRUE&rdquo;.</li>
+</ul></li>
 </ul>
 
 <blockquote>
@@ -872,8 +903,8 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 
 <h2>The Function</h2>
 
-<pre><code class="r">df.sorter = function(data, var.order = names(data), col.sort = NULL) {
-
+<pre><code class="r">df.sorter = function(data, var.order = names(data), col.sort = NULL, 
+    at.start = TRUE) {
     if (is.numeric(var.order)) 
         var.order = colnames(data)[var.order] else var.order = var.order
 
@@ -881,9 +912,17 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
     b = length(var.order)
     subs = vector(&quot;list&quot;, b)
 
-    for (i in 1:b) {
-        subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
+    if (isTRUE(at.start)) {
+        for (i in 1:b) {
+            subs[[i]] = sort(grep(paste(&quot;^&quot;, var.order[i], sep = &quot;&quot;, collapse = &quot;&quot;), 
+                a, value = TRUE))
+        }
+    } else if (!isTRUE(at.start)) {
+        for (i in 1:b) {
+            subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
+        }
     }
+
     x = unlist(subs)
     y = data[, x]
 
@@ -1025,11 +1064,23 @@ head(df.sorter(dat, col.sort = c(&quot;times&quot;, &quot;id&quot;)))
 ## 5   2     2   0.3295    245   CEB   0.8811    260   DAC
 </code></pre>
 
+<pre><code class="r"># Pattern matching anywhere in the variable name
+head(df.sorter(dat, var.order = &quot;co&quot;, at.start = FALSE))
+</code></pre>
+
+<pre><code class="no-highlight">##   code1 code2 score1 score2
+## 1   DAB   CEB    145    299
+## 2   DCB   ECD    180    224
+## 3   EBA   DAE    148    222
+## 4   AED   DBA     56    175
+## 5   CEB   DAC    245    260
+## 6   EBD   DCA    198    216
+</code></pre>
+
 <h2>To Do</h2>
 
 <ul>
 <li>Add an option to sort ascending or descending&mdash;at the moment, not supported.</li>
-<li>Modify the <code>grep</code> function for <code>var.order</code> to only match strings from the start of a variable name.</li>
 </ul>
 
 <p>\newpage</p>

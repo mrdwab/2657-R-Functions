@@ -2,7 +2,8 @@
 % Ananda Mahto
 
 \newpage
-\toc
+\tableofcontents
+\newpage
 
 concat.split
 ============
@@ -92,19 +93,13 @@ First load some data from a CSV stored at [github](http://github.com). The URL i
 require(RCurl)
 ```
 
-
-
 ```
 ## Loading required package: RCurl
 ```
 
-
-
 ```
 ## Loading required package: bitops
 ```
-
-
 
 ```r
 baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -116,20 +111,14 @@ rm(temp)
 dim(concat.test)
 ```
 
-
-
 ```
 ## [1] 48  3
 ```
-
-
 
 ```r
 # Just show me the first few rows
 head(concat.test)
 ```
-
-
 
 ```
 ##     Name     Likes                   Siblings
@@ -153,8 +142,6 @@ Notice that the data have been entered in a very silly manner. Let's split it up
 head(concat.split(concat.test, 2))
 ```
 
-
-
 ```
 ##     Name     Likes                   Siblings Likes_1 Likes_2 Likes_3
 ## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega       1       1      NA
@@ -172,14 +159,10 @@ head(concat.split(concat.test, 2))
 ## 6      NA       1       1
 ```
 
-
-
 ```r
 # ... or by name, and drop the offensive first column
 head(concat.split(concat.test, "Likes", drop.col = TRUE))
 ```
-
-
 
 ```
 ##     Name                   Siblings Likes_1 Likes_2 Likes_3 Likes_4
@@ -198,14 +181,10 @@ head(concat.split(concat.test, "Likes", drop.col = TRUE))
 ## 6       1       1
 ```
 
-
-
 ```r
 # Retain the original values
 head(concat.split(concat.test, 2, mode = "value", drop.col = TRUE))
 ```
-
-
 
 ```
 ##     Name                   Siblings Likes_1 Likes_2 Likes_3 Likes_4
@@ -224,14 +203,10 @@ head(concat.split(concat.test, 2, mode = "value", drop.col = TRUE))
 ## 6       5       6
 ```
 
-
-
 ```r
 # Let's try splitting some strings... Same syntax
 head(concat.split(concat.test, 3, drop.col = TRUE))
 ```
-
-
 
 ```
 ##     Name     Likes Siblings_1 Siblings_2  Siblings_3
@@ -280,6 +255,8 @@ Arguments
 * `col.sort`: the columns *within* which there is data that need to be sorted.
     * Defaults to `NULL`, which means no sorting takes place.
     * Variables can be referred to either by a vector of their index numbers or by a vector of the variable names; full names must be provided.
+* `at.start`: Should the pattern matching be from the start of the variable name?
+    * Defaults to "TRUE".
 
 > NOTE: If you are sorting both by variables and within the columns, the `col.sort` order should be based on the location of the columns in the *new* `data.frame`, not the original `data.frame`.
   
@@ -290,8 +267,8 @@ The Function
 
 
 ```r
-df.sorter = function(data, var.order = names(data), col.sort = NULL) {
-    
+df.sorter = function(data, var.order = names(data), col.sort = NULL, 
+    at.start = TRUE) {
     if (is.numeric(var.order)) 
         var.order = colnames(data)[var.order] else var.order = var.order
     
@@ -299,9 +276,17 @@ df.sorter = function(data, var.order = names(data), col.sort = NULL) {
     b = length(var.order)
     subs = vector("list", b)
     
-    for (i in 1:b) {
-        subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
+    if (isTRUE(at.start)) {
+        for (i in 1:b) {
+            subs[[i]] = sort(grep(paste("^", var.order[i], sep = "", collapse = ""), 
+                a, value = TRUE))
+        }
+    } else if (!isTRUE(at.start)) {
+        for (i in 1:b) {
+            subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
+        }
     }
+    
     x = unlist(subs)
     y = data[, x]
     
@@ -337,8 +322,6 @@ dat = data.frame(id = rep(1:5, each = 3), times = rep(1:3, 5), measure1 = rnorm(
 dat
 ```
 
-
-
 ```
 ##    id times measure1 score1 code1 measure2 score2 code2
 ## 1   1     1  -0.6265    145   DAB  -0.7075    299   CEB
@@ -358,8 +341,6 @@ dat
 ## 15  5     3   1.1249    152   AED  -0.1351    277   DCE
 ```
 
-
-
 ```r
 # Change the variable order, grouping related columns Note that you do not
 # need to specify full variable names, just enough that the variables can
@@ -367,8 +348,6 @@ dat
 head(df.sorter(dat, var.order = c("id", "ti", "cod", "mea", "sco")))
 ```
 
-
-
 ```
 ##   id times code1 code2 measure1 measure2 score1 score2
 ## 1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
@@ -378,16 +357,12 @@ head(df.sorter(dat, var.order = c("id", "ti", "cod", "mea", "sco")))
 ## 5  2     2   CEB   DAC   0.3295   0.8811    245    260
 ## 6  2     3   EBD   DCA  -0.8205   0.3981    198    216
 ```
-
-
 
 ```r
 # Same output, but with a more awkward syntax
 head(df.sorter(dat, var.order = c(1, 2, 5, 8, 3, 6, 4, 7)))
 ```
 
-
-
 ```
 ##   id times code1 code2 measure1 measure2 score1 score2
 ## 1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
@@ -398,15 +373,11 @@ head(df.sorter(dat, var.order = c(1, 2, 5, 8, 3, 6, 4, 7)))
 ## 6  2     3   EBD   DCA  -0.8205   0.3981    198    216
 ```
 
-
-
 ```r
 # As above, but sorted by 'times' and then 'id'
 head(df.sorter(dat, var.order = c("id", "tim", "cod", "mea", "sco"), 
     col.sort = c(2, 1)))
 ```
-
-
 
 ```
 ##    id times code1 code2 measure1 measure2 score1 score2
@@ -418,15 +389,11 @@ head(df.sorter(dat, var.order = c("id", "tim", "cod", "mea", "sco"),
 ## 2   1     2   DCB   ECD   0.1836   0.3646    180    224
 ```
 
-
-
 ```r
 # Drop 'measure1' and 'measure2', sort by 'times', and 'score1'
 head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c(2, 
     3)))
 ```
-
-
 
 ```
 ##    id times score1 score2 code1 code2
@@ -437,8 +404,6 @@ head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c(2,
 ## 7   3     1    234    300   BCA   CEA
 ## 8   3     2     32    179   CDA   CAD
 ```
-
-
 
 ```r
 # As above, but using names
@@ -446,8 +411,6 @@ head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c("time
     "score1")))
 ```
 
-
-
 ```
 ##    id times score1 score2 code1 code2
 ## 4   2     1     56    175   AED   DBA
@@ -458,14 +421,10 @@ head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c("time
 ## 8   3     2     32    179   CDA   CAD
 ```
 
-
-
 ```r
 # Just sort by columns, first by 'times' then by 'id'
 head(df.sorter(dat, col.sort = c("times", "id")))
 ```
-
-
 
 ```
 ##    id times measure1 score1 code1 measure2 score2 code2
@@ -477,13 +436,9 @@ head(df.sorter(dat, col.sort = c("times", "id")))
 ## 2   1     2   0.1836    180   DCB   0.3646    224   ECD
 ```
 
-
-
 ```r
 head(df.sorter(dat, col.sort = c("code1")))  # Sorting by character values
 ```
-
-
 
 ```
 ##    id times measure1 score1 code1 measure2 score2 code2
@@ -495,6 +450,21 @@ head(df.sorter(dat, col.sort = c("code1")))  # Sorting by character values
 ## 5   2     2   0.3295    245   CEB   0.8811    260   DAC
 ```
 
+```r
+# Pattern matching anywhere in the variable name
+head(df.sorter(dat, var.order = "co", at.start = FALSE))
+```
+
+```
+##   code1 code2 score1 score2
+## 1   DAB   CEB    145    299
+## 2   DCB   ECD    180    224
+## 3   EBA   DAE    148    222
+## 4   AED   DBA     56    175
+## 5   CEB   DAC    245    260
+## 6   EBD   DCA    198    216
+```
+
 
 
 
@@ -502,7 +472,6 @@ To Do
 -----
 
 * Add an option to sort ascending or descending---at the moment, not supported.
-* Modify the `grep` function for `var.order` to only match strings from the start of a variable name.
 
 
 
@@ -603,8 +572,6 @@ dat = data.frame(V1 = 1:50, V2 = rnorm(50), V3 = round(abs(rnorm(50)),
 summary(dat)
 ```
 
-
-
 ```
 ##        V1             V2               V3              V4       
 ##  Min.   : 1.0   Min.   :-2.215   Min.   :0.000   Min.   : 2.00  
@@ -615,14 +582,10 @@ summary(dat)
 ##  Max.   :50.0   Max.   : 1.595   Max.   :2.400   Max.   :29.00  
 ```
 
-
-
 ```r
 # Get the rows corresponding to the 'min', 'median', and 'max' of 'V4'
 row.extractor(dat, 4)
 ```
-
-
 
 ```
 ##    V1      V2   V3 V4
@@ -636,21 +599,15 @@ row.extractor(dat, 4)
 ## 50 50  0.8811 0.47 29
 ```
 
-
-
 ```r
 # Get the 'min' rows only, referenced by the variable name
 row.extractor(dat, "V4", "min")
 ```
 
-
-
 ```
 ##    V1     V2 V3 V4
 ## 28 28 -1.471  0  2
 ```
-
-
 
 ```r
 # Get the 'median' rows only. Notice that there are two rows since we have
@@ -659,22 +616,16 @@ row.extractor(dat, "V4", "min")
 row.extractor(dat, "V4", "median")
 ```
 
-
-
 ```
 ##    V1      V2   V3 V4
 ## 47 47  0.3646 1.28 13
 ## 29 29 -0.4782 0.07 13
 ```
 
-
-
 ```r
 # Get the rows corresponding to the deciles of 'V3'
 row.extractor(dat, "V3", seq(0.1, 1, 0.1))
 ```
-
-
 
 ```
 ##    V1       V2   V3 V4
