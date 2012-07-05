@@ -3,6 +3,7 @@ concat.data = read.csv("./data/concatenated-cells.csv")
 source("./scripts/concat.split.R")
 head(concat.data)
 head(concat.split(concat.data, "Likes", drop.col=TRUE))
+head(concat.split(concat.data, "Hates", sep=";", drop.col=TRUE))
 head(concat.split(concat.data, 2, mode="value", drop.col=T))
 head(concat.split(concat.data, "Siblings"))
 
@@ -36,6 +37,8 @@ head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"),
 # As above, but using names
 head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), 
                col.sort = c("times", "score1")))
+# "co" is not unique if "at.start=FALSE"
+head(df.sorter(dat, var.order = "co", at.start=FALSE))
 # Just sort by columns, first by 'times' then by 'id'
 head(df.sorter(dat, col.sort = c("times", "id")))
 head(df.sorter(dat, col.sort = c("code1"))) # Sorting by character values

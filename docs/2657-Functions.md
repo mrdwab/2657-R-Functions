@@ -112,7 +112,7 @@ dim(concat.test)
 ```
 
 ```
-## [1] 48  3
+## [1] 48  4
 ```
 
 ```r
@@ -121,13 +121,13 @@ head(concat.test)
 ```
 
 ```
-##     Name     Likes                   Siblings
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery
-## 3   Dana 1,2,4,5,6                     Pierce
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard
-## 5 Ramona   1,2,5,6           Snyder , Joann ,
-## 6 Kelley   1,2,5,6          James , Roxanne ,
+##     Name     Likes                   Siblings    Hates
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;
+## 3   Dana 1,2,4,5,6                     Pierce       2;
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;
+## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;
+## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;
 ```
 
 
@@ -143,13 +143,35 @@ head(concat.split(concat.test, 2))
 ```
 
 ```
-##     Name     Likes                   Siblings Likes_1 Likes_2 Likes_3
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega       1       1      NA
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1      NA
-## 3   Dana 1,2,4,5,6                     Pierce       1       1      NA
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1       1      NA
-## 5 Ramona   1,2,5,6           Snyder , Joann ,       1       1      NA
-## 6 Kelley   1,2,5,6          James , Roxanne ,       1       1      NA
+##     Name     Likes                   Siblings    Hates Likes_1 Likes_2
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;       1       1
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;       1       1
+## 3   Dana 1,2,4,5,6                     Pierce       2;       1       1
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;       1       1
+## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;       1       1
+## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;       1       1
+##   Likes_3 Likes_4 Likes_5 Likes_6
+## 1      NA       1       1       1
+## 2      NA       1       1       1
+## 3      NA       1       1       1
+## 4      NA       1       1       1
+## 5      NA      NA       1       1
+## 6      NA      NA       1       1
+```
+
+```r
+# ... or by name, and drop the offensive first column
+head(concat.split(concat.test, "Likes", drop.col = TRUE))
+```
+
+```
+##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3
+## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       1      NA
+## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA
+## 3   Dana                     Pierce       2;       1       1      NA
+## 4 Carole Colon , Michelle , Ballard     1;4;       1       1      NA
+## 5 Ramona           Snyder , Joann ,   1;2;3;       1       1      NA
+## 6 Kelley          James , Roxanne ,     1;4;       1       1      NA
 ##   Likes_4 Likes_5 Likes_6
 ## 1       1       1       1
 ## 2       1       1       1
@@ -160,25 +182,25 @@ head(concat.split(concat.test, 2))
 ```
 
 ```r
-# ... or by name, and drop the offensive first column
-head(concat.split(concat.test, "Likes", drop.col = TRUE))
+# The 'Hates' column uses a different separator:
+head(concat.split(concat.test, "Hates", sep = ";", drop.col = TRUE))
 ```
 
 ```
-##     Name                   Siblings Likes_1 Likes_2 Likes_3 Likes_4
-## 1   Boyd Reynolds , Albert , Ortega       1       1      NA       1
-## 2  Rufus  Cohen , Bert , Montgomery       1       1      NA       1
-## 3   Dana                     Pierce       1       1      NA       1
-## 4 Carole Colon , Michelle , Ballard       1       1      NA       1
-## 5 Ramona           Snyder , Joann ,       1       1      NA      NA
-## 6 Kelley          James , Roxanne ,       1       1      NA      NA
-##   Likes_5 Likes_6
-## 1       1       1
-## 2       1       1
-## 3       1       1
-## 4       1       1
-## 5       1       1
-## 6       1       1
+##     Name     Likes                   Siblings Hates_1 Hates_2 Hates_3
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega      NA       1      NA
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1       1
+## 3   Dana 1,2,4,5,6                     Pierce      NA       1      NA
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1      NA      NA
+## 5 Ramona   1,2,5,6           Snyder , Joann ,       1       1       1
+## 6 Kelley   1,2,5,6          James , Roxanne ,       1      NA      NA
+##   Hates_4
+## 1       1
+## 2       1
+## 3      NA
+## 4       1
+## 5      NA
+## 6       1
 ```
 
 ```r
@@ -187,20 +209,20 @@ head(concat.split(concat.test, 2, mode = "value", drop.col = TRUE))
 ```
 
 ```
-##     Name                   Siblings Likes_1 Likes_2 Likes_3 Likes_4
-## 1   Boyd Reynolds , Albert , Ortega       1       2      NA       4
-## 2  Rufus  Cohen , Bert , Montgomery       1       2      NA       4
-## 3   Dana                     Pierce       1       2      NA       4
-## 4 Carole Colon , Michelle , Ballard       1       2      NA       4
-## 5 Ramona           Snyder , Joann ,       1       2      NA      NA
-## 6 Kelley          James , Roxanne ,       1       2      NA      NA
-##   Likes_5 Likes_6
-## 1       5       6
-## 2       5       6
-## 3       5       6
-## 4       5       6
-## 5       5       6
-## 6       5       6
+##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3
+## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       2      NA
+## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       2      NA
+## 3   Dana                     Pierce       2;       1       2      NA
+## 4 Carole Colon , Michelle , Ballard     1;4;       1       2      NA
+## 5 Ramona           Snyder , Joann ,   1;2;3;       1       2      NA
+## 6 Kelley          James , Roxanne ,     1;4;       1       2      NA
+##   Likes_4 Likes_5 Likes_6
+## 1       4       5       6
+## 2       4       5       6
+## 3       4       5       6
+## 4       4       5       6
+## 5      NA       5       6
+## 6      NA       5       6
 ```
 
 ```r
@@ -209,13 +231,13 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 ```
 
 ```
-##     Name     Likes Siblings_1 Siblings_2  Siblings_3
-## 1   Boyd 1,2,4,5,6  Reynolds     Albert       Ortega
-## 2  Rufus 1,2,4,5,6     Cohen       Bert   Montgomery
-## 3   Dana 1,2,4,5,6     Pierce       <NA>        <NA>
-## 4 Carole 1,2,4,5,6     Colon   Michelle      Ballard
-## 5 Ramona   1,2,5,6    Snyder      Joann         <NA>
-## 6 Kelley   1,2,5,6     James    Roxanne         <NA>
+##     Name     Likes    Hates Siblings_1 Siblings_2  Siblings_3
+## 1   Boyd 1,2,4,5,6     2;4;  Reynolds     Albert       Ortega
+## 2  Rufus 1,2,4,5,6 1;2;3;4;     Cohen       Bert   Montgomery
+## 3   Dana 1,2,4,5,6       2;     Pierce       <NA>        <NA>
+## 4 Carole 1,2,4,5,6     1;4;     Colon   Michelle      Ballard
+## 5 Ramona   1,2,5,6   1;2;3;    Snyder      Joann         <NA>
+## 6 Kelley   1,2,5,6     1;4;     James    Roxanne         <NA>
 ```
 
 
@@ -474,6 +496,158 @@ To Do
 * Add an option to sort ascending or descending---at the moment, not supported.
 
 
+
+\newpage
+
+multi.freq.table
+================
+
+What it Does
+------------
+The `multi.freq.table` function takes a data frame containing boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers.
+
+Arguments
+---------
+* `data`: The multiple responses that need to be tabulated.
+* `sep`: The desired separator for collapsing the combinations of options.
+    * Defaults to `""` (collapsing with no space between each option name).
+* `dropzero`: Should combinations with a frequency of zero be dropped from the final table?
+    * Defaults to `FALSE`.
+* `clean`: Should the original tabulated data be retained or dropped from the final table?
+    * Defaults to `TRUE`.
+
+The Function
+------------
+
+
+```r
+multi.freq.table = function(data, sep = "", dropzero = FALSE, clean = TRUE) {
+    
+    counts = data.frame(table(data))
+    N = ncol(counts)
+    counts$Combn = apply(counts[-N] == 1, 1, function(x) paste(names(counts[-N])[x], 
+        collapse = sep))
+    if (isTRUE(dropzero)) {
+        counts = counts[counts$Freq != 0, ]
+    } else if (!isTRUE(dropzero)) {
+        counts = counts
+    }
+    if (isTRUE(clean)) {
+        counts = data.frame(Combn = counts$Combn, Freq = counts$Freq)
+    }
+    counts
+}
+```
+
+
+
+
+
+Examples
+--------
+
+
+```r
+# Make up some data
+set.seed(1)
+dat = data.frame(A = sample(c(0, 1), 20, replace = TRUE), B = sample(c(0, 
+    1), 20, replace = TRUE), C = sample(c(0, 1), 20, replace = TRUE), D = sample(c(0, 
+    1), 20, replace = TRUE), E = sample(c(0, 1), 20, replace = TRUE))
+# View your data
+dat
+```
+
+```
+##    A B C D E
+## 1  0 1 1 1 0
+## 2  0 0 1 0 1
+## 3  1 1 1 0 0
+## 4  1 0 1 0 0
+## 5  0 0 1 1 1
+## 6  1 0 1 0 0
+## 7  1 0 0 0 1
+## 8  1 0 0 1 0
+## 9  1 1 1 0 0
+## 10 0 0 1 1 0
+## 11 0 0 0 0 0
+## 12 0 1 1 1 0
+## 13 1 0 0 0 1
+## 14 0 0 0 0 1
+## 15 1 1 0 0 1
+## 16 0 1 0 1 1
+## 17 1 1 0 1 0
+## 18 1 0 1 0 0
+## 19 0 1 1 1 1
+## 20 1 0 0 1 1
+```
+
+```r
+# Apply the function with all defaults accepted
+multi.freq.table(dat)
+```
+
+```
+##    Combn Freq
+## 1           1
+## 2      A    0
+## 3      B    0
+## 4     AB    0
+## 5      C    0
+## 6     AC    3
+## 7     BC    0
+## 8    ABC    2
+## 9      D    0
+## 10    AD    1
+## 11    BD    0
+## 12   ABD    1
+## 13    CD    1
+## 14   ACD    0
+## 15   BCD    2
+## 16  ABCD    0
+## 17     E    1
+## 18    AE    2
+## 19    BE    0
+## 20   ABE    1
+## 21    CE    1
+## 22   ACE    0
+## 23   BCE    0
+## 24  ABCE    0
+## 25    DE    0
+## 26   ADE    1
+## 27   BDE    1
+## 28  ABDE    0
+## 29   CDE    1
+## 30  ACDE    0
+## 31  BCDE    1
+## 32 ABCDE    0
+```
+
+```r
+# Tabulate only on variables 'A', 'B', and 'D', with a different
+# separator, dropping any zero frequency values, and keeping the original
+# tabulations.  Note that there are no solitary 'B' responses.
+multi.freq.table(dat[c(1, 2, 4)], sep = "-", dropzero = TRUE, clean = FALSE)
+```
+
+```
+##   A B D Freq Combn
+## 1 0 0 0    3      
+## 2 1 0 0    5     A
+## 4 1 1 0    3   A-B
+## 5 0 0 1    2     D
+## 6 1 0 1    2   A-D
+## 7 0 1 1    4   B-D
+## 8 1 1 1    1 A-B-D
+```
+
+
+
+
+
+References
+----------
+`apply` shortcut for creating the `Combn` column in the output by [Justin](http://stackoverflow.com/users/906490/justin)  
+See: [http://stackoverflow.com/q/11348391/1270695](http://stackoverflow.com/q/11348391/1270695)
 
 \newpage
 

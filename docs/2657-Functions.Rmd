@@ -103,6 +103,8 @@ Notice that the data have been entered in a very silly manner. Let's split it up
 head(concat.split(concat.test, 2))
 # ... or by name, and drop the offensive first column
 head(concat.split(concat.test, "Likes", drop.col=TRUE))
+# The "Hates" column uses a different separator:
+head(concat.split(concat.test, "Hates", sep=";", drop.col=TRUE))
 # Retain the original values
 head(concat.split(concat.test, 2, mode="value", drop.col=TRUE))
 # Let's try splitting some strings... Same syntax
@@ -227,6 +229,74 @@ To Do
 * Add an option to sort ascending or descending---at the moment, not supported.
 
 
+
+\newpage
+
+multi.freq.table
+================
+
+What it Does
+------------
+The `multi.freq.table` function takes a data frame containing boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers.
+
+Arguments
+---------
+* `data`: The multiple responses that need to be tabulated.
+* `sep`: The desired separator for collapsing the combinations of options.
+    * Defaults to `""` (collapsing with no space between each option name).
+* `dropzero`: Should combinations with a frequency of zero be dropped from the final table?
+    * Defaults to `FALSE`.
+* `clean`: Should the original tabulated data be retained or dropped from the final table?
+    * Defaults to `TRUE`.
+
+The Function
+------------
+```{r multi_freq_table_function}
+multi.freq.table = function(data, sep="", dropzero=FALSE, clean=TRUE) {
+  
+  counts = data.frame(table(data))
+  N = ncol(counts)
+  counts$Combn = apply(counts[-N] == 1, 1, 
+                       function(x) paste(names(counts[-N])[x],
+                                         collapse=sep))
+  if (isTRUE(dropzero)) {
+    counts = counts[counts$Freq != 0, ]
+  } else if (!isTRUE(dropzero)) {
+    counts = counts
+  }
+  if (isTRUE(clean)) {
+    counts = data.frame(Combn = counts$Combn, Freq = counts$Freq)
+  } 
+  counts
+}
+```
+
+
+Examples
+--------
+```{r multi_freq_table_examples}
+# Make up some data
+set.seed(1)
+dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE),
+                 B = sample(c(0, 1), 20, replace=TRUE),
+                 C = sample(c(0, 1), 20, replace=TRUE),
+                 D = sample(c(0, 1), 20, replace=TRUE),
+                 E = sample(c(0, 1), 20, replace=TRUE))
+# View your data
+dat
+# Apply the function with all defaults accepted
+multi.freq.table(dat)
+# Tabulate only on variables "A", "B", and "D", with a different
+# separator, dropping any zero frequency values, and keeping the original tabulations.
+# Note that there are no solitary "B" responses.
+multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=TRUE, clean=FALSE)
+```
+
+
+References
+----------
+`apply` shortcut for creating the `Combn` column in the output by [Justin](http://stackoverflow.com/users/906490/justin)  
+See: [http://stackoverflow.com/q/11348391/1270695](http://stackoverflow.com/q/11348391/1270695)
 
 \newpage
 
