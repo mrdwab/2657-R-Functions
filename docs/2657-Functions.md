@@ -2,6 +2,7 @@
 % Ananda Mahto
 
 \newpage
+\toc
 
 concat.split
 ============
