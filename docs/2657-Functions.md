@@ -641,7 +641,11 @@ multi.freq.table(dat[c(1, 2, 4)], sep = "-", dropzero = TRUE, clean = FALSE)
 ```
 
 
+To Do
+-----
 
+* Add columns for percent and cumulative percent like Stata's tabulate output.
+* Add an option to drop zero combinations (again, like Stata's tabulate output).
 
 
 References
