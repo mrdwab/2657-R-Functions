@@ -886,10 +886,6 @@ multi.freq.table
 
 
 ```
-Warning: incomplete final line found on
-'~/2657-R-Functions/scripts/multi.freq.table.R'```
-
-```
 multi.freq.table = function(data, sep="", dropzero=FALSE, clean=TRUE) {
   # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.

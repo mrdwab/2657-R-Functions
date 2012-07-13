@@ -1642,46 +1642,37 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 
 <h2>multi.freq.table</h2>
 
-<pre><code class="no-highlight">Warning: incomplete final line found on
-&#39;~/2657-R-Functions/scripts/multi.freq.table.R&#39;```
+<pre><code class="no-highlight">multi.freq.table = function(data, sep=&quot;&quot;, dropzero=FALSE, clean=TRUE) {
+  # Takes boolean multiple-response data and tabulates it according
+  #   to the possible combinations of each variable.
+  #
+  # === EXAMPLES ===
+  #     set.seed(1)
+  #     dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE), 
+  #                      B = sample(c(0, 1), 20, replace=TRUE), 
+  #                      C = sample(c(0, 1), 20, replace=TRUE),
+  #                      D = sample(c(0, 1), 20, replace=TRUE),
+  #                      E = sample(c(0, 1), 20, replace=TRUE))
+  #   multi.freq.table(dat)
+  #   multi.freq.table(dat[1:3], sep=&quot;-&quot;, dropzero=TRUE)
+  #
+  # See: http://stackoverflow.com/q/11348391/1270695
 
-</code></pre>
-
-<p>multi.freq.table = function(data, sep=&ldquo;&rdquo;, dropzero=FALSE, clean=TRUE) {<br/>
-  # Takes boolean multiple-response data and tabulates it according<br/>
-  #   to the possible combinations of each variable.<br/>
-  #<br/>
-  # === EXAMPLES ===<br/>
-  #     set.seed(1)<br/>
-  #     dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE), <br/>
-  #                      B = sample(c(0, 1), 20, replace=TRUE), <br/>
-  #                      C = sample(c(0, 1), 20, replace=TRUE),<br/>
-  #                      D = sample(c(0, 1), 20, replace=TRUE),<br/>
-  #                      E = sample(c(0, 1), 20, replace=TRUE))<br/>
-  #   multi.freq.table(dat)<br/>
-  #   multi.freq.table(dat[1:3], sep=&ldquo;-&rdquo;, dropzero=TRUE)<br/>
-  #<br/>
-  # See: <a href="http://stackoverflow.com/q/11348391/1270695">http://stackoverflow.com/q/11348391/1270695</a></p>
-
-<p>counts = data.frame(table(data))<br/>
-  N = ncol(counts)<br/>
-  counts$Combn = apply(counts[-N] == 1, 1, <br/>
-                       function(x) paste(names(counts[-N])[x],<br/>
-                                         collapse=sep))<br/>
-  if (isTRUE(dropzero)) {<br/>
-    counts = counts[counts$Freq != 0, ]<br/>
-  } else if (!isTRUE(dropzero)) {<br/>
-    counts = counts<br/>
-  }<br/>
-  if (isTRUE(clean)) {<br/>
-    counts = data.frame(Combn = counts$Combn, Freq = counts$Freq)<br/>
-  } <br/>
-  counts<br/>
-}</p>
-
-<pre><code class="no-highlight">
-
-
+  counts = data.frame(table(data))
+  N = ncol(counts)
+  counts$Combn = apply(counts[-N] == 1, 1, 
+                       function(x) paste(names(counts[-N])[x],
+                                         collapse=sep))
+  if (isTRUE(dropzero)) {
+    counts = counts[counts$Freq != 0, ]
+  } else if (!isTRUE(dropzero)) {
+    counts = counts
+  }
+  if (isTRUE(clean)) {
+    counts = data.frame(Combn = counts$Combn, Freq = counts$Freq)
+  } 
+  counts
+}
 </code></pre>
 
 </body>
