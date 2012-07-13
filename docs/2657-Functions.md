@@ -190,6 +190,7 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 To Do
 -----
 
+* Add the option to put the output as `list`s instead of adding multiple columns to the `data.frame`.
 * Modify the function so that you can split multiple columns in one go?
 
 References
@@ -541,78 +542,16 @@ Arguments
 * `extract.by`: the column which will be used as the reference for extraction; can be specified either by the column number or the variable name.
 * `what`: options are `min` (for all rows matching the minimum value), `median` (for the median row or rows), `max` (for all rows matching the maximum value), or `all` (for `min`, `median`, and `max`); alternatively, a numeric vector can be specified with the desired quantiles, for instance `c(0, .25, .5, .75, 1)`
 
-The Function
-------------
-
-
-
-```r
-row.extractor = function(data, extract.by, what = "all") {
-    
-    if (is.numeric(extract.by)) {
-        extract.by = extract.by
-    } else if (is.numeric(extract.by) != 0) {
-        extract.by = which(colnames(data) %in% "extract.by")
-    }
-    
-    if (is.character(what)) {
-        which.median = function(data, extract.by) {
-            a = data[, extract.by]
-            if (length(a)%%2 != 0) {
-                which(a == median(a))
-            } else if (length(a)%%2 == 0) {
-                b = sort(a)[c(length(a)/2, length(a)/2 + 1)]
-                c(max(which(a == b[1])), min(which(a == b[2])))
-            }
-        }
-        
-        X1 = data[which(data[extract.by] == min(data[extract.by])), ]  # min
-        X2 = data[which(data[extract.by] == max(data[extract.by])), ]  # max
-        X3 = data[which.median(data, extract.by), ]  # median
-        
-        if (identical(what, "min")) {
-            X1
-        } else if (identical(what, "max")) {
-            X2
-        } else if (identical(what, "median")) {
-            X3
-        } else if (identical(what, "all")) {
-            rbind(X1, X3, X2)
-        }
-    } else if (is.numeric(what)) {
-        which.quantile <- function(data, extract.by, what, na.rm = FALSE) {
-            
-            x = data[, extract.by]
-            
-            if (!na.rm & any(is.na(x))) 
-                return(rep(NA_integer_, length(what)))
-            
-            o <- order(x)
-            n <- sum(!is.na(x))
-            o <- o[seq_len(n)]
-            
-            nppm <- n * what - 0.5
-            j <- floor(nppm)
-            h <- ifelse((nppm == j) & ((j%%2L) == 0L), 0, 1)
-            j <- j + h
-            
-            j[j == 0] <- 1
-            o[j]
-        }
-        data[which.quantile(data, extract.by, what), ]  # quantile
-    }
-}
-```
-
-
-
-
 Examples
 --------
 
 
 
 ```r
+# Load the function!  require(RCurl) baseURL =
+# c('https://raw.github.com/mrdwab/2657-R-Functions/master/')
+source(textConnection(getURL(paste0(baseURL, "scripts/row.extractor.R"))))
+
 # Make up some data
 set.seed(1)
 dat = data.frame(V1 = 1:50, V2 = rnorm(50), V3 = round(abs(rnorm(50)), 
@@ -916,6 +855,94 @@ multi.freq.table = function(data, sep="", dropzero=FALSE, clean=TRUE) {
     counts = data.frame(Combn = counts$Combn, Freq = counts$Freq)
   } 
   counts
+}
+```
+
+
+
+
+\newpage
+
+row.extractor
+---------------
+
+
+
+```
+row.extractor = function(data, extract.by, what="all") {
+  # Extracts rows with min, median, and max values, or by quantiles.
+  # Values for "what" can be "min", "median", "max", "all", or a
+  #   vector specifying the desired quantiles.
+  # Values for "extract.by" can be the variable name or number.
+  #
+  # === EXAMPLES ===
+  #
+  #    set.seed(1)
+  #    dat = data.frame(V1 = 1:10, V2 = rnorm(10), V3 = rnorm(10), 
+  #                     V4 = sample(1:20, 10, replace=T))
+  #    dat2 = dat[-10,]
+  #    row.extractor(dat, 4, "all")
+  #    row.extractor(dat1, 4, "min")
+  #    row.extractor(dat, "V4", "median")
+  #    row.extractor(dat, 4, c(0, .5, 1))
+  #    row.extractor(dat, "V4", c(0, .25, .5, .75, 1))
+  #
+  # "which.quantile" function by cbeleites:
+  # http://stackoverflow.com/users/755257/cbeleites
+  # See: http://stackoverflow.com/q/10256503/1270695
+  
+  if (is.numeric(extract.by)) {
+    extract.by = extract.by
+  } else if (is.numeric(extract.by) != 0) {
+    extract.by = which(colnames(data) %in% "extract.by")
+  } 
+  
+  if (is.character(what)) {
+    which.median = function(data, extract.by) {
+      a = data[, extract.by]
+      if (length(a) %% 2 != 0) {
+        which(a == median(a))
+      } else if (length(a) %% 2 == 0) {
+        b = sort(a)[c(length(a)/2, length(a)/2+1)]
+        c(max(which(a == b[1])), min(which(a == b[2])))
+      }
+    }
+    
+    X1 = data[which(data[extract.by] == min(data[extract.by])), ] # min
+    X2 = data[which(data[extract.by] == max(data[extract.by])), ] # max
+    X3 = data[which.median(data, extract.by), ]                # median
+    
+    if (identical(what, "min")) {
+      X1
+    } else if (identical(what, "max")) {
+      X2
+    } else if (identical(what, "median")) {
+      X3
+    } else if (identical(what, "all")) {
+      rbind(X1, X3, X2)
+    }
+  } else if (is.numeric(what)) {
+    which.quantile <- function (data, extract.by, what, na.rm = FALSE) {
+      
+      x = data[ , extract.by]
+      
+      if (! na.rm & any (is.na (x)))
+        return (rep (NA_integer_, length (what)))
+      
+      o <- order (x)
+      n <- sum (! is.na (x))
+      o <- o [seq_len (n)]
+      
+      nppm <- n * what - 0.5
+      j <- floor(nppm)
+      h <- ifelse((nppm == j) & ((j%%2L) == 0L), 0, 1)
+      j <- j + h
+      
+      j [j == 0] <- 1
+      o[j]
+    }
+    data[which.quantile(data, extract.by, what), ]           # quantile
+  }
 }
 ```
 
