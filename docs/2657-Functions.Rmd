@@ -145,8 +145,7 @@ Arguments
 * `col.sort`: the columns *within* which there is data that need to be sorted.
     * Defaults to `NULL`, which means no sorting takes place.
     * Variables can be referred to either by a vector of their index numbers or by a vector of the variable names; full names must be provided.
-* `at.start`: Should the pattern matching be from the start of the variable name?
-    * Defaults to "TRUE".
+* `at.start`: Should the pattern matching be from the start of the variable name? Defaults to "TRUE".
 
 > NOTE: If you are sorting both by variables and within the columns, the `col.sort` order should be based on the location of the columns in the *new* `data.frame`, not the original `data.frame`.
   
@@ -242,12 +241,9 @@ The `multi.freq.table` function takes a data frame containing boolean responses 
 Arguments
 ---------
 * `data`: The multiple responses that need to be tabulated.
-* `sep`: The desired separator for collapsing the combinations of options.
-    * Defaults to `""` (collapsing with no space between each option name).
-* `dropzero`: Should combinations with a frequency of zero be dropped from the final table?
-    * Defaults to `FALSE`.
-* `clean`: Should the original tabulated data be retained or dropped from the final table?
-    * Defaults to `TRUE`.
+* `sep`: The desired separator for collapsing the combinations of options; defaults to `""` (collapsing with no space between each option name).
+* `dropzero`: Should combinations with a frequency of zero be dropped from the final table? Defaults to `FALSE`.
+* `clean`: Should the original tabulated data be retained or dropped from the final table? Defaults to `TRUE`.
 
 The Function
 ------------
