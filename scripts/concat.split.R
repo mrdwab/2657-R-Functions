@@ -47,6 +47,7 @@ concat.split = function(data, split.col, mode=NULL,
   if (identical(what, "string")) {
     temp = as.data.frame(t(sapply(b, '[', 1:ncol)))
     names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep="")
+    temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
     temp1 = cbind(data, temp)
   } else if (identical(what, "numeric")) {
     for (i in 1:nrow(data)) {

@@ -46,6 +46,7 @@
     if (identical(what, &quot;string&quot;)) {
         temp = as.data.frame(t(sapply(b, &quot;[&quot;, 1:ncol)))
         names(temp) = paste(names(data[split.col]), &quot;_&quot;, 1:ncol, sep = &quot;&quot;)
+        temp = apply(temp, 2, function(x) gsub(&quot;^\\s+|\\s+$&quot;, &quot;&quot;, x))
         temp1 = cbind(data, temp)
     } else if (identical(what, &quot;numeric&quot;)) {
         for (i in 1:nrow(data)) {
@@ -198,20 +199,19 @@ head(concat.split(concat.test, 2, mode = &quot;value&quot;, drop.col = TRUE))
 head(concat.split(concat.test, 3, drop.col = TRUE))
 </code></pre>
 
-<pre><code class="no-highlight">##     Name     Likes    Hates Siblings_1 Siblings_2  Siblings_3
-## 1   Boyd 1,2,4,5,6     2;4;  Reynolds     Albert       Ortega
-## 2  Rufus 1,2,4,5,6 1;2;3;4;     Cohen       Bert   Montgomery
-## 3   Dana 1,2,4,5,6       2;     Pierce       &lt;NA&gt;        &lt;NA&gt;
-## 4 Carole 1,2,4,5,6     1;4;     Colon   Michelle      Ballard
-## 5 Ramona   1,2,5,6   1;2;3;    Snyder      Joann         &lt;NA&gt;
-## 6 Kelley   1,2,5,6     1;4;     James    Roxanne         &lt;NA&gt;
+<pre><code class="no-highlight">##     Name     Likes    Hates Siblings_1 Siblings_2 Siblings_3
+## 1   Boyd 1,2,4,5,6     2;4;   Reynolds     Albert     Ortega
+## 2  Rufus 1,2,4,5,6 1;2;3;4;      Cohen       Bert Montgomery
+## 3   Dana 1,2,4,5,6       2;     Pierce       &lt;NA&gt;       &lt;NA&gt;
+## 4 Carole 1,2,4,5,6     1;4;      Colon   Michelle    Ballard
+## 5 Ramona   1,2,5,6   1;2;3;     Snyder      Joann       &lt;NA&gt;
+## 6 Kelley   1,2,5,6     1;4;      James    Roxanne       &lt;NA&gt;
 </code></pre>
 
 <h2>To Do</h2>
 
 <ul>
 <li>Modify the function so that you can split multiple columns in one go?</li>
-<li>Strip whitespace from string output.</li>
 </ul>
 
 <h2>References</h2>
@@ -573,13 +573,6 @@ multi.freq.table(dat[c(1, 2, 4)], sep = &quot;-&quot;, dropzero = TRUE, clean = 
 ## 7 0 1 1    4   B-D
 ## 8 1 1 1    1 A-B-D
 </code></pre>
-
-<h2>To Do</h2>
-
-<ul>
-<li>Add columns for percent and cumulative percent like Stata&#39;s tabulate output.</li>
-<li>Add an option to drop zero combinations (again, like Stata&#39;s tabulate output).</li>
-</ul>
 
 <h2>References</h2>
 
@@ -883,6 +876,7 @@ pre .vhdl .literal { color: rgb(163, 21, 21); }
     if (identical(what, &quot;string&quot;)) {
         temp = as.data.frame(t(sapply(b, &quot;[&quot;, 1:ncol)))
         names(temp) = paste(names(data[split.col]), &quot;_&quot;, 1:ncol, sep = &quot;&quot;)
+        temp = apply(temp, 2, function(x) gsub(&quot;^\\s+|\\s+$&quot;, &quot;&quot;, x))
         temp1 = cbind(data, temp)
     } else if (identical(what, &quot;numeric&quot;)) {
         for (i in 1:nrow(data)) {
@@ -1035,20 +1029,19 @@ head(concat.split(concat.test, 2, mode = &quot;value&quot;, drop.col = TRUE))
 head(concat.split(concat.test, 3, drop.col = TRUE))
 </code></pre>
 
-<pre><code class="no-highlight">##     Name     Likes    Hates Siblings_1 Siblings_2  Siblings_3
-## 1   Boyd 1,2,4,5,6     2;4;  Reynolds     Albert       Ortega
-## 2  Rufus 1,2,4,5,6 1;2;3;4;     Cohen       Bert   Montgomery
-## 3   Dana 1,2,4,5,6       2;     Pierce       &lt;NA&gt;        &lt;NA&gt;
-## 4 Carole 1,2,4,5,6     1;4;     Colon   Michelle      Ballard
-## 5 Ramona   1,2,5,6   1;2;3;    Snyder      Joann         &lt;NA&gt;
-## 6 Kelley   1,2,5,6     1;4;     James    Roxanne         &lt;NA&gt;
+<pre><code class="no-highlight">##     Name     Likes    Hates Siblings_1 Siblings_2 Siblings_3
+## 1   Boyd 1,2,4,5,6     2;4;   Reynolds     Albert     Ortega
+## 2  Rufus 1,2,4,5,6 1;2;3;4;      Cohen       Bert Montgomery
+## 3   Dana 1,2,4,5,6       2;     Pierce       &lt;NA&gt;       &lt;NA&gt;
+## 4 Carole 1,2,4,5,6     1;4;      Colon   Michelle    Ballard
+## 5 Ramona   1,2,5,6   1;2;3;     Snyder      Joann       &lt;NA&gt;
+## 6 Kelley   1,2,5,6     1;4;      James    Roxanne       &lt;NA&gt;
 </code></pre>
 
 <h2>To Do</h2>
 
 <ul>
 <li>Modify the function so that you can split multiple columns in one go?</li>
-<li>Strip whitespace from string output.</li>
 </ul>
 
 <h2>References</h2>
@@ -1410,13 +1403,6 @@ multi.freq.table(dat[c(1, 2, 4)], sep = &quot;-&quot;, dropzero = TRUE, clean = 
 ## 7 0 1 1    4   B-D
 ## 8 1 1 1    1 A-B-D
 </code></pre>
-
-<h2>To Do</h2>
-
-<ul>
-<li>Add columns for percent and cumulative percent like Stata&#39;s tabulate output.</li>
-<li>Add an option to drop zero combinations (again, like Stata&#39;s tabulate output).</li>
-</ul>
 
 <h2>References</h2>
 

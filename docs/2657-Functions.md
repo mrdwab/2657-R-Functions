@@ -51,6 +51,7 @@ concat.split = function(data, split.col, mode = NULL, sep = ",",
     if (identical(what, "string")) {
         temp = as.data.frame(t(sapply(b, "[", 1:ncol)))
         names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep = "")
+        temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
         temp1 = cbind(data, temp)
     } else if (identical(what, "numeric")) {
         for (i in 1:nrow(data)) {
@@ -231,13 +232,13 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 ```
 
 ```
-##     Name     Likes    Hates Siblings_1 Siblings_2  Siblings_3
-## 1   Boyd 1,2,4,5,6     2;4;  Reynolds     Albert       Ortega
-## 2  Rufus 1,2,4,5,6 1;2;3;4;     Cohen       Bert   Montgomery
-## 3   Dana 1,2,4,5,6       2;     Pierce       <NA>        <NA>
-## 4 Carole 1,2,4,5,6     1;4;     Colon   Michelle      Ballard
-## 5 Ramona   1,2,5,6   1;2;3;    Snyder      Joann         <NA>
-## 6 Kelley   1,2,5,6     1;4;     James    Roxanne         <NA>
+##     Name     Likes    Hates Siblings_1 Siblings_2 Siblings_3
+## 1   Boyd 1,2,4,5,6     2;4;   Reynolds     Albert     Ortega
+## 2  Rufus 1,2,4,5,6 1;2;3;4;      Cohen       Bert Montgomery
+## 3   Dana 1,2,4,5,6       2;     Pierce       <NA>       <NA>
+## 4 Carole 1,2,4,5,6     1;4;      Colon   Michelle    Ballard
+## 5 Ramona   1,2,5,6   1;2;3;     Snyder      Joann       <NA>
+## 6 Kelley   1,2,5,6     1;4;      James    Roxanne       <NA>
 ```
 
 
@@ -247,7 +248,6 @@ To Do
 -----
 
 * Modify the function so that you can split multiple columns in one go?
-* Strip whitespace from string output.
 
 References
 ----------
@@ -641,11 +641,7 @@ multi.freq.table(dat[c(1, 2, 4)], sep = "-", dropzero = TRUE, clean = FALSE)
 ```
 
 
-To Do
------
 
-* Add columns for percent and cumulative percent like Stata's tabulate output.
-* Add an option to drop zero combinations (again, like Stata's tabulate output).
 
 
 References
