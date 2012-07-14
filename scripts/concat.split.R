@@ -1,3 +1,4 @@
+## @knitr concatsplit
 concat.split = function(data, split.col, mode=NULL, 
                         sep=",", drop.col=FALSE) {
   # Takes a column with multiple values, splits the values into 

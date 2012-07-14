@@ -1,3 +1,4 @@
+## @knitr scriptsanddata
 load.scripts.and.data = function(path,
                         pattern=list(scripts = "*.R$",
                                      data = "*.rda$|*.Rdata$"), 

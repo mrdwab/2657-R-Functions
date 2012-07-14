@@ -1,3 +1,4 @@
+## @knitr dfsorter
 df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE ) {
   # Sorts a data.frame by columns or rows or both.
   # Can also subset the data columns by using 'var.order'.

@@ -1,6 +1,13 @@
 % 2657 Functions
 % Ananda Mahto
 
+```{r set-options, echo=FALSE, cache=FALSE}
+read_chunk("../scripts/concat.split.R")
+read_chunk("../scripts/df.sorter.R")
+read_chunk("../scripts/multi.freq.table.R")
+read_chunk("../scripts/row.extractor.R")
+```
+
 \newpage
 \tableofcontents
 \newpage
@@ -250,7 +257,7 @@ To load the functions, you can directly source them from the 2657 R Functions pa
 
 You should be able to load the functions using the following (replace `-----------` with the function name):
 
-```{r eval=FALSE}
+```{r rcurl_load_scripts, eval=FALSE}
 require(RCurl)
 baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
 source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
@@ -261,8 +268,7 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 concat.split
 ------------
 
-```{r echo=FALSE, eval=TRUE, comment=NA}
-writeLines(readLines("~/2657-R-Functions/scripts/concat.split.R"))
+```{r concatsplit}
 ```
 
 \newpage
@@ -270,8 +276,7 @@ writeLines(readLines("~/2657-R-Functions/scripts/concat.split.R"))
 df.sorter
 ---------
 
-```{r echo=FALSE, eval=TRUE, comment=NA}
-writeLines(readLines("~/2657-R-Functions/scripts/df.sorter.R"))
+```{r dfsorter}
 ```
 
 \newpage
@@ -279,8 +284,7 @@ writeLines(readLines("~/2657-R-Functions/scripts/df.sorter.R"))
 multi.freq.table
 ----------------
 
-```{r echo=FALSE, eval=TRUE, comment=NA}
-writeLines(readLines("~/2657-R-Functions/scripts/multi.freq.table.R"))
+```{r multifreqtable}
 ```
 
 \newpage
@@ -288,6 +292,5 @@ writeLines(readLines("~/2657-R-Functions/scripts/multi.freq.table.R"))
 row.extractor
 ---------------
 
-```{r echo=FALSE, eval=TRUE, comment=NA}
-writeLines(readLines("~/2657-R-Functions/scripts/row.extractor.R"))
+```{r rowextractor}
 ```
