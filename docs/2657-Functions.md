@@ -14,13 +14,14 @@ concat.split
 What it Does
 ------------
 
-The `concat.split` function takes a column with multiple values, splits the values into separate columns, and returns a new `data.frame`.
+The `concat.split` function takes a column with multiple values, splits the values into a list or into separate columns, and returns a new `data.frame`.
 
 Arguments
 ---------
 
 * `data`: the source `data.frame`.
 * `split.col`: the variable that needs to be split; can be specified either by the column number or the variable name.
+* `to.list`: logical; should the split column be returned as a single variable list (named "original-variable_list") or multiple new variables? If `to.list` is `TRUE`, the `mode` argument is ignored and a list of the original values are returned.
 * `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`).
 * `sep`: the character separating each value (defaults to `","`).
 * `drop.col`: logical (whether to remove the original variable from the output or not; defaults to `TRUE`).
@@ -187,13 +188,54 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 ## 6 Kelley   1,2,5,6     1;4;      James    Roxanne       <NA>
 ```
 
+```r
+# Split up the 'Likes column' into a list variable; retain original column
+head(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE))
+```
+
+```
+##     Name     Likes                   Siblings    Hates    Likes_list
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4; 1, 2, 4, 5, 6
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4; 1, 2, 4, 5, 6
+## 3   Dana 1,2,4,5,6                     Pierce       2; 1, 2, 4, 5, 6
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4; 1, 2, 4, 5, 6
+## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;    1, 2, 5, 6
+## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;    1, 2, 5, 6
+```
+
+```r
+# View the structure of the output for the first 10 rows to verify that
+# the new column is a list; note the difference between 'Likes' and
+# 'Likes_list'.
+str(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE)[1:10, 
+    ])
+```
+
+```
+## 'data.frame':	10 obs. of  5 variables:
+##  $ Name      : Factor w/ 48 levels "Ada","Alexis",..: 6 39 11 7 37 21 46 29 12 47
+##  $ Likes     : Factor w/ 5 levels "1,2,3,4,5","1,2,4,5",..: 3 3 3 3 5 5 3 3 3 4
+##  $ Siblings  : Factor w/ 46 levels "","Alexander , Sidney",..: 36 7 35 8 40 21 19 25 1 23
+##  $ Hates     : Factor w/ 14 levels "1;","1;2;3;",..: 11 3 8 7 2 7 8 3 2 3
+##  $ Likes_list:List of 10
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 5 6
+##   ..$ : num  1 2 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 5
+```
+
 
 
 
 To Do
 -----
 
-* Add the option to put the output as `list`s instead of adding multiple columns to the `data.frame`.
 * Modify the function so that you can split multiple columns in one go?
 
 References
@@ -211,7 +253,7 @@ df.sorter
 What it Does
 ------------
 
-The `df.sorter` function allows you to sort a `data.frame` by columns or rows or both. You can also quickly subset data solums by using the `var.order` argument.
+The `df.sorter` function allows you to sort a `data.frame` by columns or rows or both. You can also quickly subset data columns by using the `var.order` argument.
 
 Arguments
 ---------
@@ -409,7 +451,7 @@ multi.freq.table
 
 What it Does
 ------------
-The `multi.freq.table` function takes a data frame containing boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers.
+The `multi.freq.table` function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers.
 
 Arguments
 ---------
@@ -674,15 +716,16 @@ concat.split
 
 
 ```r
-concat.split = function(data, split.col, mode = NULL, sep = ",", 
-    drop.col = FALSE) {
+concat.split = function(data, split.col, to.list = FALSE, mode = NULL, 
+    sep = ",", drop.col = FALSE) {
     # Takes a column with multiple values, splits the values into separate
     # columns, and returns a new data.frame.  'data' is the source data.frame;
-    # 'split.col' is the variable that needs to be split; 'mode' can be either
-    # 'binary' or 'value' (where 'binary' is default and it recodes values to
-    # 1 or NA); 'sep' is the character separating each value (defaults to
-    # ','); and 'drop.col' is logical (whether to remove the original variable
-    # from the output or not.
+    # 'split.col' is the variable that needs to be split; 'to.list' is whether
+    # the split output should be added as a single variable list (defaults to
+    # 'FALSE'); mode' can be either 'binary' or 'value' (where 'binary' is
+    # default and it recodes values to 1 or NA); 'sep' is the character
+    # separating each value (defaults to ','); and 'drop.col' is logical
+    # (whether to remove the original variable from the output or not.
     # 
     # === EXAMPLES ===
     # 
@@ -703,46 +746,57 @@ concat.split = function(data, split.col, mode = NULL, sep = ",",
     a = as.character(data[, split.col])
     b = strsplit(a, sep)
     
-    if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
-        what = "string"
-        ncol = max(unlist(lapply(b, function(i) length(i))))
-    } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
-        what = "numeric"
-        ncol = max(as.numeric(unlist(b)))
+    if (isTRUE(to.list)) {
+        varname = paste(names(data[split.col]), "_list", sep = "")
+        if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
+            data[varname] = list(lapply(lapply(b, as.character), function(x) gsub("^\\s+|\\s+$", 
+                "", x)))
+        } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
+            data[varname] = list(lapply(b, as.numeric))
+        }
+        if (isTRUE(drop.col)) 
+            data[-split.col] else data
+    } else if (!isTRUE(to.list)) {
+        if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
+            what = "string"
+            ncol = max(unlist(lapply(b, function(i) length(i))))
+        } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
+            what = "numeric"
+            ncol = max(as.numeric(unlist(b)))
+        }
+        
+        m = matrix(nrow = nrow(data), ncol = ncol)
+        v = vector("list", nrow(data))
+        
+        if (identical(what, "string")) {
+            temp = as.data.frame(t(sapply(b, "[", 1:ncol)))
+            names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep = "")
+            temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
+            temp1 = cbind(data, temp)
+        } else if (identical(what, "numeric")) {
+            for (i in 1:nrow(data)) {
+                v[[i]] = as.numeric(strsplit(a, sep)[[i]])
+            }
+            
+            temp = v
+            
+            for (i in 1:nrow(data)) {
+                m[i, temp[[i]]] = temp[[i]]
+            }
+            
+            m = data.frame(m)
+            names(m) = paste(names(data[split.col]), "_", 1:ncol, sep = "")
+            
+            if (is.null(mode) || identical(mode, "binary")) {
+                temp1 = cbind(data, replace(m, m != "NA", 1))
+            } else if (identical(mode, "value")) {
+                temp1 = cbind(data, m)
+            }
+        }
+        
+        if (isTRUE(drop.col)) 
+            temp1[-split.col] else temp1
     }
-    
-    m = matrix(nrow = nrow(data), ncol = ncol)
-    v = vector("list", nrow(data))
-    
-    if (identical(what, "string")) {
-        temp = as.data.frame(t(sapply(b, "[", 1:ncol)))
-        names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep = "")
-        temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
-        temp1 = cbind(data, temp)
-    } else if (identical(what, "numeric")) {
-        for (i in 1:nrow(data)) {
-            v[[i]] = as.numeric(strsplit(a, sep)[[i]])
-        }
-        
-        temp = v
-        
-        for (i in 1:nrow(data)) {
-            m[i, temp[[i]]] = temp[[i]]
-        }
-        
-        m = data.frame(m)
-        names(m) = paste(names(data[split.col]), "_", 1:ncol, sep = "")
-        
-        if (is.null(mode) || identical(mode, "binary")) {
-            temp1 = cbind(data, replace(m, m != "NA", 1))
-        } else if (identical(mode, "value")) {
-            temp1 = cbind(data, m)
-        }
-    }
-    
-    if (isTRUE(drop.col)) 
-        temp1[-split.col] else temp1
-    
 }
 ```
 

@@ -18,13 +18,14 @@ concat.split
 What it Does
 ------------
 
-The `concat.split` function takes a column with multiple values, splits the values into separate columns, and returns a new `data.frame`.
+The `concat.split` function takes a column with multiple values, splits the values into a list or into separate columns, and returns a new `data.frame`.
 
 Arguments
 ---------
 
 * `data`: the source `data.frame`.
 * `split.col`: the variable that needs to be split; can be specified either by the column number or the variable name.
+* `to.list`: logical; should the split column be returned as a single variable list (named "original-variable_list") or multiple new variables? If `to.list` is `TRUE`, the `mode` argument is ignored and a list of the original values are returned.
 * `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`).
 * `sep`: the character separating each value (defaults to `","`).
 * `drop.col`: logical (whether to remove the original variable from the output or not; defaults to `TRUE`).
@@ -65,12 +66,17 @@ head(concat.split(concat.test, "Hates", sep=";", drop.col=TRUE))
 head(concat.split(concat.test, 2, mode="value", drop.col=TRUE))
 # Let's try splitting some strings... Same syntax
 head(concat.split(concat.test, 3, drop.col=TRUE))
+# Split up the "Likes column" into a list variable; retain original column
+head(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE))
+# View the structure of the output for the first 10 rows to verify 
+# that the new column is a list; note the difference between "Likes"
+# and "Likes_list".
+str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, ])
 ```
 
 To Do
 -----
 
-* Add the option to put the output as `list`s instead of adding multiple columns to the `data.frame`.
 * Modify the function so that you can split multiple columns in one go?
 
 References
@@ -88,7 +94,7 @@ df.sorter
 What it Does
 ------------
 
-The `df.sorter` function allows you to sort a `data.frame` by columns or rows or both. You can also quickly subset data solums by using the `var.order` argument.
+The `df.sorter` function allows you to sort a `data.frame` by columns or rows or both. You can also quickly subset data columns by using the `var.order` argument.
 
 Arguments
 ---------
@@ -156,7 +162,7 @@ multi.freq.table
 
 What it Does
 ------------
-The `multi.freq.table` function takes a data frame containing boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers.
+The `multi.freq.table` function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers.
 
 Arguments
 ---------
