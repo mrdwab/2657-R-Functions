@@ -1,12 +1,14 @@
 ## @knitr concatsplit
-concat.split = function(data, split.col, mode=NULL, 
+concat.split = function(data, split.col, to.list=FALSE, mode=NULL, 
                         sep=",", drop.col=FALSE) {
   # Takes a column with multiple values, splits the values into 
   #   separate columns, and returns a new data.frame.
   # 'data' is the source data.frame; 'split.col' is the variable that 
-  #   needs to be split; 'mode' can be either 'binary' or 'value' 
-  #   (where 'binary' is default and it recodes values to 1 or NA);
-  #   'sep' is the character separating each value (defaults to ','); 
+  #   needs to be split; 'to.list' is whether the split output should
+  #   be added as a single variable list (defaults to "FALSE"); 
+  #   mode' can be either 'binary' or 'value' (where 'binary' is 
+  #   default and it recodes values to 1 or NA); 'sep' is the 
+  #   character separating each value (defaults to ','); 
   #   and 'drop.col' is logical (whether to remove the original 
   #   variable from the output or not.
   #
@@ -34,44 +36,56 @@ concat.split = function(data, split.col, mode=NULL,
   a = as.character(data[ , split.col])
   b = strsplit(a, sep)
   
-  if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
-    what = "string"
-    ncol = max(unlist(lapply(b, function(i) length(i))))
-  } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
-    what = "numeric"
-    ncol = max(as.numeric(unlist(b)))
-  }
-  
-  m = matrix(nrow = nrow(data), ncol = ncol)
-  v = vector("list", nrow(data))
-  
-  if (identical(what, "string")) {
-    temp = as.data.frame(t(sapply(b, '[', 1:ncol)))
-    names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep="")
-    temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
-    temp1 = cbind(data, temp)
-  } else if (identical(what, "numeric")) {
-    for (i in 1:nrow(data)) {
-      v[[i]] = as.numeric(strsplit(a, sep)[[i]])
+  if (isTRUE(to.list)) {
+    varname = paste(names(data[split.col]), "_list", sep="")
+    if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
+      data[varname] = list(lapply(lapply(b, as.character),
+                                  function(x) gsub("^\\s+|\\s+$", 
+                                                   "", x)))
+    } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
+      data[varname] = list(lapply(b, as.numeric))
+    } 
+    if (isTRUE(drop.col)) data[-split.col]
+    else data
+  } else if (!isTRUE(to.list)) {
+    if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
+      what = "string"
+      ncol = max(unlist(lapply(b, function(i) length(i))))
+    } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
+      what = "numeric"
+      ncol = max(as.numeric(unlist(b)))
     }
     
-    temp = v
+    m = matrix(nrow = nrow(data), ncol = ncol)
+    v = vector("list", nrow(data))
     
-    for (i in 1:nrow(data)) {
-      m[i, temp[[i]]] = temp[[i]]
-    }
+    if (identical(what, "string")) {
+      temp = as.data.frame(t(sapply(b, '[', 1:ncol)))
+      names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep="")
+      temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
+      temp1 = cbind(data, temp)
+    } else if (identical(what, "numeric")) {
+      for (i in 1:nrow(data)) {
+        v[[i]] = as.numeric(strsplit(a, sep)[[i]])
+      }
+      
+      temp = v
+      
+      for (i in 1:nrow(data)) {
+        m[i, temp[[i]]] = temp[[i]]
+      }
+      
+      m = data.frame(m)
+      names(m) = paste(names(data[split.col]), "_", 1:ncol, sep="")
+      
+      if (is.null(mode) || identical(mode, "binary")) {
+        temp1 = cbind(data, replace(m, m != "NA", 1))
+      } else if (identical(mode, "value")) {
+        temp1 = cbind(data, m)
+      }
+    } 
     
-    m = data.frame(m)
-    names(m) = paste(names(data[split.col]), "_", 1:ncol, sep="")
-    
-    if (is.null(mode) || identical(mode, "binary")) {
-      temp1 = cbind(data, replace(m, m != "NA", 1))
-    } else if (identical(mode, "value")) {
-      temp1 = cbind(data, m)
-    }
-  } 
-  
-  if (isTRUE(drop.col)) temp1[-split.col]
-  else temp1
-  
+    if (isTRUE(drop.col)) temp1[-split.col]
+    else temp1    
+  }  
 }
