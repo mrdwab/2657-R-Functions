@@ -6,13 +6,15 @@
 
 
 
-\newpage
-\pagenumbering{roman}
-\setcounter{page}{1}
+\pagestyle{plain}
 \tableofcontents
-\newpage
-\pagenumbering{arabic}
+\cleardoublepage
+
+\pagestyle{headings}
 \setcounter{page}{1}
+\pagenumbering{arabic}
+
+\part{Function Descriptions and Examples}
 
 concat.split
 ============
@@ -691,10 +693,10 @@ See: [http://stackoverflow.com/q/10256503/1270695](http://stackoverflow.com/q/10
 
 \newpage
 
-\appendix
+\part{The Functions}
 
-The Functions
-=============
+Where to Get the Functions
+==========================
 
 The most current source code for the functions described in this document follow.
 
@@ -712,277 +714,296 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 
 \newpage
 
-concat.split
-------------
+# concat.split
 
 
 ```r
-concat.split = function(data, split.col, to.list = FALSE, mode = NULL, sep = ",", 
-    drop.col = FALSE) {
-    # Takes a column with multiple values, splits the values into separate
-    # columns, and returns a new data.frame.  'data' is the source data.frame;
-    # 'split.col' is the variable that needs to be split; 'to.list' is whether
-    # the split output should be added as a single variable list (defaults to
-    # 'FALSE'); mode' can be either 'binary' or 'value' (where 'binary' is
-    # default and it recodes values to 1 or NA); 'sep' is the character
-    # separating each value (defaults to ','); and 'drop.col' is logical
-    # (whether to remove the original variable from the output or not.
-    # 
-    # === EXAMPLES ===
-    # 
-    # dat = data.frame(V1 = c('1, 2, 4', '3, 4, 5', '1, 2, 5', '4', '1, 2, 3,
-    # 5'), V2 = c('1;2;3;4', '1', '2;5', '3;2', '2;3;4')) dat2 = data.frame(V1
-    # = c('Fred, John, Sue', 'Jerry, Jill', 'Sally, Ryan', 'Susan, Amos,
-    # Ben'))
-    # 
-    # concat.split(dat, 1) concat.split(dat, 2, sep=';') concat.split(dat,
-    # 'V2', sep=';', mode='value') concat.split(dat, 'V1', mode='binary')
-    # concat.split(dat2, 1) concat.split(dat2, 'V1', drop.col=TRUE)
-    # 
-    # See: http://stackoverflow.com/q/10100887/1270695
-    
-    if (is.numeric(split.col)) 
-        split.col = split.col else split.col = which(colnames(data) %in% split.col)
-    
-    a = as.character(data[, split.col])
-    b = strsplit(a, sep)
-    
-    if (isTRUE(to.list)) {
-        varname = paste(names(data[split.col]), "_list", sep = "")
-        if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
-            data[varname] = list(lapply(lapply(b, as.character), function(x) gsub("^\\s+|\\s+$", 
-                "", x)))
-        } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
-            data[varname] = list(lapply(b, as.numeric))
-        }
-        if (isTRUE(drop.col)) 
-            data[-split.col] else data
-    } else if (!isTRUE(to.list)) {
-        if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
-            what = "string"
-            ncol = max(unlist(lapply(b, function(i) length(i))))
-        } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
-            what = "numeric"
-            ncol = max(as.numeric(unlist(b)))
-        }
-        
-        m = matrix(nrow = nrow(data), ncol = ncol)
-        v = vector("list", nrow(data))
-        
-        if (identical(what, "string")) {
-            temp = as.data.frame(t(sapply(b, "[", 1:ncol)))
-            names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep = "")
-            temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
-            temp1 = cbind(data, temp)
-        } else if (identical(what, "numeric")) {
-            for (i in 1:nrow(data)) {
-                v[[i]] = as.numeric(strsplit(a, sep)[[i]])
-            }
-            
-            temp = v
-            
-            for (i in 1:nrow(data)) {
-                m[i, temp[[i]]] = temp[[i]]
-            }
-            
-            m = data.frame(m)
-            names(m) = paste(names(data[split.col]), "_", 1:ncol, sep = "")
-            
-            if (is.null(mode) || identical(mode, "binary")) {
-                temp1 = cbind(data, replace(m, m != "NA", 1))
-            } else if (identical(mode, "value")) {
-                temp1 = cbind(data, m)
-            }
-        }
-        
-        if (isTRUE(drop.col)) 
-            temp1[-split.col] else temp1
+concat.split = function(data, split.col, to.list=FALSE, mode=NULL, 
+                        sep=",", drop.col=FALSE) {
+  # Takes a column with multiple values, splits the values into 
+  #   separate columns, and returns a new data.frame.
+  # 'data' is the source data.frame; 'split.col' is the variable that 
+  #   needs to be split; 'to.list' is whether the split output should
+  #   be added as a single variable list (defaults to "FALSE"); 
+  #   mode' can be either 'binary' or 'value' (where 'binary' is 
+  #   default and it recodes values to 1 or NA); 'sep' is the 
+  #   character separating each value (defaults to ','); 
+  #   and 'drop.col' is logical (whether to remove the original 
+  #   variable from the output or not.
+  #
+  # === EXAMPLES ===
+  #
+  #       dat = data.frame(V1 = c("1, 2, 4", "3, 4, 5", 
+  #                               "1, 2, 5", "4", "1, 2, 3, 5"),
+  #                        V2 = c("1;2;3;4", "1", "2;5", 
+  #                               "3;2", "2;3;4"))
+  #       dat2 = data.frame(V1 = c("Fred, John, Sue", "Jerry, Jill", 
+  #                                "Sally, Ryan", "Susan, Amos, Ben"))
+  #
+  #       concat.split(dat, 1) 
+  #       concat.split(dat, 2, sep=";")
+  #       concat.split(dat, "V2", sep=";", mode="value")
+  #       concat.split(dat, "V1", mode="binary")
+  #       concat.split(dat2, 1)
+  #       concat.split(dat2, "V1", drop.col=TRUE)
+  #
+  # See: http://stackoverflow.com/q/10100887/1270695
+
+  if (is.numeric(split.col)) split.col = split.col
+  else split.col = which(colnames(data) %in% split.col)
+  
+  a = as.character(data[ , split.col])
+  b = strsplit(a, sep)
+  
+  if (isTRUE(to.list)) {
+    varname = paste(names(data[split.col]), "_list", sep="")
+    if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
+      data[varname] = list(lapply(lapply(b, as.character),
+                                  function(x) gsub("^\\s+|\\s+$", 
+                                                   "", x)))
+    } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
+      data[varname] = list(lapply(b, as.numeric))
+    } 
+    if (isTRUE(drop.col)) data[-split.col]
+    else data
+  } else if (!isTRUE(to.list)) {
+    if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
+      what = "string"
+      ncol = max(unlist(lapply(b, function(i) length(i))))
+    } else if (!is.na(try(max(as.numeric(unlist(b)))))) {
+      what = "numeric"
+      ncol = max(as.numeric(unlist(b)))
     }
+    
+    m = matrix(nrow = nrow(data), ncol = ncol)
+    v = vector("list", nrow(data))
+    
+    if (identical(what, "string")) {
+      temp = as.data.frame(t(sapply(b, '[', 1:ncol)))
+      names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep="")
+      temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
+      temp1 = cbind(data, temp)
+    } else if (identical(what, "numeric")) {
+      for (i in 1:nrow(data)) {
+        v[[i]] = as.numeric(strsplit(a, sep)[[i]])
+      }
+      
+      temp = v
+      
+      for (i in 1:nrow(data)) {
+        m[i, temp[[i]]] = temp[[i]]
+      }
+      
+      m = data.frame(m)
+      names(m) = paste(names(data[split.col]), "_", 1:ncol, sep="")
+      
+      if (is.null(mode) || identical(mode, "binary")) {
+        temp1 = cbind(data, replace(m, m != "NA", 1))
+      } else if (identical(mode, "value")) {
+        temp1 = cbind(data, m)
+      }
+    } 
+    
+    if (isTRUE(drop.col)) temp1[-split.col]
+    else temp1    
+  }  
 }
 ```
 
 
 \newpage
 
-df.sorter
----------
+# df.sorter
 
 
 ```r
-df.sorter = function(data, var.order = names(data), col.sort = NULL, at.start = TRUE) {
-    # Sorts a data.frame by columns or rows or both.  Can also subset the data
-    # columns by using 'var.order'.  Can refer to variables either by names or
-    # number.  If referring to variable by number, and sorting both the order
-    # of variables and the sorting within variables, refer to the variable
-    # numbers of the final data.frame.
-    # 
-    # === EXAMPLES ===
-    # 
-    # library(foreign) temp =
-    # 'http://www.ats.ucla.edu/stat/stata/modules/kidshtwt.dta' kidshtwt =
-    # read.dta(temp); rm(temp) df.sorter(kidshtwt, var.order = c('fam', 'bir',
-    # 'wt', 'ht')) df.sorter(kidshtwt, var.order = c('fam', 'bir', 'wt',
-    # 'ht'), col.sort = c('birth', 'famid')) # USE FULL NAMES HERE
-    # df.sorter(kidshtwt, var.order = c(1:4), # DROP THE WT COLUMNS col.sort =
-    # 3) # SORT BY HT1
-    
-    if (is.numeric(var.order)) 
-        var.order = colnames(data)[var.order] else var.order = var.order
-    
-    a = names(data)
-    b = length(var.order)
-    subs = vector("list", b)
-    
-    if (isTRUE(at.start)) {
-        for (i in 1:b) {
-            subs[[i]] = sort(grep(paste("^", var.order[i], sep = "", collapse = ""), 
-                a, value = TRUE))
-        }
-    } else if (!isTRUE(at.start)) {
-        for (i in 1:b) {
-            subs[[i]] = sort(grep(var.order[i], a, value = TRUE))
-        }
+df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE ) {
+  # Sorts a data.frame by columns or rows or both.
+  # Can also subset the data columns by using 'var.order'.
+  # Can refer to variables either by names or number.
+  # If referring to variable by number, and sorting both the order
+  #   of variables and the sorting within variables, refer to the
+  #   variable numbers of the final data.frame.
+  #
+  # === EXAMPLES ===
+  #
+  #    library(foreign)
+  #    temp = "http://www.ats.ucla.edu/stat/stata/modules/kidshtwt.dta"
+  #    kidshtwt = read.dta(temp); rm(temp)
+  #    df.sorter(kidshtwt, var.order = c("fam", "bir", "wt", "ht"))
+  #    df.sorter(kidshtwt, var.order = c("fam", "bir", "wt", "ht"),
+  #              col.sort = c("birth", "famid")) # USE FULL NAMES HERE
+  #    df.sorter(kidshtwt, var.order = c(1:4),   # DROP THE WT COLUMNS
+  #              col.sort = 3)                   # SORT BY HT1  
+
+  if (is.numeric(var.order)) 
+    var.order = colnames(data)[var.order]
+  else var.order = var.order
+  
+  a = names(data)
+  b = length(var.order)
+  subs = vector("list", b)
+  
+  if (isTRUE(at.start)) {
+    for (i in 1:b) {
+      subs[[i]] = sort(grep(paste("^", var.order[i],
+                                  sep="", collapse=""),
+                            a, value=TRUE))
+    }  
+  } else if (!isTRUE(at.start)) {
+    for (i in 1:b) {
+      subs[[i]] = sort(grep(var.order[i], a, value=TRUE))
     }
-    
-    x = unlist(subs)
-    y = data[, x]
-    
-    if (is.null(col.sort)) {
-        y
-    } else if (is.numeric(col.sort)) {
-        col.sort = colnames(y)[col.sort]
-        y[do.call(order, y[col.sort]), ]
-    } else if (!is.numeric(col.sort)) {
-        col.sort = col.sort
-        y[do.call(order, y[col.sort]), ]
-    }
+  }
+  
+  x = unlist(subs)
+  y = data[ , x ]
+  
+  if (is.null(col.sort)) {
+    y
+  } else if (is.numeric(col.sort)) {
+    col.sort = colnames(y)[col.sort]
+    y[do.call(order, y[col.sort]), ]
+  } else if (!is.numeric(col.sort)) {
+    col.sort = col.sort
+    y[do.call(order, y[col.sort]), ]
+  }
 }
 ```
 
 
 \newpage
 
-multi.freq.table
-----------------
+# multi.freq.table
 
 
 ```r
-multi.freq.table = function(data, sep = "", dropzero = FALSE, clean = TRUE, 
-    basic = FALSE) {
-    # Takes boolean multiple-response data and tabulates it according to the
-    # possible combinations of each variable.
-    # 
-    # === EXAMPLES === set.seed(1) dat = data.frame(A = sample(c(0, 1), 20,
-    # replace=TRUE), B = sample(c(0, 1), 20, replace=TRUE), C = sample(c(0,
-    # 1), 20, replace=TRUE), D = sample(c(0, 1), 20, replace=TRUE), E =
-    # sample(c(0, 1), 20, replace=TRUE)) multi.freq.table(dat)
-    # multi.freq.table(dat[1:3], sep='-', dropzero=TRUE)
-    # 
-    # See: http://stackoverflow.com/q/11348391/1270695
-    # http://stackoverflow.com/q/11622660/1270695
-    
-    if (isTRUE(basic)) {
-        counts = data.frame(Freq = colSums(data), Pct.of.Resp = (colSums(data)/sum(data)) * 
-            100, Pct.of.Cases = (colSums(data)/nrow(data)) * 100)
-    } else if (!isTRUE(basic)) {
-        counts = data.frame(table(data))
-        N = ncol(counts)
-        counts$Combn = apply(counts[-N] == 1, 1, function(x) paste(names(counts[-N])[x], 
-            collapse = sep))
-        counts$Pct.of.Resp = (counts$Freq/sum(data)) * 100
-        counts$Pct.of.Cases = (counts$Freq/nrow(data)) * 100
-        if (isTRUE(dropzero)) {
-            counts = counts[counts$Freq != 0, ]
-        } else if (!isTRUE(dropzero)) {
-            counts = counts
-        }
-        if (isTRUE(clean)) {
-            counts = data.frame(Combn = counts$Combn, Freq = counts$Freq, Pct.of.Resp = counts$Pct.of.Resp, 
-                Pct.of.Cases = counts$Pct.of.Cases)
-        }
+multi.freq.table = function(data, sep="", dropzero=FALSE,
+                            clean=TRUE, basic=FALSE) {
+  # Takes boolean multiple-response data and tabulates it according
+  #   to the possible combinations of each variable.
+  #
+  # === EXAMPLES ===
+  #     set.seed(1)
+  #     dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE), 
+  #                      B = sample(c(0, 1), 20, replace=TRUE), 
+  #                      C = sample(c(0, 1), 20, replace=TRUE),
+  #                      D = sample(c(0, 1), 20, replace=TRUE),
+  #                      E = sample(c(0, 1), 20, replace=TRUE))
+  #   multi.freq.table(dat)
+  #   multi.freq.table(dat[1:3], sep="-", dropzero=TRUE)
+  #
+  # See: http://stackoverflow.com/q/11348391/1270695
+  #      http://stackoverflow.com/q/11622660/1270695
+  
+  if(isTRUE(basic)) {
+    counts = data.frame(Freq = colSums(data),
+                        Pct.of.Resp = (colSums(data)/sum(data))*100,
+                        Pct.of.Cases = (colSums(data)/nrow(data))*100)
+  } else if (!isTRUE(basic)) {
+    counts = data.frame(table(data))
+    N = ncol(counts)
+    counts$Combn = apply(counts[-N] == 1, 1, 
+                         function(x) paste(names(counts[-N])[x],
+                                           collapse=sep))
+    counts$Pct.of.Resp = (counts$Freq/sum(data))*100
+    counts$Pct.of.Cases = (counts$Freq/nrow(data))*100
+    if (isTRUE(dropzero)) {
+      counts = counts[counts$Freq != 0, ]
+    } else if (!isTRUE(dropzero)) {
+      counts = counts
     }
-    counts
+    if (isTRUE(clean)) {
+      counts = data.frame(Combn = counts$Combn, Freq = counts$Freq, 
+                          Pct.of.Resp = counts$Pct.of.Resp, 
+                          Pct.of.Cases = counts$Pct.of.Cases)
+    }
+  }
+  counts
 }
 ```
 
 
 \newpage
 
-row.extractor
----------------
+# row.extractor
 
 
 ```r
-row.extractor = function(data, extract.by, what = "all") {
-    # Extracts rows with min, median, and max values, or by quantiles.  Values
-    # for 'what' can be 'min', 'median', 'max', 'all', or a vector specifying
-    # the desired quantiles.  Values for 'extract.by' can be the variable name
-    # or number.
-    # 
-    # === EXAMPLES ===
-    # 
-    # set.seed(1) dat = data.frame(V1 = 1:10, V2 = rnorm(10), V3 = rnorm(10),
-    # V4 = sample(1:20, 10, replace=T)) dat2 = dat[-10,] row.extractor(dat, 4,
-    # 'all') row.extractor(dat1, 4, 'min') row.extractor(dat, 'V4', 'median')
-    # row.extractor(dat, 4, c(0, .5, 1)) row.extractor(dat, 'V4', c(0, .25,
-    # .5, .75, 1))
-    # 
-    # 'which.quantile' function by cbeleites:
-    # http://stackoverflow.com/users/755257/cbeleites See:
-    # http://stackoverflow.com/q/10256503/1270695
-    
-    if (is.numeric(extract.by)) {
-        extract.by = extract.by
-    } else if (is.numeric(extract.by) != 0) {
-        extract.by = which(colnames(data) %in% "extract.by")
+row.extractor = function(data, extract.by, what="all") {
+  # Extracts rows with min, median, and max values, or by quantiles.
+  # Values for "what" can be "min", "median", "max", "all", or a
+  #   vector specifying the desired quantiles.
+  # Values for "extract.by" can be the variable name or number.
+  #
+  # === EXAMPLES ===
+  #
+  #    set.seed(1)
+  #    dat = data.frame(V1 = 1:10, V2 = rnorm(10), V3 = rnorm(10), 
+  #                     V4 = sample(1:20, 10, replace=T))
+  #    dat2 = dat[-10,]
+  #    row.extractor(dat, 4, "all")
+  #    row.extractor(dat1, 4, "min")
+  #    row.extractor(dat, "V4", "median")
+  #    row.extractor(dat, 4, c(0, .5, 1))
+  #    row.extractor(dat, "V4", c(0, .25, .5, .75, 1))
+  #
+  # "which.quantile" function by cbeleites:
+  # http://stackoverflow.com/users/755257/cbeleites
+  # See: http://stackoverflow.com/q/10256503/1270695
+  
+  if (is.numeric(extract.by)) {
+    extract.by = extract.by
+  } else if (is.numeric(extract.by) != 0) {
+    extract.by = which(colnames(data) %in% "extract.by")
+  } 
+  
+  if (is.character(what)) {
+    which.median = function(data, extract.by) {
+      a = data[, extract.by]
+      if (length(a) %% 2 != 0) {
+        which(a == median(a))
+      } else if (length(a) %% 2 == 0) {
+        b = sort(a)[c(length(a)/2, length(a)/2+1)]
+        c(max(which(a == b[1])), min(which(a == b[2])))
+      }
     }
     
-    if (is.character(what)) {
-        which.median = function(data, extract.by) {
-            a = data[, extract.by]
-            if (length(a)%%2 != 0) {
-                which(a == median(a))
-            } else if (length(a)%%2 == 0) {
-                b = sort(a)[c(length(a)/2, length(a)/2 + 1)]
-                c(max(which(a == b[1])), min(which(a == b[2])))
-            }
-        }
-        
-        X1 = data[which(data[extract.by] == min(data[extract.by])), ]  # min
-        X2 = data[which(data[extract.by] == max(data[extract.by])), ]  # max
-        X3 = data[which.median(data, extract.by), ]  # median
-        
-        if (identical(what, "min")) {
-            X1
-        } else if (identical(what, "max")) {
-            X2
-        } else if (identical(what, "median")) {
-            X3
-        } else if (identical(what, "all")) {
-            rbind(X1, X3, X2)
-        }
-    } else if (is.numeric(what)) {
-        which.quantile <- function(data, extract.by, what, na.rm = FALSE) {
-            
-            x = data[, extract.by]
-            
-            if (!na.rm & any(is.na(x))) 
-                return(rep(NA_integer_, length(what)))
-            
-            o <- order(x)
-            n <- sum(!is.na(x))
-            o <- o[seq_len(n)]
-            
-            nppm <- n * what - 0.5
-            j <- floor(nppm)
-            h <- ifelse((nppm == j) & ((j%%2L) == 0L), 0, 1)
-            j <- j + h
-            
-            j[j == 0] <- 1
-            o[j]
-        }
-        data[which.quantile(data, extract.by, what), ]  # quantile
+    X1 = data[which(data[extract.by] == min(data[extract.by])), ] # min
+    X2 = data[which(data[extract.by] == max(data[extract.by])), ] # max
+    X3 = data[which.median(data, extract.by), ]                # median
+    
+    if (identical(what, "min")) {
+      X1
+    } else if (identical(what, "max")) {
+      X2
+    } else if (identical(what, "median")) {
+      X3
+    } else if (identical(what, "all")) {
+      rbind(X1, X3, X2)
     }
+  } else if (is.numeric(what)) {
+    which.quantile <- function (data, extract.by, what, na.rm = FALSE) {
+      
+      x = data[ , extract.by]
+      
+      if (! na.rm & any (is.na (x)))
+        return (rep (NA_integer_, length (what)))
+      
+      o <- order (x)
+      n <- sum (! is.na (x))
+      o <- o [seq_len (n)]
+      
+      nppm <- n * what - 0.5
+      j <- floor(nppm)
+      h <- ifelse((nppm == j) & ((j%%2L) == 0L), 0, 1)
+      j <- j + h
+      
+      j [j == 0] <- 1
+      o[j]
+    }
+    data[which.quantile(data, extract.by, what), ]           # quantile
+  }
 }
 ```
 

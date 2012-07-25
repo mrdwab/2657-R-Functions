@@ -10,13 +10,15 @@ read_chunk("../scripts/multi.freq.table.R")
 read_chunk("../scripts/row.extractor.R")
 ```
 
-\newpage
-\pagenumbering{roman}
-\setcounter{page}{1}
+\pagestyle{plain}
 \tableofcontents
-\newpage
-\pagenumbering{arabic}
+\cleardoublepage
+
+\pagestyle{headings}
 \setcounter{page}{1}
+\pagenumbering{arabic}
+
+\part{Function Descriptions and Examples}
 
 concat.split
 ============
@@ -261,10 +263,10 @@ See: [http://stackoverflow.com/q/10256503/1270695](http://stackoverflow.com/q/10
 
 \newpage
 
-\appendix
+\part{The Functions}
 
-The Functions
-=============
+Where to Get the Functions
+==========================
 
 The most current source code for the functions described in this document follow.
 
@@ -280,32 +282,28 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 
 \newpage
 
-concat.split
-------------
+# concat.split
 
-```{r concatsplit}
+```{r concatsplit, tidy=FALSE}
 ```
 
 \newpage
 
-df.sorter
----------
+# df.sorter
 
-```{r dfsorter}
+```{r dfsorter, tidy=FALSE}
 ```
 
 \newpage
 
-multi.freq.table
-----------------
+# multi.freq.table
 
-```{r multifreqtable}
+```{r multifreqtable, tidy=FALSE}
 ```
 
 \newpage
 
-row.extractor
----------------
+# row.extractor
 
-```{r rowextractor}
+```{r rowextractor, tidy=FALSE}
 ```
