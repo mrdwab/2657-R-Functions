@@ -1,6 +1,8 @@
 % 2657 Functions
 % Ananda Mahto
 
+\pagenumbering{gobble}
+
 ```{r set-options, echo=FALSE, cache=FALSE}
 read_chunk("../scripts/concat.split.R")
 read_chunk("../scripts/df.sorter.R")
@@ -9,8 +11,12 @@ read_chunk("../scripts/row.extractor.R")
 ```
 
 \newpage
+\pagenumbering{roman}
+\setcounter{page}{1}
 \tableofcontents
 \newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 concat.split
 ============
@@ -162,7 +168,7 @@ multi.freq.table
 
 What it Does
 ------------
-The `multi.freq.table` function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers.
+The `multi.freq.table` function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers. In addition to tabulating the frequency (`Freq`), there are two other columns in the output: *Percent of Responses* (`Pct.of.Resp`) and *Percent of Cases* (`Pct.of.Cases`). *Percent of Responses* is the frequency divided by the total number of answers provided; this column should sum to 100%. *Percent of Cases* is the frequency divided by the total number of valid cases; this column would mot likely sum to more than 100% since each respondent (case) can select multiple answers.
 
 Arguments
 ---------
@@ -170,6 +176,7 @@ Arguments
 * `sep`: The desired separator for collapsing the combinations of options; defaults to `""` (collapsing with no space between each option name).
 * `dropzero`: Should combinations with a frequency of zero be dropped from the final table? Defaults to `FALSE`.
 * `clean`: Should the original tabulated data be retained or dropped from the final table? Defaults to `TRUE`.
+* `basic`: Should a basic table of each item, rather than combinations of items, be created? Defaults to `FALSE`.
 
 Examples
 --------
@@ -194,13 +201,15 @@ multi.freq.table(dat)
 # separator, dropping any zero frequency values, and keeping the original tabulations.
 # Note that there are no solitary "B" responses.
 multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=TRUE, clean=FALSE)
+# View a basic table.
+multi.freq.table(dat, basic=TRUE)
 ```
 
 
 References
 ----------
 `apply` shortcut for creating the `Combn` column in the output by [Justin](http://stackoverflow.com/users/906490/justin)  
-See: [http://stackoverflow.com/q/11348391/1270695](http://stackoverflow.com/q/11348391/1270695)
+See: [http://stackoverflow.com/q/11348391/1270695](http://stackoverflow.com/q/11348391/1270695) and [http://stackoverflow.com/q/11622660/1270695](http://stackoverflow.com/q/11622660/1270695)
 
 \newpage
 

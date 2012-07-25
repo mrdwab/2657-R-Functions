@@ -175,8 +175,7 @@ head(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE))
 <pre><code class="r"># View the structure of the output for the first 10 rows to verify that
 # the new column is a list; note the difference between &#39;Likes&#39; and
 # &#39;Likes_list&#39;.
-str(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE)[1:10, 
-    ])
+str(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE)[1:10, ])
 </code></pre>
 
 <pre><code class="no-highlight">## &#39;data.frame&#39;:    10 obs. of  5 variables:
@@ -303,8 +302,8 @@ head(df.sorter(dat, var.order = c(1, 2, 5, 8, 3, 6, 4, 7)))
 </code></pre>
 
 <pre><code class="r"># As above, but sorted by &#39;times&#39; and then &#39;id&#39;
-head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;cod&quot;, &quot;mea&quot;, &quot;sco&quot;), 
-    col.sort = c(2, 1)))
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;cod&quot;, &quot;mea&quot;, &quot;sco&quot;), col.sort = c(2, 
+    1)))
 </code></pre>
 
 <pre><code class="no-highlight">##    id times code1 code2 measure1 measure2 score1 score2
@@ -394,7 +393,7 @@ head(df.sorter(dat, var.order = &quot;co&quot;, at.start = FALSE))
 
 <h2>What it Does</h2>
 
-<p>The <code>multi.freq.table</code> function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers.</p>
+<p>The <code>multi.freq.table</code> function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers. In addition to tabulating the frequency (<code>Freq</code>), there are two other columns in the output: <em>Percent of Responses</em> (<code>Pct.of.Resp</code>) and <em>Percent of Cases</em> (<code>Pct.of.Cases</code>). <em>Percent of Responses</em> is the frequency divided by the total number of answers provided; this column should sum to 100%. <em>Percent of Cases</em> is the frequency divided by the total number of valid cases; this column would mot likely sum to more than 100% since each respondent (case) can select multiple answers.</p>
 
 <h2>Arguments</h2>
 
@@ -403,6 +402,7 @@ head(df.sorter(dat, var.order = &quot;co&quot;, at.start = FALSE))
 <li><code>sep</code>: The desired separator for collapsing the combinations of options; defaults to <code>&quot;&quot;</code> (collapsing with no space between each option name).</li>
 <li><code>dropzero</code>: Should combinations with a frequency of zero be dropped from the final table? Defaults to <code>FALSE</code>.</li>
 <li><code>clean</code>: Should the original tabulated data be retained or dropped from the final table? Defaults to <code>TRUE</code>.</li>
+<li><code>basic</code>: Should a basic table of each item, rather than combinations of items, be created? Defaults to <code>FALSE</code>.</li>
 </ul>
 
 <h2>Examples</h2>
@@ -413,8 +413,8 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/multi.freq.table.R&qu
 
 # Make up some data
 set.seed(1)
-dat = data.frame(A = sample(c(0, 1), 20, replace = TRUE), B = sample(c(0, 
-    1), 20, replace = TRUE), C = sample(c(0, 1), 20, replace = TRUE), D = sample(c(0, 
+dat = data.frame(A = sample(c(0, 1), 20, replace = TRUE), B = sample(c(0, 1), 
+    20, replace = TRUE), C = sample(c(0, 1), 20, replace = TRUE), D = sample(c(0, 
     1), 20, replace = TRUE), E = sample(c(0, 1), 20, replace = TRUE))
 # View your data
 dat
@@ -447,39 +447,39 @@ dat
 multi.freq.table(dat)
 </code></pre>
 
-<pre><code class="no-highlight">##    Combn Freq
-## 1           1
-## 2      A    0
-## 3      B    0
-## 4     AB    0
-## 5      C    0
-## 6     AC    3
-## 7     BC    0
-## 8    ABC    2
-## 9      D    0
-## 10    AD    1
-## 11    BD    0
-## 12   ABD    1
-## 13    CD    1
-## 14   ACD    0
-## 15   BCD    2
-## 16  ABCD    0
-## 17     E    1
-## 18    AE    2
-## 19    BE    0
-## 20   ABE    1
-## 21    CE    1
-## 22   ACE    0
-## 23   BCE    0
-## 24  ABCE    0
-## 25    DE    0
-## 26   ADE    1
-## 27   BDE    1
-## 28  ABDE    0
-## 29   CDE    1
-## 30  ACDE    0
-## 31  BCDE    1
-## 32 ABCDE    0
+<pre><code class="no-highlight">##    Combn Freq Pct.of.Resp Pct.of.Cases
+## 1           1       2.083            5
+## 2      A    0       0.000            0
+## 3      B    0       0.000            0
+## 4     AB    0       0.000            0
+## 5      C    0       0.000            0
+## 6     AC    3       6.250           15
+## 7     BC    0       0.000            0
+## 8    ABC    2       4.167           10
+## 9      D    0       0.000            0
+## 10    AD    1       2.083            5
+## 11    BD    0       0.000            0
+## 12   ABD    1       2.083            5
+## 13    CD    1       2.083            5
+## 14   ACD    0       0.000            0
+## 15   BCD    2       4.167           10
+## 16  ABCD    0       0.000            0
+## 17     E    1       2.083            5
+## 18    AE    2       4.167           10
+## 19    BE    0       0.000            0
+## 20   ABE    1       2.083            5
+## 21    CE    1       2.083            5
+## 22   ACE    0       0.000            0
+## 23   BCE    0       0.000            0
+## 24  ABCE    0       0.000            0
+## 25    DE    0       0.000            0
+## 26   ADE    1       2.083            5
+## 27   BDE    1       2.083            5
+## 28  ABDE    0       0.000            0
+## 29   CDE    1       2.083            5
+## 30  ACDE    0       0.000            0
+## 31  BCDE    1       2.083            5
+## 32 ABCDE    0       0.000            0
 </code></pre>
 
 <pre><code class="r"># Tabulate only on variables &#39;A&#39;, &#39;B&#39;, and &#39;D&#39;, with a different
@@ -488,20 +488,32 @@ multi.freq.table(dat)
 multi.freq.table(dat[c(1, 2, 4)], sep = &quot;-&quot;, dropzero = TRUE, clean = FALSE)
 </code></pre>
 
-<pre><code class="no-highlight">##   A B D Freq Combn
-## 1 0 0 0    3      
-## 2 1 0 0    5     A
-## 4 1 1 0    3   A-B
-## 5 0 0 1    2     D
-## 6 1 0 1    2   A-D
-## 7 0 1 1    4   B-D
-## 8 1 1 1    1 A-B-D
+<pre><code class="no-highlight">##   A B D Freq Combn Pct.of.Resp Pct.of.Cases
+## 1 0 0 0    3            10.714           15
+## 2 1 0 0    5     A      17.857           25
+## 4 1 1 0    3   A-B      10.714           15
+## 5 0 0 1    2     D       7.143           10
+## 6 1 0 1    2   A-D       7.143           10
+## 7 0 1 1    4   B-D      14.286           20
+## 8 1 1 1    1 A-B-D       3.571            5
+</code></pre>
+
+<pre><code class="r"># View a basic table.
+multi.freq.table(dat, basic = TRUE)
+</code></pre>
+
+<pre><code class="no-highlight">##   Freq Pct.of.Resp Pct.of.Cases
+## A   11       22.92           55
+## B    8       16.67           40
+## C   11       22.92           55
+## D    9       18.75           45
+## E    9       18.75           45
 </code></pre>
 
 <h2>References</h2>
 
 <p><code>apply</code> shortcut for creating the <code>Combn</code> column in the output by <a href="http://stackoverflow.com/users/906490/justin">Justin</a><br/><br/>
-See: <a href="http://stackoverflow.com/q/11348391/1270695">http://stackoverflow.com/q/11348391/1270695</a></p>
+See: <a href="http://stackoverflow.com/q/11348391/1270695">http://stackoverflow.com/q/11348391/1270695</a> and <a href="http://stackoverflow.com/q/11622660/1270695">http://stackoverflow.com/q/11622660/1270695</a></p>
 
 <p>\newpage</p>
 
@@ -527,8 +539,8 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/row.extractor.R&quot;
 
 # Make up some data
 set.seed(1)
-dat = data.frame(V1 = 1:50, V2 = rnorm(50), V3 = round(abs(rnorm(50)), 
-    digits = 2), V4 = sample(1:30, 50, replace = TRUE))
+dat = data.frame(V1 = 1:50, V2 = rnorm(50), V3 = round(abs(rnorm(50)), digits = 2), 
+    V4 = sample(1:30, 50, replace = TRUE))
 # Get a sumary of the data
 summary(dat)
 </code></pre>
@@ -852,9 +864,15 @@ pre .vhdl .literal { color: rgb(163, 21, 21); }
 <p>% 2657 Functions<br/>
 % Ananda Mahto</p>
 
+<p>\pagenumbering{gobble}</p>
+
 <p>\newpage<br/>
+\pagenumbering{roman}<br/>
+\setcounter{page}{1}<br/>
 \tableofcontents<br/>
-\newpage</p>
+\newpage<br/>
+\pagenumbering{arabic}<br/>
+\setcounter{page}{1}</p>
 
 <h1>concat.split</h1>
 
@@ -1026,8 +1044,7 @@ head(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE))
 <pre><code class="r"># View the structure of the output for the first 10 rows to verify that
 # the new column is a list; note the difference between &#39;Likes&#39; and
 # &#39;Likes_list&#39;.
-str(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE)[1:10, 
-    ])
+str(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE)[1:10, ])
 </code></pre>
 
 <pre><code class="no-highlight">## &#39;data.frame&#39;:    10 obs. of  5 variables:
@@ -1154,8 +1171,8 @@ head(df.sorter(dat, var.order = c(1, 2, 5, 8, 3, 6, 4, 7)))
 </code></pre>
 
 <pre><code class="r"># As above, but sorted by &#39;times&#39; and then &#39;id&#39;
-head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;cod&quot;, &quot;mea&quot;, &quot;sco&quot;), 
-    col.sort = c(2, 1)))
+head(df.sorter(dat, var.order = c(&quot;id&quot;, &quot;tim&quot;, &quot;cod&quot;, &quot;mea&quot;, &quot;sco&quot;), col.sort = c(2, 
+    1)))
 </code></pre>
 
 <pre><code class="no-highlight">##    id times code1 code2 measure1 measure2 score1 score2
@@ -1245,7 +1262,7 @@ head(df.sorter(dat, var.order = &quot;co&quot;, at.start = FALSE))
 
 <h2>What it Does</h2>
 
-<p>The <code>multi.freq.table</code> function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers.</p>
+<p>The <code>multi.freq.table</code> function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers. In addition to tabulating the frequency (<code>Freq</code>), there are two other columns in the output: <em>Percent of Responses</em> (<code>Pct.of.Resp</code>) and <em>Percent of Cases</em> (<code>Pct.of.Cases</code>). <em>Percent of Responses</em> is the frequency divided by the total number of answers provided; this column should sum to 100%. <em>Percent of Cases</em> is the frequency divided by the total number of valid cases; this column would mot likely sum to more than 100% since each respondent (case) can select multiple answers.</p>
 
 <h2>Arguments</h2>
 
@@ -1254,6 +1271,7 @@ head(df.sorter(dat, var.order = &quot;co&quot;, at.start = FALSE))
 <li><code>sep</code>: The desired separator for collapsing the combinations of options; defaults to <code>&quot;&quot;</code> (collapsing with no space between each option name).</li>
 <li><code>dropzero</code>: Should combinations with a frequency of zero be dropped from the final table? Defaults to <code>FALSE</code>.</li>
 <li><code>clean</code>: Should the original tabulated data be retained or dropped from the final table? Defaults to <code>TRUE</code>.</li>
+<li><code>basic</code>: Should a basic table of each item, rather than combinations of items, be created? Defaults to <code>FALSE</code>.</li>
 </ul>
 
 <h2>Examples</h2>
@@ -1264,8 +1282,8 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/multi.freq.table.R&qu
 
 # Make up some data
 set.seed(1)
-dat = data.frame(A = sample(c(0, 1), 20, replace = TRUE), B = sample(c(0, 
-    1), 20, replace = TRUE), C = sample(c(0, 1), 20, replace = TRUE), D = sample(c(0, 
+dat = data.frame(A = sample(c(0, 1), 20, replace = TRUE), B = sample(c(0, 1), 
+    20, replace = TRUE), C = sample(c(0, 1), 20, replace = TRUE), D = sample(c(0, 
     1), 20, replace = TRUE), E = sample(c(0, 1), 20, replace = TRUE))
 # View your data
 dat
@@ -1298,39 +1316,39 @@ dat
 multi.freq.table(dat)
 </code></pre>
 
-<pre><code class="no-highlight">##    Combn Freq
-## 1           1
-## 2      A    0
-## 3      B    0
-## 4     AB    0
-## 5      C    0
-## 6     AC    3
-## 7     BC    0
-## 8    ABC    2
-## 9      D    0
-## 10    AD    1
-## 11    BD    0
-## 12   ABD    1
-## 13    CD    1
-## 14   ACD    0
-## 15   BCD    2
-## 16  ABCD    0
-## 17     E    1
-## 18    AE    2
-## 19    BE    0
-## 20   ABE    1
-## 21    CE    1
-## 22   ACE    0
-## 23   BCE    0
-## 24  ABCE    0
-## 25    DE    0
-## 26   ADE    1
-## 27   BDE    1
-## 28  ABDE    0
-## 29   CDE    1
-## 30  ACDE    0
-## 31  BCDE    1
-## 32 ABCDE    0
+<pre><code class="no-highlight">##    Combn Freq Pct.of.Resp Pct.of.Cases
+## 1           1       2.083            5
+## 2      A    0       0.000            0
+## 3      B    0       0.000            0
+## 4     AB    0       0.000            0
+## 5      C    0       0.000            0
+## 6     AC    3       6.250           15
+## 7     BC    0       0.000            0
+## 8    ABC    2       4.167           10
+## 9      D    0       0.000            0
+## 10    AD    1       2.083            5
+## 11    BD    0       0.000            0
+## 12   ABD    1       2.083            5
+## 13    CD    1       2.083            5
+## 14   ACD    0       0.000            0
+## 15   BCD    2       4.167           10
+## 16  ABCD    0       0.000            0
+## 17     E    1       2.083            5
+## 18    AE    2       4.167           10
+## 19    BE    0       0.000            0
+## 20   ABE    1       2.083            5
+## 21    CE    1       2.083            5
+## 22   ACE    0       0.000            0
+## 23   BCE    0       0.000            0
+## 24  ABCE    0       0.000            0
+## 25    DE    0       0.000            0
+## 26   ADE    1       2.083            5
+## 27   BDE    1       2.083            5
+## 28  ABDE    0       0.000            0
+## 29   CDE    1       2.083            5
+## 30  ACDE    0       0.000            0
+## 31  BCDE    1       2.083            5
+## 32 ABCDE    0       0.000            0
 </code></pre>
 
 <pre><code class="r"># Tabulate only on variables &#39;A&#39;, &#39;B&#39;, and &#39;D&#39;, with a different
@@ -1339,20 +1357,32 @@ multi.freq.table(dat)
 multi.freq.table(dat[c(1, 2, 4)], sep = &quot;-&quot;, dropzero = TRUE, clean = FALSE)
 </code></pre>
 
-<pre><code class="no-highlight">##   A B D Freq Combn
-## 1 0 0 0    3      
-## 2 1 0 0    5     A
-## 4 1 1 0    3   A-B
-## 5 0 0 1    2     D
-## 6 1 0 1    2   A-D
-## 7 0 1 1    4   B-D
-## 8 1 1 1    1 A-B-D
+<pre><code class="no-highlight">##   A B D Freq Combn Pct.of.Resp Pct.of.Cases
+## 1 0 0 0    3            10.714           15
+## 2 1 0 0    5     A      17.857           25
+## 4 1 1 0    3   A-B      10.714           15
+## 5 0 0 1    2     D       7.143           10
+## 6 1 0 1    2   A-D       7.143           10
+## 7 0 1 1    4   B-D      14.286           20
+## 8 1 1 1    1 A-B-D       3.571            5
+</code></pre>
+
+<pre><code class="r"># View a basic table.
+multi.freq.table(dat, basic = TRUE)
+</code></pre>
+
+<pre><code class="no-highlight">##   Freq Pct.of.Resp Pct.of.Cases
+## A   11       22.92           55
+## B    8       16.67           40
+## C   11       22.92           55
+## D    9       18.75           45
+## E    9       18.75           45
 </code></pre>
 
 <h2>References</h2>
 
 <p><code>apply</code> shortcut for creating the <code>Combn</code> column in the output by <a href="http://stackoverflow.com/users/906490/justin">Justin</a><br/><br/>
-See: <a href="http://stackoverflow.com/q/11348391/1270695">http://stackoverflow.com/q/11348391/1270695</a></p>
+See: <a href="http://stackoverflow.com/q/11348391/1270695">http://stackoverflow.com/q/11348391/1270695</a> and <a href="http://stackoverflow.com/q/11622660/1270695">http://stackoverflow.com/q/11622660/1270695</a></p>
 
 <p>\newpage</p>
 
@@ -1378,8 +1408,8 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/row.extractor.R&quot;
 
 # Make up some data
 set.seed(1)
-dat = data.frame(V1 = 1:50, V2 = rnorm(50), V3 = round(abs(rnorm(50)), 
-    digits = 2), V4 = sample(1:30, 50, replace = TRUE))
+dat = data.frame(V1 = 1:50, V2 = rnorm(50), V3 = round(abs(rnorm(50)), digits = 2), 
+    V4 = sample(1:30, 50, replace = TRUE))
 # Get a sumary of the data
 summary(dat)
 </code></pre>
@@ -1470,8 +1500,8 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 
 <h2>concat.split</h2>
 
-<pre><code class="r">concat.split = function(data, split.col, to.list = FALSE, mode = NULL, 
-    sep = &quot;,&quot;, drop.col = FALSE) {
+<pre><code class="r">concat.split = function(data, split.col, to.list = FALSE, mode = NULL, sep = &quot;,&quot;, 
+    drop.col = FALSE) {
     # Takes a column with multiple values, splits the values into separate
     # columns, and returns a new data.frame.  &#39;data&#39; is the source data.frame;
     # &#39;split.col&#39; is the variable that needs to be split; &#39;to.list&#39; is whether
@@ -1558,8 +1588,7 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 
 <h2>df.sorter</h2>
 
-<pre><code class="r">df.sorter = function(data, var.order = names(data), col.sort = NULL, 
-    at.start = TRUE) {
+<pre><code class="r">df.sorter = function(data, var.order = names(data), col.sort = NULL, at.start = TRUE) {
     # Sorts a data.frame by columns or rows or both.  Can also subset the data
     # columns by using &#39;var.order&#39;.  Can refer to variables either by names or
     # number.  If referring to variable by number, and sorting both the order
@@ -1613,7 +1642,8 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 
 <h2>multi.freq.table</h2>
 
-<pre><code class="r">multi.freq.table = function(data, sep = &quot;&quot;, dropzero = FALSE, clean = TRUE) {
+<pre><code class="r">multi.freq.table = function(data, sep = &quot;&quot;, dropzero = FALSE, clean = TRUE, 
+    basic = FALSE) {
     # Takes boolean multiple-response data and tabulates it according to the
     # possible combinations of each variable.
     # 
@@ -1624,18 +1654,27 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
     # multi.freq.table(dat[1:3], sep=&#39;-&#39;, dropzero=TRUE)
     # 
     # See: http://stackoverflow.com/q/11348391/1270695
+    # http://stackoverflow.com/q/11622660/1270695
 
-    counts = data.frame(table(data))
-    N = ncol(counts)
-    counts$Combn = apply(counts[-N] == 1, 1, function(x) paste(names(counts[-N])[x], 
-        collapse = sep))
-    if (isTRUE(dropzero)) {
-        counts = counts[counts$Freq != 0, ]
-    } else if (!isTRUE(dropzero)) {
-        counts = counts
-    }
-    if (isTRUE(clean)) {
-        counts = data.frame(Combn = counts$Combn, Freq = counts$Freq)
+    if (isTRUE(basic)) {
+        counts = data.frame(Freq = colSums(data), Pct.of.Resp = (colSums(data)/sum(data)) * 
+            100, Pct.of.Cases = (colSums(data)/nrow(data)) * 100)
+    } else if (!isTRUE(basic)) {
+        counts = data.frame(table(data))
+        N = ncol(counts)
+        counts$Combn = apply(counts[-N] == 1, 1, function(x) paste(names(counts[-N])[x], 
+            collapse = sep))
+        counts$Pct.of.Resp = (counts$Freq/sum(data)) * 100
+        counts$Pct.of.Cases = (counts$Freq/nrow(data)) * 100
+        if (isTRUE(dropzero)) {
+            counts = counts[counts$Freq != 0, ]
+        } else if (!isTRUE(dropzero)) {
+            counts = counts
+        }
+        if (isTRUE(clean)) {
+            counts = data.frame(Combn = counts$Combn, Freq = counts$Freq, Pct.of.Resp = counts$Pct.of.Resp, 
+                Pct.of.Cases = counts$Pct.of.Cases)
+        }
     }
     counts
 }
