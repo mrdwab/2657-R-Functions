@@ -4,10 +4,12 @@
 \pagenumbering{gobble}
 
 ```{r set-options, echo=FALSE, cache=FALSE}
+options(width=80)
 read_chunk("../scripts/concat.split.R")
 read_chunk("../scripts/df.sorter.R")
 read_chunk("../scripts/multi.freq.table.R")
 read_chunk("../scripts/row.extractor.R")
+read_chunk("../scripts/snippets.R")
 ```
 
 \pagestyle{plain}
@@ -20,16 +22,13 @@ read_chunk("../scripts/row.extractor.R")
 
 \part{Function Descriptions and Examples}
 
-concat.split
-============
+# concat.split
 
-What it Does
-------------
+## What it Does
 
 The `concat.split` function takes a column with multiple values, splits the values into a list or into separate columns, and returns a new `data.frame`.
 
-Arguments
----------
+## Arguments
 
 * `data`: the source `data.frame`.
 * `split.col`: the variable that needs to be split; can be specified either by the column number or the variable name.
@@ -38,12 +37,11 @@ Arguments
 * `sep`: the character separating each value (defaults to `","`).
 * `drop.col`: logical (whether to remove the original variable from the output or not; defaults to `TRUE`).
 
-Examples
---------
+## Examples
 
 First load some data from a CSV stored at [github](http://github.com). The URL is an HTTPS, so we need to use `getURL` from `RCurl`.
 
-```{r concat_split_data_loading}
+```{r concat_split_data_loading, tidy=FALSE}
 require(RCurl)
 baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
 temp = getURL(paste0(baseURL, "data/concatenated-cells.csv"))
@@ -58,7 +56,7 @@ head(concat.test)
 
 Notice that the data have been entered in a very silly manner. Let's split it up!
 
-```{r concat_split_examples}
+```{r concat_split_examples, tidy=FALSE}
 # Load the function!
 # require(RCurl)
 # baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -79,16 +77,14 @@ head(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE))
 # View the structure of the output for the first 10 rows to verify 
 # that the new column is a list; note the difference between "Likes"
 # and "Likes_list".
-str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, ])
+str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
 ```
 
-To Do
------
+## To Do
 
 * Modify the function so that you can split multiple columns in one go?
 
-References
-----------
+## References
 
 See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10100887/1270695)
 
@@ -96,16 +92,13 @@ See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10
 
 \newpage
 
-df.sorter
-=========
+# df.sorter
 
-What it Does
-------------
+## What it Does
 
 The `df.sorter` function allows you to sort a `data.frame` by columns or rows or both. You can also quickly subset data columns by using the `var.order` argument.
 
-Arguments
----------
+## Arguments
 
 * `data`: the source `data.frame`.
 * `var.order`: the new order in which you want the variables to appear.
@@ -119,10 +112,9 @@ Arguments
 
 > NOTE: If you are sorting both by variables and within the columns, the `col.sort` order should be based on the location of the columns in the *new* `data.frame`, not the original `data.frame`.
 
-Examples
---------
+## Examples
 
-```{r df_sorter_examples}
+```{r df_sorter_examples, tidy=FALSE}
 # Load the function!
 # require(RCurl)
 # baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -132,9 +124,11 @@ source(textConnection(getURL(paste0(baseURL, "scripts/df.sorter.R"))))
 set.seed(1)
 dat = data.frame(id = rep(1:5, each=3), times = rep(1:3, 5),
                  measure1 = rnorm(15), score1 = sample(300, 15),
-                 code1 = replicate(15, paste(sample(LETTERS[1:5], 3), sep="", collapse="")),
+                 code1 = replicate(15, paste(sample(LETTERS[1:5], 3), 
+                                             sep="", collapse="")),
                  measure2 = rnorm(15), score2 = sample(150:300, 15), 
-                 code2 = replicate(15, paste(sample(LETTERS[1:5], 3), sep="", collapse="")))
+                 code2 = replicate(15, paste(sample(LETTERS[1:5], 3), 
+                                             sep="", collapse="")))
 # Preview your data
 dat
 # Change the variable order, grouping related columns
@@ -144,11 +138,14 @@ head(df.sorter(dat, var.order = c("id", "ti", "cod", "mea", "sco")))
 # Same output, but with a more awkward syntax
 head(df.sorter(dat, var.order = c(1, 2, 5, 8, 3, 6, 4, 7)))
 # As above, but sorted by 'times' and then 'id'
-head(df.sorter(dat, var.order = c("id", "tim", "cod", "mea", "sco"), col.sort = c(2, 1)))
+head(df.sorter(dat, var.order = c("id", "tim", "cod", "mea", "sco"), 
+               col.sort = c(2, 1)))
 # Drop 'measure1' and 'measure2', sort by 'times', and 'score1'
-head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c(2, 3)))
+head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), 
+               col.sort = c(2, 3)))
 # As above, but using names
-head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c("times", "score1")))
+head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), 
+               col.sort = c("times", "score1")))
 # Just sort by columns, first by 'times' then by 'id'
 head(df.sorter(dat, col.sort = c("times", "id")))
 head(df.sorter(dat, col.sort = c("code1"))) # Sorting by character values
@@ -156,8 +153,7 @@ head(df.sorter(dat, col.sort = c("code1"))) # Sorting by character values
 head(df.sorter(dat, var.order= "co", at.start=FALSE))
 ```
 
-To Do
------
+## To Do
 
 * Add an option to sort ascending or descending---at the moment, not supported.
 
@@ -165,24 +161,23 @@ To Do
 
 \newpage
 
-multi.freq.table
-================
+# multi.freq.table
 
-What it Does
-------------
+## What it Does
+
 The `multi.freq.table` function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers. In addition to tabulating the frequency (`Freq`), there are two other columns in the output: *Percent of Responses* (`Pct.of.Resp`) and *Percent of Cases* (`Pct.of.Cases`). *Percent of Responses* is the frequency divided by the total number of answers provided; this column should sum to 100%. *Percent of Cases* is the frequency divided by the total number of valid cases; this column would mot likely sum to more than 100% since each respondent (case) can select multiple answers.
 
-Arguments
----------
+## Arguments
+
 * `data`: The multiple responses that need to be tabulated.
 * `sep`: The desired separator for collapsing the combinations of options; defaults to `""` (collapsing with no space between each option name).
 * `dropzero`: Should combinations with a frequency of zero be dropped from the final table? Defaults to `FALSE`.
 * `clean`: Should the original tabulated data be retained or dropped from the final table? Defaults to `TRUE`.
 * `basic`: Should a basic table of each item, rather than combinations of items, be created? Defaults to `FALSE`.
 
-Examples
---------
-```{r multi_freq_table_examples}
+## Examples
+
+```{r multi_freq_table_examples, tidy=FALSE}
 # Load the function!
 # require(RCurl)
 # baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -208,32 +203,28 @@ multi.freq.table(dat, basic=TRUE)
 ```
 
 
-References
-----------
+## References
+
 `apply` shortcut for creating the `Combn` column in the output by [Justin](http://stackoverflow.com/users/906490/justin)  
 See: [http://stackoverflow.com/q/11348391/1270695](http://stackoverflow.com/q/11348391/1270695) and [http://stackoverflow.com/q/11622660/1270695](http://stackoverflow.com/q/11622660/1270695)
 
 \newpage
 
-row.extractor
-=============
+# row.extractor
 
-What it Does
-------------
+## What it Does
 
 The `row.extractor` function takes a `data.frame` and extracts rows with the `min`, `median`, or `max` values of a given variable, or extracts rows with specific quantiles of a given variable.
 
-Arguments
----------
+## Arguments
 
 * `data`: the source `data.frame`.
 * `extract.by`: the column which will be used as the reference for extraction; can be specified either by the column number or the variable name.
 * `what`: options are `min` (for all rows matching the minimum value), `median` (for the median row or rows), `max` (for all rows matching the maximum value), or `all` (for `min`, `median`, and `max`); alternatively, a numeric vector can be specified with the desired quantiles, for instance `c(0, .25, .5, .75, 1)`
 
-Examples
---------
+## Examples
 
-```{r row_extractor_examples}
+```{r row_extractor_examples, tidy=FALSE}
 # Load the function!
 # require(RCurl)
 # baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -241,22 +232,25 @@ source(textConnection(getURL(paste0(baseURL, "scripts/row.extractor.R"))))
 
 # Make up some data
 set.seed(1)
-dat = data.frame(V1 = 1:50, V2 = rnorm(50), V3 = round(abs(rnorm(50)), digits=2), V4 = sample(1:30, 50, replace=TRUE))
+dat = data.frame(V1 = 1:50, V2 = rnorm(50), 
+                 V3 = round(abs(rnorm(50)), digits=2), 
+                 V4 = sample(1:30, 50, replace=TRUE))
 # Get a sumary of the data
 summary(dat)
 # Get the rows corresponding to the 'min', 'median', and 'max' of 'V4'
 row.extractor(dat, 4) 
 # Get the 'min' rows only, referenced by the variable name
 row.extractor(dat, "V4", "min") 
-# Get the 'median' rows only. Notice that there are two rows since we have an even number of cases and true median is the mean of the two central sorted values
+# Get the 'median' rows only. Notice that there are two rows 
+#    since we have an even number of cases and true median 
+#    is the mean of the two central sorted values
 row.extractor(dat, "V4", "median") 
 # Get the rows corresponding to the deciles of 'V3'
 row.extractor(dat, "V3", seq(0.1, 1, 0.1)) 
 ```
 
 
-References
-----------
+## References
 
 `which.quantile` function by [cbeleites](http://stackoverflow.com/users/755257/cbeleites)  
 See: [http://stackoverflow.com/q/10256503/1270695](http://stackoverflow.com/q/10256503/1270695)
@@ -265,8 +259,7 @@ See: [http://stackoverflow.com/q/10256503/1270695](http://stackoverflow.com/q/10
 
 \part{The Functions}
 
-Where to Get the Functions
-==========================
+# Where to Get the Functions
 
 The most current source code for the functions described in this document follow.
 
@@ -307,3 +300,67 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 
 ```{r rowextractor, tidy=FALSE}
 ```
+
+\newpage
+
+\part{Snippets and Tips}
+
+# Snippets
+
+## Load All Scripts and Data Files From Multiple Directories
+
+```{r scriptsanddata, tidy=FALSE}
+```
+
+## Convert a List of Data Frames Into Individual Data Frames
+
+```{r unlistdfs, tidy=FALSE}
+```
+
+### Example
+
+*Note that the list name must be quoted.*
+
+```{r unlistdfs_example, tidy=FALSE}
+# Sample data
+temp = list(A = data.frame(A = 1:2, B = 3:4), 
+            B = data.frame(C = 5:6, D = 7:8))
+# View it
+temp
+# Remove any files with similar names to output
+rm(list=ls(pattern="temp_"))
+# The following should not work
+temp_1
+# Split it up!
+unlist.dfs("temp")
+# List files with the desired pattern
+ls(pattern="temp_")
+# View the new files
+temp_1
+temp_2
+```
+
+
+
+\newpage
+
+# Tips
+
+## Batch Convert Factor to Character Variables
+
+In the example data below, `author` and `title` are automatically converted to factor (unless you add the argument `stringsAsFactor = FALSE` when you are creating the data). What if you forgot?
+
+Use `sapply` to identify factors and convert to string.
+
+```{r factortocharacter, tidy=FALSE}
+dat = data.frame(title = c("title1", "title2", "title3"),
+                 author = c("author1", "author2", "author3"),
+                 customerID = c(1, 2, 1))
+str(dat)
+dat[sapply(dat, is.factor)] = lapply(dat[sapply(dat, is.factor)], as.character)
+str(dat)
+```
+
+
+
+

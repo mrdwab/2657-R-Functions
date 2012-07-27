@@ -16,16 +16,13 @@
 
 \part{Function Descriptions and Examples}
 
-concat.split
-============
+# concat.split
 
-What it Does
-------------
+## What it Does
 
 The `concat.split` function takes a column with multiple values, splits the values into a list or into separate columns, and returns a new `data.frame`.
 
-Arguments
----------
+## Arguments
 
 * `data`: the source `data.frame`.
 * `split.col`: the variable that needs to be split; can be specified either by the column number or the variable name.
@@ -34,8 +31,7 @@ Arguments
 * `sep`: the character separating each value (defaults to `","`).
 * `drop.col`: logical (whether to remove the original variable from the output or not; defaults to `TRUE`).
 
-Examples
---------
+## Examples
 
 First load some data from a CSV stored at [github](http://github.com). The URL is an HTTPS, so we need to use `getURL` from `RCurl`.
 
@@ -86,8 +82,9 @@ Notice that the data have been entered in a very silly manner. Let's split it up
 
 
 ```r
-# Load the function!  require(RCurl) baseURL =
-# c('https://raw.github.com/mrdwab/2657-R-Functions/master/')
+# Load the function!
+# require(RCurl)
+# baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
 source(textConnection(getURL(paste0(baseURL, "scripts/concat.split.R"))))
 
 # Split up the second column, selecting by column number
@@ -95,35 +92,13 @@ head(concat.split(concat.test, 2))
 ```
 
 ```
-##     Name     Likes                   Siblings    Hates Likes_1 Likes_2
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;       1       1
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;       1       1
-## 3   Dana 1,2,4,5,6                     Pierce       2;       1       1
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;       1       1
-## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;       1       1
-## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;       1       1
-##   Likes_3 Likes_4 Likes_5 Likes_6
-## 1      NA       1       1       1
-## 2      NA       1       1       1
-## 3      NA       1       1       1
-## 4      NA       1       1       1
-## 5      NA      NA       1       1
-## 6      NA      NA       1       1
-```
-
-```r
-# ... or by name, and drop the offensive first column
-head(concat.split(concat.test, "Likes", drop.col = TRUE))
-```
-
-```
-##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3
-## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       1      NA
-## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA
-## 3   Dana                     Pierce       2;       1       1      NA
-## 4 Carole Colon , Michelle , Ballard     1;4;       1       1      NA
-## 5 Ramona           Snyder , Joann ,   1;2;3;       1       1      NA
-## 6 Kelley          James , Roxanne ,     1;4;       1       1      NA
+##     Name     Likes                   Siblings    Hates Likes_1 Likes_2 Likes_3
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;       1       1      NA
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA
+## 3   Dana 1,2,4,5,6                     Pierce       2;       1       1      NA
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;       1       1      NA
+## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;       1       1      NA
+## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;       1       1      NA
 ##   Likes_4 Likes_5 Likes_6
 ## 1       1       1       1
 ## 2       1       1       1
@@ -134,52 +109,67 @@ head(concat.split(concat.test, "Likes", drop.col = TRUE))
 ```
 
 ```r
-# The 'Hates' column uses a different separator:
-head(concat.split(concat.test, "Hates", sep = ";", drop.col = TRUE))
+# ... or by name, and drop the offensive first column
+head(concat.split(concat.test, "Likes", drop.col=TRUE))
 ```
 
 ```
-##     Name     Likes                   Siblings Hates_1 Hates_2 Hates_3
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega      NA       1      NA
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1       1
-## 3   Dana 1,2,4,5,6                     Pierce      NA       1      NA
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1      NA      NA
-## 5 Ramona   1,2,5,6           Snyder , Joann ,       1       1       1
-## 6 Kelley   1,2,5,6          James , Roxanne ,       1      NA      NA
-##   Hates_4
-## 1       1
-## 2       1
-## 3      NA
-## 4       1
-## 5      NA
-## 6       1
+##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
+## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       1      NA       1
+## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA       1
+## 3   Dana                     Pierce       2;       1       1      NA       1
+## 4 Carole Colon , Michelle , Ballard     1;4;       1       1      NA       1
+## 5 Ramona           Snyder , Joann ,   1;2;3;       1       1      NA      NA
+## 6 Kelley          James , Roxanne ,     1;4;       1       1      NA      NA
+##   Likes_5 Likes_6
+## 1       1       1
+## 2       1       1
+## 3       1       1
+## 4       1       1
+## 5       1       1
+## 6       1       1
+```
+
+```r
+# The "Hates" column uses a different separator:
+head(concat.split(concat.test, "Hates", sep=";", drop.col=TRUE))
+```
+
+```
+##     Name     Likes                   Siblings Hates_1 Hates_2 Hates_3 Hates_4
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega      NA       1      NA       1
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1       1       1
+## 3   Dana 1,2,4,5,6                     Pierce      NA       1      NA      NA
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1      NA      NA       1
+## 5 Ramona   1,2,5,6           Snyder , Joann ,       1       1       1      NA
+## 6 Kelley   1,2,5,6          James , Roxanne ,       1      NA      NA       1
 ```
 
 ```r
 # Retain the original values
-head(concat.split(concat.test, 2, mode = "value", drop.col = TRUE))
+head(concat.split(concat.test, 2, mode="value", drop.col=TRUE))
 ```
 
 ```
-##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3
-## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       2      NA
-## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       2      NA
-## 3   Dana                     Pierce       2;       1       2      NA
-## 4 Carole Colon , Michelle , Ballard     1;4;       1       2      NA
-## 5 Ramona           Snyder , Joann ,   1;2;3;       1       2      NA
-## 6 Kelley          James , Roxanne ,     1;4;       1       2      NA
-##   Likes_4 Likes_5 Likes_6
-## 1       4       5       6
-## 2       4       5       6
-## 3       4       5       6
-## 4       4       5       6
-## 5      NA       5       6
-## 6      NA       5       6
+##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
+## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       2      NA       4
+## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       2      NA       4
+## 3   Dana                     Pierce       2;       1       2      NA       4
+## 4 Carole Colon , Michelle , Ballard     1;4;       1       2      NA       4
+## 5 Ramona           Snyder , Joann ,   1;2;3;       1       2      NA      NA
+## 6 Kelley          James , Roxanne ,     1;4;       1       2      NA      NA
+##   Likes_5 Likes_6
+## 1       5       6
+## 2       5       6
+## 3       5       6
+## 4       5       6
+## 5       5       6
+## 6       5       6
 ```
 
 ```r
 # Let's try splitting some strings... Same syntax
-head(concat.split(concat.test, 3, drop.col = TRUE))
+head(concat.split(concat.test, 3, drop.col=TRUE))
 ```
 
 ```
@@ -193,8 +183,8 @@ head(concat.split(concat.test, 3, drop.col = TRUE))
 ```
 
 ```r
-# Split up the 'Likes column' into a list variable; retain original column
-head(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE))
+# Split up the "Likes column" into a list variable; retain original column
+head(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE))
 ```
 
 ```
@@ -208,18 +198,15 @@ head(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE))
 ```
 
 ```r
-# View the structure of the output for the first 10 rows to verify that
-# the new column is a list; note the difference between 'Likes' and
-# 'Likes_list'.
-str(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE)[1:10, ])
+# View the structure of the output for the first 10 rows to verify 
+# that the new column is a list; note the difference between "Likes"
+# and "Likes_list".
+str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
 ```
 
 ```
-## 'data.frame':	10 obs. of  5 variables:
-##  $ Name      : Factor w/ 48 levels "Ada","Alexis",..: 6 39 11 7 37 21 46 29 12 47
+## 'data.frame':	10 obs. of  2 variables:
 ##  $ Likes     : Factor w/ 5 levels "1,2,3,4,5","1,2,4,5",..: 3 3 3 3 5 5 3 3 3 4
-##  $ Siblings  : Factor w/ 46 levels "","Alexander , Sidney",..: 36 7 35 8 40 21 19 25 1 23
-##  $ Hates     : Factor w/ 14 levels "1;","1;2;3;",..: 11 3 8 7 2 7 8 3 2 3
 ##  $ Likes_list:List of 10
 ##   ..$ : num  1 2 4 5 6
 ##   ..$ : num  1 2 4 5 6
@@ -234,13 +221,11 @@ str(concat.split(concat.test, 2, to.list = TRUE, drop.col = FALSE)[1:10, ])
 ```
 
 
-To Do
------
+## To Do
 
 * Modify the function so that you can split multiple columns in one go?
 
-References
-----------
+## References
 
 See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10100887/1270695)
 
@@ -248,16 +233,13 @@ See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10
 
 \newpage
 
-df.sorter
-=========
+# df.sorter
 
-What it Does
-------------
+## What it Does
 
 The `df.sorter` function allows you to sort a `data.frame` by columns or rows or both. You can also quickly subset data columns by using the `var.order` argument.
 
-Arguments
----------
+## Arguments
 
 * `data`: the source `data.frame`.
 * `var.order`: the new order in which you want the variables to appear.
@@ -271,22 +253,24 @@ Arguments
 
 > NOTE: If you are sorting both by variables and within the columns, the `col.sort` order should be based on the location of the columns in the *new* `data.frame`, not the original `data.frame`.
 
-Examples
---------
+## Examples
 
 
 ```r
-# Load the function!  require(RCurl) baseURL =
-# c('https://raw.github.com/mrdwab/2657-R-Functions/master/')
+# Load the function!
+# require(RCurl)
+# baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
 source(textConnection(getURL(paste0(baseURL, "scripts/df.sorter.R"))))
 
 # Make up some data
 set.seed(1)
-dat = data.frame(id = rep(1:5, each = 3), times = rep(1:3, 5), measure1 = rnorm(15), 
-    score1 = sample(300, 15), code1 = replicate(15, paste(sample(LETTERS[1:5], 
-        3), sep = "", collapse = "")), measure2 = rnorm(15), score2 = sample(150:300, 
-        15), code2 = replicate(15, paste(sample(LETTERS[1:5], 3), sep = "", 
-        collapse = "")))
+dat = data.frame(id = rep(1:5, each=3), times = rep(1:3, 5),
+                 measure1 = rnorm(15), score1 = sample(300, 15),
+                 code1 = replicate(15, paste(sample(LETTERS[1:5], 3), 
+                                             sep="", collapse="")),
+                 measure2 = rnorm(15), score2 = sample(150:300, 15), 
+                 code2 = replicate(15, paste(sample(LETTERS[1:5], 3), 
+                                             sep="", collapse="")))
 # Preview your data
 dat
 ```
@@ -311,9 +295,9 @@ dat
 ```
 
 ```r
-# Change the variable order, grouping related columns Note that you do not
-# need to specify full variable names, just enough that the variables can
-# be uniquely identified
+# Change the variable order, grouping related columns
+# Note that you do not need to specify full variable names,
+#    just enough that the variables can be uniquely identified
 head(df.sorter(dat, var.order = c("id", "ti", "cod", "mea", "sco")))
 ```
 
@@ -344,8 +328,8 @@ head(df.sorter(dat, var.order = c(1, 2, 5, 8, 3, 6, 4, 7)))
 
 ```r
 # As above, but sorted by 'times' and then 'id'
-head(df.sorter(dat, var.order = c("id", "tim", "cod", "mea", "sco"), col.sort = c(2, 
-    1)))
+head(df.sorter(dat, var.order = c("id", "tim", "cod", "mea", "sco"), 
+               col.sort = c(2, 1)))
 ```
 
 ```
@@ -360,8 +344,8 @@ head(df.sorter(dat, var.order = c("id", "tim", "cod", "mea", "sco"), col.sort = 
 
 ```r
 # Drop 'measure1' and 'measure2', sort by 'times', and 'score1'
-head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c(2, 
-    3)))
+head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), 
+               col.sort = c(2, 3)))
 ```
 
 ```
@@ -376,8 +360,8 @@ head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c(2,
 
 ```r
 # As above, but using names
-head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), col.sort = c("times", 
-    "score1")))
+head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"), 
+               col.sort = c("times", "score1")))
 ```
 
 ```
@@ -406,7 +390,7 @@ head(df.sorter(dat, col.sort = c("times", "id")))
 ```
 
 ```r
-head(df.sorter(dat, col.sort = c("code1")))  # Sorting by character values
+head(df.sorter(dat, col.sort = c("code1"))) # Sorting by character values
 ```
 
 ```
@@ -421,7 +405,7 @@ head(df.sorter(dat, col.sort = c("code1")))  # Sorting by character values
 
 ```r
 # Pattern matching anywhere in the variable name
-head(df.sorter(dat, var.order = "co", at.start = FALSE))
+head(df.sorter(dat, var.order= "co", at.start=FALSE))
 ```
 
 ```
@@ -435,8 +419,7 @@ head(df.sorter(dat, var.order = "co", at.start = FALSE))
 ```
 
 
-To Do
------
+## To Do
 
 * Add an option to sort ascending or descending---at the moment, not supported.
 
@@ -444,34 +427,36 @@ To Do
 
 \newpage
 
-multi.freq.table
-================
+# multi.freq.table
 
-What it Does
-------------
+## What it Does
+
 The `multi.freq.table` function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers. In addition to tabulating the frequency (`Freq`), there are two other columns in the output: *Percent of Responses* (`Pct.of.Resp`) and *Percent of Cases* (`Pct.of.Cases`). *Percent of Responses* is the frequency divided by the total number of answers provided; this column should sum to 100%. *Percent of Cases* is the frequency divided by the total number of valid cases; this column would mot likely sum to more than 100% since each respondent (case) can select multiple answers.
 
-Arguments
----------
+## Arguments
+
 * `data`: The multiple responses that need to be tabulated.
 * `sep`: The desired separator for collapsing the combinations of options; defaults to `""` (collapsing with no space between each option name).
 * `dropzero`: Should combinations with a frequency of zero be dropped from the final table? Defaults to `FALSE`.
 * `clean`: Should the original tabulated data be retained or dropped from the final table? Defaults to `TRUE`.
 * `basic`: Should a basic table of each item, rather than combinations of items, be created? Defaults to `FALSE`.
 
-Examples
---------
+## Examples
+
 
 ```r
-# Load the function!  require(RCurl) baseURL =
-# c('https://raw.github.com/mrdwab/2657-R-Functions/master/')
+# Load the function!
+# require(RCurl)
+# baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
 source(textConnection(getURL(paste0(baseURL, "scripts/multi.freq.table.R"))))
 
 # Make up some data
 set.seed(1)
-dat = data.frame(A = sample(c(0, 1), 20, replace = TRUE), B = sample(c(0, 1), 
-    20, replace = TRUE), C = sample(c(0, 1), 20, replace = TRUE), D = sample(c(0, 
-    1), 20, replace = TRUE), E = sample(c(0, 1), 20, replace = TRUE))
+dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE),
+                 B = sample(c(0, 1), 20, replace=TRUE),
+                 C = sample(c(0, 1), 20, replace=TRUE),
+                 D = sample(c(0, 1), 20, replace=TRUE),
+                 E = sample(c(0, 1), 20, replace=TRUE))
 # View your data
 dat
 ```
@@ -542,10 +527,10 @@ multi.freq.table(dat)
 ```
 
 ```r
-# Tabulate only on variables 'A', 'B', and 'D', with a different
-# separator, dropping any zero frequency values, and keeping the original
-# tabulations.  Note that there are no solitary 'B' responses.
-multi.freq.table(dat[c(1, 2, 4)], sep = "-", dropzero = TRUE, clean = FALSE)
+# Tabulate only on variables "A", "B", and "D", with a different
+# separator, dropping any zero frequency values, and keeping the original tabulations.
+# Note that there are no solitary "B" responses.
+multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=TRUE, clean=FALSE)
 ```
 
 ```
@@ -561,7 +546,7 @@ multi.freq.table(dat[c(1, 2, 4)], sep = "-", dropzero = TRUE, clean = FALSE)
 
 ```r
 # View a basic table.
-multi.freq.table(dat, basic = TRUE)
+multi.freq.table(dat, basic=TRUE)
 ```
 
 ```
@@ -575,41 +560,39 @@ multi.freq.table(dat, basic = TRUE)
 
 
 
-References
-----------
+## References
+
 `apply` shortcut for creating the `Combn` column in the output by [Justin](http://stackoverflow.com/users/906490/justin)  
 See: [http://stackoverflow.com/q/11348391/1270695](http://stackoverflow.com/q/11348391/1270695) and [http://stackoverflow.com/q/11622660/1270695](http://stackoverflow.com/q/11622660/1270695)
 
 \newpage
 
-row.extractor
-=============
+# row.extractor
 
-What it Does
-------------
+## What it Does
 
 The `row.extractor` function takes a `data.frame` and extracts rows with the `min`, `median`, or `max` values of a given variable, or extracts rows with specific quantiles of a given variable.
 
-Arguments
----------
+## Arguments
 
 * `data`: the source `data.frame`.
 * `extract.by`: the column which will be used as the reference for extraction; can be specified either by the column number or the variable name.
 * `what`: options are `min` (for all rows matching the minimum value), `median` (for the median row or rows), `max` (for all rows matching the maximum value), or `all` (for `min`, `median`, and `max`); alternatively, a numeric vector can be specified with the desired quantiles, for instance `c(0, .25, .5, .75, 1)`
 
-Examples
---------
+## Examples
 
 
 ```r
-# Load the function!  require(RCurl) baseURL =
-# c('https://raw.github.com/mrdwab/2657-R-Functions/master/')
+# Load the function!
+# require(RCurl)
+# baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
 source(textConnection(getURL(paste0(baseURL, "scripts/row.extractor.R"))))
 
 # Make up some data
 set.seed(1)
-dat = data.frame(V1 = 1:50, V2 = rnorm(50), V3 = round(abs(rnorm(50)), digits = 2), 
-    V4 = sample(1:30, 50, replace = TRUE))
+dat = data.frame(V1 = 1:50, V2 = rnorm(50), 
+                 V3 = round(abs(rnorm(50)), digits=2), 
+                 V4 = sample(1:30, 50, replace=TRUE))
 # Get a sumary of the data
 summary(dat)
 ```
@@ -626,7 +609,7 @@ summary(dat)
 
 ```r
 # Get the rows corresponding to the 'min', 'median', and 'max' of 'V4'
-row.extractor(dat, 4)
+row.extractor(dat, 4) 
 ```
 
 ```
@@ -643,7 +626,7 @@ row.extractor(dat, 4)
 
 ```r
 # Get the 'min' rows only, referenced by the variable name
-row.extractor(dat, "V4", "min")
+row.extractor(dat, "V4", "min") 
 ```
 
 ```
@@ -652,10 +635,10 @@ row.extractor(dat, "V4", "min")
 ```
 
 ```r
-# Get the 'median' rows only. Notice that there are two rows since we have
-# an even number of cases and true median is the mean of the two central
-# sorted values
-row.extractor(dat, "V4", "median")
+# Get the 'median' rows only. Notice that there are two rows 
+#    since we have an even number of cases and true median 
+#    is the mean of the two central sorted values
+row.extractor(dat, "V4", "median") 
 ```
 
 ```
@@ -666,7 +649,7 @@ row.extractor(dat, "V4", "median")
 
 ```r
 # Get the rows corresponding to the deciles of 'V3'
-row.extractor(dat, "V3", seq(0.1, 1, 0.1))
+row.extractor(dat, "V3", seq(0.1, 1, 0.1)) 
 ```
 
 ```
@@ -685,8 +668,7 @@ row.extractor(dat, "V3", seq(0.1, 1, 0.1))
 
 
 
-References
-----------
+## References
 
 `which.quantile` function by [cbeleites](http://stackoverflow.com/users/755257/cbeleites)  
 See: [http://stackoverflow.com/q/10256503/1270695](http://stackoverflow.com/q/10256503/1270695)
@@ -695,8 +677,7 @@ See: [http://stackoverflow.com/q/10256503/1270695](http://stackoverflow.com/q/10
 
 \part{The Functions}
 
-Where to Get the Functions
-==========================
+# Where to Get the Functions
 
 The most current source code for the functions described in this document follow.
 
@@ -1006,4 +987,164 @@ row.extractor = function(data, extract.by, what="all") {
   }
 }
 ```
+
+
+\newpage
+
+\part{Snippets and Tips}
+
+# Snippets
+
+## Load All Scripts and Data Files From Multiple Directories
+
+
+```r
+load.scripts.and.data = function(path,
+                                 pattern=list(scripts = "*.R$",
+                                              data = "*.rda$|*.Rdata$"), 
+                                 ignore.case=TRUE) {
+  # Reads all the data files and scripts from specified directories.
+  #     In general, should only need to specify the directories.
+  #     Specify directories without trailing slashes.
+  #
+  # === EXAMPLE ===
+  #
+  #    load.scripts.and.data(c("~/Dropbox/Public", 
+  #                            "~/Dropbox/Public/R Functions"))
+    
+  file.sources = list.files(path, pattern=pattern$scripts, 
+                            full.names=TRUE, ignore.case=ignore.case)
+  data.sources = list.files(path, pattern=pattern$data,
+                            full.names=TRUE, ignore.case=ignore.case)
+  sapply(data.sources,load,.GlobalEnv)
+  sapply(file.sources,source,.GlobalEnv)
+}
+```
+
+
+## Convert a List of Data Frames Into Individual Data Frames
+
+
+```r
+unlist.dfs = function(data) {
+  # Specify the quoted name of the source list.
+  q = get(data)
+  prefix = paste0(data, "_", 1:length(q))
+  for (i in 1:length(q)) assign(prefix[i], q[[i]], envir=.GlobalEnv)
+}
+```
+
+
+### Example
+
+*Note that the list name must be quoted.*
+
+
+```r
+# Sample data
+temp = list(A = data.frame(A = 1:2, B = 3:4), 
+            B = data.frame(C = 5:6, D = 7:8))
+# View it
+temp
+```
+
+```
+## $A
+##   A B
+## 1 1 3
+## 2 2 4
+## 
+## $B
+##   C D
+## 1 5 7
+## 2 6 8
+## 
+```
+
+```r
+# Remove any files with similar names to output
+rm(list=ls(pattern="temp_"))
+# The following should not work
+temp_1
+```
+
+```
+## Error: object 'temp_1' not found
+```
+
+```r
+# Split it up!
+unlist.dfs("temp")
+# List files with the desired pattern
+ls(pattern="temp_")
+```
+
+```
+## [1] "temp_1" "temp_2"
+```
+
+```r
+# View the new files
+temp_1
+```
+
+```
+##   A B
+## 1 1 3
+## 2 2 4
+```
+
+```r
+temp_2
+```
+
+```
+##   C D
+## 1 5 7
+## 2 6 8
+```
+
+
+
+
+\newpage
+
+# Tips
+
+## Batch Convert Factor to Character Variables
+
+In the example data below, `author` and `title` are automatically converted to factor (unless you add the argument `stringsAsFactor = FALSE` when you are creating the data). What if you forgot?
+
+Use `sapply` to identify factors and convert to string.
+
+
+```r
+dat = data.frame(title = c("title1", "title2", "title3"),
+                 author = c("author1", "author2", "author3"),
+                 customerID = c(1, 2, 1))
+str(dat)
+```
+
+```
+## 'data.frame':	3 obs. of  3 variables:
+##  $ title     : Factor w/ 3 levels "title1","title2",..: 1 2 3
+##  $ author    : Factor w/ 3 levels "author1","author2",..: 1 2 3
+##  $ customerID: num  1 2 1
+```
+
+```r
+dat[sapply(dat, is.factor)] = lapply(dat[sapply(dat, is.factor)], as.character)
+str(dat)
+```
+
+```
+## 'data.frame':	3 obs. of  3 variables:
+##  $ title     : chr  "title1" "title2" "title3"
+##  $ author    : chr  "author1" "author2" "author3"
+##  $ customerID: num  1 2 1
+```
+
+
+
+
 
