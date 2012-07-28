@@ -1310,5 +1310,14 @@ Reduce(function(x, y) merge(x, y, all=TRUE),
 ```
 
 
+### How Much Memory Are the Objects in Your Workspace Using?
+
+Sometimes you need to just check and see how much memory the objects in your workspace occupy.
+
+
+```r
+sort(sapply(ls(), function(x) {object.size(get(x))}))
+```
+
 
 

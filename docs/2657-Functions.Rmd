@@ -435,5 +435,12 @@ Reduce(function(x, y) merge(x, y, all=TRUE),
        list(JAN, FEB, MAR, APR))
 ```
 
+### How Much Memory Are the Objects in Your Workspace Using?
+
+Sometimes you need to just check and see how much memory the objects in your workspace occupy.
+
+```{r memoryoccupy, tidy=FALSE, eval=FALSE}
+sort(sapply(ls(), function(x) {object.size(get(x))}))
+```
 
 

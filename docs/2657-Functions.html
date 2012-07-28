@@ -2530,6 +2530,13 @@ temp_3 = merge(temp_2, APR, all=TRUE)
 ## 4  5    F    B &lt;NA&gt; &lt;NA&gt;
 </code></pre>
 
+<h3>How Much Memory Are the Objects in Your Workspace Using?</h3>
+
+<p>Sometimes you need to just check and see how much memory the objects in your workspace occupy.</p>
+
+<pre><code class="r">sort(sapply(ls(), function(x) {object.size(get(x))}))
+</code></pre>
+
 </body>
 
 </html>
