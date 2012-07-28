@@ -265,7 +265,7 @@ The most current source code for the functions described in this document follow
 
 To load the functions, you can directly source them from the 2657 R Functions page at github: [https://github.com/mrdwab/2657-R-Functions](https://github.com/mrdwab/2657-R-Functions)
 
-You should be able to load the functions using the following (replace `-----------` with the function name):
+You should be able to load the functions using the following (replace `-----------` with the function name^[The "snippets" in Part III of this document can all be loaded from the script `snippets.R`.]):
 
 ```{r rcurl_load_scripts, eval=FALSE}
 require(RCurl)
@@ -325,7 +325,6 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 # Sample data
 temp = list(A = data.frame(A = 1:2, B = 3:4), 
             B = data.frame(C = 5:6, D = 7:8))
-# View it
 temp
 # Remove any files with similar names to output
 rm(list=ls(pattern="temp_"))
@@ -340,27 +339,101 @@ temp_1
 temp_2
 ```
 
+## Convert a Data Frame Into a List With Each Column Becoming a List Item
+
+```{r dfcolslist, tidy=FALSE}
+```
+
+### Examples
+
+```{r dfcolslist_examples, tidy=FALSE}
+# Sample data
+dat = data.frame(A = c(1:2), B = c(3:4), C = c(5:6))
+dat
+# Split into a list, retaining data.frame structure
+dfcols.list(dat)
+# Split into a list, converting to vector
+dfcols.list(dat, vectorize=TRUE)
+```
+
+## Rename an Object in the Workplace
+
+```{r rmmove, tidy=FALSE}
+```
+
+### Basic Usage
+
+If there is already an object with the same name in the workplace, the function will ask you if you want to replace the object or not. Otherwise, the basic usage is:
+
+```{r rmmove_example, eval=FALSE, tidy=FALSE}
+# Rename "object_1" to "object_2"
+mv(object_1, object_2)
+```
+
 
 
 \newpage
 
 # Tips
 
-## Batch Convert Factor to Character Variables
+Many of the following tips are useful for reducing repetitious tasks. They might seem silly or unnecessary with the small examples provided, but they can be *huge* time-savers when dealing with larger objects or larger sets of data.
 
-In the example data below, `author` and `title` are automatically converted to factor (unless you add the argument `stringsAsFactor = FALSE` when you are creating the data). What if you forgot?
+## Batch Convert Factor Variables to Character Variables
 
-Use `sapply` to identify factors and convert to string.
+In the example data below, `author` and `title` are automatically converted to factor (unless you add the argument `stringsAsFactor = FALSE` when you are creating the data). What if you forgot and actually needed the variables to be in mode `as.character` instead?
+
+Use `sapply` to identify which variables are currently factors and convert them to `as.character`.
 
 ```{r factortocharacter, tidy=FALSE}
 dat = data.frame(title = c("title1", "title2", "title3"),
                  author = c("author1", "author2", "author3"),
                  customerID = c(1, 2, 1))
 str(dat)
-dat[sapply(dat, is.factor)] = lapply(dat[sapply(dat, is.factor)], as.character)
+# Left of the equal sign identifies and extracts the factor variables;
+#    right converts them from factor to character
+dat[sapply(dat, is.factor)] = lapply(dat[sapply(dat, is.factor)], 
+                                     as.character)
 str(dat)
 ```
 
+## Using Reduce to Merge Multiple Data Frames at Once
+
+The `merge` function in R only merges two objects at a time. This is usually fine, but what if you had several `data.frames` that needed to be merged?
+
+Consider the following data, where we want to take monthly tables and merge them into an annual table:
+
+```{r reduce_sample_data, tidy=FALSE}
+set.seed(1)
+JAN = data.frame(ID = sample(5, 3), JAN = sample(LETTERS, 3))
+FEB = data.frame(ID = sample(5, 3), FEB = sample(LETTERS, 3))
+MAR = data.frame(ID = sample(5, 3), MAR = sample(LETTERS, 3))
+APR = data.frame(ID = sample(5, 3), APR = sample(LETTERS, 3))
+```
+
+If we wanted to merge these into a single `data.frame` using `merge`, we might end up creating several temporary objects and merging those, like this:
+
+```{r merge_nonsense_1, tidy=FALSE, eval=FALSE}
+temp_1 = merge(JAN, FEB, all=TRUE)
+temp_2 = merge(temp_1, MAR, all=TRUE)
+temp_3 = merge(temp_2, APR, all=TRUE)
+```
+
+Or, we might nest a whole bunch of `merge` commands together, something like this:
+
+```{r merge_nonsense, tidy=FALSE, eval=FALSE}
+merge(merge(merge(JAN, FEB, all=TRUE), 
+            MAR, all=TRUE), 
+      APR, all=TRUE)
+```
+
+However, that first option requires a lot of unnecessary typing and produces unnecessary objects that we then need to remember to remove, and the second option is not very reader-friendly---try doing a merge like that with, say, 12 `data.frames` if we had an entire year of data!
+
+Use `Reduce` instead, simply specifying all the objects to be merged in a `list`:
+
+```{r merge_reduce, tidy=FALSE}
+Reduce(function(x, y) merge(x, y, all=TRUE), 
+       list(JAN, FEB, MAR, APR))
+```
 
 
 

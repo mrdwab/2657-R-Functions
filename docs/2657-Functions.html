@@ -619,7 +619,7 @@ See: <a href="http://stackoverflow.com/q/10256503/1270695">http://stackoverflow.
 
 <p>To load the functions, you can directly source them from the 2657 R Functions page at github: <a href="https://github.com/mrdwab/2657-R-Functions">https://github.com/mrdwab/2657-R-Functions</a></p>
 
-<p>You should be able to load the functions using the following (replace <code>-----------</code> with the function name):</p>
+<p>You should be able to load the functions using the following (replace <code>-----------</code> with the function name<sup>[The</sup> &ldquo;snippets&rdquo; in Part III of this document can all be loaded from the script <code>snippets.R</code>.]):</p>
 
 <pre><code class="r">require(RCurl)
 baseURL = c(&quot;https://raw.github.com/mrdwab/2657-R-Functions/master/&quot;)
@@ -957,7 +957,6 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 <pre><code class="r"># Sample data
 temp = list(A = data.frame(A = 1:2, B = 3:4), 
             B = data.frame(C = 5:6, D = 7:8))
-# View it
 temp
 </code></pre>
 
@@ -1006,6 +1005,95 @@ temp_1
 <pre><code class="no-highlight">##   C D
 ## 1 5 7
 ## 2 6 8
+</code></pre>
+
+<h2>Convert a Data Frame Into a List With Each Column Becoming a List Item</h2>
+
+<pre><code class="r">dfcols.list = function(data, vectorize=FALSE) {
+  # Specify the unquoted name of the data.frame to convert
+  if (isTRUE(vectorize)) {
+    dat.list = sapply(1:ncol(data), function(x) data[x])
+  } else if (!isTRUE(vectorize)) {
+    dat.list = lapply(names(data), function(x) data[x])
+    names(dat.list) = colnames(data)
+  }
+  dat.list
+}
+</code></pre>
+
+<h3>Examples</h3>
+
+<pre><code class="r"># Sample data
+dat = data.frame(A = c(1:2), B = c(3:4), C = c(5:6))
+dat
+</code></pre>
+
+<pre><code class="no-highlight">##   A B C
+## 1 1 3 5
+## 2 2 4 6
+</code></pre>
+
+<pre><code class="r"># Split into a list, retaining data.frame structure
+dfcols.list(dat)
+</code></pre>
+
+<pre><code class="no-highlight">## $A
+##   A
+## 1 1
+## 2 2
+## 
+## $B
+##   B
+## 1 3
+## 2 4
+## 
+## $C
+##   C
+## 1 5
+## 2 6
+## 
+</code></pre>
+
+<pre><code class="r"># Split into a list, converting to vector
+dfcols.list(dat, vectorize=TRUE)
+</code></pre>
+
+<pre><code class="no-highlight">## $A
+## [1] 1 2
+## 
+## $B
+## [1] 3 4
+## 
+## $C
+## [1] 5 6
+## 
+</code></pre>
+
+<h2>Rename an Object in the Workplace</h2>
+
+<pre><code class="r">mv &lt;- function (a, b) {
+  # Source: https://stat.ethz.ch/pipermail/r-help/2008-March/156035.html
+  anm &lt;- deparse(substitute(a))
+  bnm &lt;- deparse(substitute(b))
+  if (!exists(anm,where=1,inherits=FALSE))
+    stop(paste(anm, &quot;does not exist.\n&quot;))
+  if (exists(bnm,where=1,inherits=FALSE)) {
+    ans &lt;- readline(paste(&quot;Overwrite &quot;, bnm, &quot;? (y/n) &quot;, sep =  &quot;&quot;))
+    if (ans != &quot;y&quot;)
+      return(invisible())
+  }
+  assign(bnm, a, pos = 1)
+  rm(list = anm, pos = 1)
+  invisible()
+}
+</code></pre>
+
+<h3>Basic Usage</h3>
+
+<p>If there is already an object with the same name in the workplace, the function will ask you if you want to replace the object or not. Otherwise, the basic usage is:</p>
+
+<pre><code class="r"># Rename &quot;object_1&quot; to &quot;object_2&quot;
+mv(object_1, object_2)
 </code></pre>
 
 <p>\newpage</p>
@@ -1886,7 +1974,7 @@ See: <a href="http://stackoverflow.com/q/10256503/1270695">http://stackoverflow.
 
 <p>To load the functions, you can directly source them from the 2657 R Functions page at github: <a href="https://github.com/mrdwab/2657-R-Functions">https://github.com/mrdwab/2657-R-Functions</a></p>
 
-<p>You should be able to load the functions using the following (replace <code>-----------</code> with the function name):</p>
+<p>You should be able to load the functions using the following (replace <code>-----------</code> with the function name<sup>[The</sup> &ldquo;snippets&rdquo; in Part III of this document can all be loaded from the script <code>snippets.R</code>.]):</p>
 
 <pre><code class="r">require(RCurl)
 baseURL = c(&quot;https://raw.github.com/mrdwab/2657-R-Functions/master/&quot;)
@@ -2224,7 +2312,6 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 <pre><code class="r"># Sample data
 temp = list(A = data.frame(A = 1:2, B = 3:4), 
             B = data.frame(C = 5:6, D = 7:8))
-# View it
 temp
 </code></pre>
 
@@ -2275,15 +2362,106 @@ temp_1
 ## 2 6 8
 </code></pre>
 
+<h2>Convert a Data Frame Into a List With Each Column Becoming a List Item</h2>
+
+<pre><code class="r">dfcols.list = function(data, vectorize=FALSE) {
+  # Specify the unquoted name of the data.frame to convert
+  if (isTRUE(vectorize)) {
+    dat.list = sapply(1:ncol(data), function(x) data[x])
+  } else if (!isTRUE(vectorize)) {
+    dat.list = lapply(names(data), function(x) data[x])
+    names(dat.list) = colnames(data)
+  }
+  dat.list
+}
+</code></pre>
+
+<h3>Examples</h3>
+
+<pre><code class="r"># Sample data
+dat = data.frame(A = c(1:2), B = c(3:4), C = c(5:6))
+dat
+</code></pre>
+
+<pre><code class="no-highlight">##   A B C
+## 1 1 3 5
+## 2 2 4 6
+</code></pre>
+
+<pre><code class="r"># Split into a list, retaining data.frame structure
+dfcols.list(dat)
+</code></pre>
+
+<pre><code class="no-highlight">## $A
+##   A
+## 1 1
+## 2 2
+## 
+## $B
+##   B
+## 1 3
+## 2 4
+## 
+## $C
+##   C
+## 1 5
+## 2 6
+## 
+</code></pre>
+
+<pre><code class="r"># Split into a list, converting to vector
+dfcols.list(dat, vectorize=TRUE)
+</code></pre>
+
+<pre><code class="no-highlight">## $A
+## [1] 1 2
+## 
+## $B
+## [1] 3 4
+## 
+## $C
+## [1] 5 6
+## 
+</code></pre>
+
+<h2>Rename an Object in the Workplace</h2>
+
+<pre><code class="r">mv &lt;- function (a, b) {
+  # Source: https://stat.ethz.ch/pipermail/r-help/2008-March/156035.html
+  anm &lt;- deparse(substitute(a))
+  bnm &lt;- deparse(substitute(b))
+  if (!exists(anm,where=1,inherits=FALSE))
+    stop(paste(anm, &quot;does not exist.\n&quot;))
+  if (exists(bnm,where=1,inherits=FALSE)) {
+    ans &lt;- readline(paste(&quot;Overwrite &quot;, bnm, &quot;? (y/n) &quot;, sep =  &quot;&quot;))
+    if (ans != &quot;y&quot;)
+      return(invisible())
+  }
+  assign(bnm, a, pos = 1)
+  rm(list = anm, pos = 1)
+  invisible()
+}
+</code></pre>
+
+<h3>Basic Usage</h3>
+
+<p>If there is already an object with the same name in the workplace, the function will ask you if you want to replace the object or not. Otherwise, the basic usage is:</p>
+
+<pre><code class="r"># Rename &quot;object_1&quot; to &quot;object_2&quot;
+mv(object_1, object_2)
+</code></pre>
+
 <p>\newpage</p>
 
 <h1>Tips</h1>
 
-<h2>Batch Convert Factor to Character Variables</h2>
+<p>Many of the following tips are useful for reducing repetitious tasks. They might seem silly or unnecessary with the small examples provided, but they can be <em>huge</em> time-savers when dealing with larger objects or larger sets of data.</p>
 
-<p>In the example data below, <code>author</code> and <code>title</code> are automatically converted to factor (unless you add the argument <code>stringsAsFactor = FALSE</code> when you are creating the data). What if you forgot?</p>
+<h2>Batch Convert Factor Variables to Character Variables</h2>
 
-<p>Use <code>sapply</code> to identify factors and convert to string.</p>
+<p>In the example data below, <code>author</code> and <code>title</code> are automatically converted to factor (unless you add the argument <code>stringsAsFactor = FALSE</code> when you are creating the data). What if you forgot and actually needed the variables to be in mode <code>as.character</code> instead?</p>
+
+<p>Use <code>sapply</code> to identify which variables are currently factors and convert them to <code>as.character</code>.</p>
 
 <pre><code class="r">dat = data.frame(title = c(&quot;title1&quot;, &quot;title2&quot;, &quot;title3&quot;),
                  author = c(&quot;author1&quot;, &quot;author2&quot;, &quot;author3&quot;),
@@ -2297,7 +2475,10 @@ str(dat)
 ##  $ customerID: num  1 2 1
 </code></pre>
 
-<pre><code class="r">dat[sapply(dat, is.factor)] = lapply(dat[sapply(dat, is.factor)], as.character)
+<pre><code class="r"># Left of the equal sign identifies and extracts the factor variables;
+#    right converts them from factor to character
+dat[sapply(dat, is.factor)] = lapply(dat[sapply(dat, is.factor)], 
+                                     as.character)
 str(dat)
 </code></pre>
 
@@ -2305,6 +2486,48 @@ str(dat)
 ##  $ title     : chr  &quot;title1&quot; &quot;title2&quot; &quot;title3&quot;
 ##  $ author    : chr  &quot;author1&quot; &quot;author2&quot; &quot;author3&quot;
 ##  $ customerID: num  1 2 1
+</code></pre>
+
+<h2>Using Reduce to Merge Multiple Data Frames at Once</h2>
+
+<p>The <code>merge</code> function in R only merges two objects at a time. This is usually fine, but what if you had several <code>data.frames</code> that needed to be merged?</p>
+
+<p>Consider the following data, where we want to take monthly tables and merge them into an annual table:</p>
+
+<pre><code class="r">set.seed(1)
+JAN = data.frame(ID = sample(5, 3), JAN = sample(LETTERS, 3))
+FEB = data.frame(ID = sample(5, 3), FEB = sample(LETTERS, 3))
+MAR = data.frame(ID = sample(5, 3), MAR = sample(LETTERS, 3))
+APR = data.frame(ID = sample(5, 3), APR = sample(LETTERS, 3))
+</code></pre>
+
+<p>If we wanted to merge these into a single <code>data.frame</code> using <code>merge</code>, we might end up creating several temporary objects and merging those, like this:</p>
+
+<pre><code class="r">temp_1 = merge(JAN, FEB, all=TRUE)
+temp_2 = merge(temp_1, MAR, all=TRUE)
+temp_3 = merge(temp_2, APR, all=TRUE)
+</code></pre>
+
+<p>Or, we might nest a whole bunch of <code>merge</code> commands together, something like this:</p>
+
+<pre><code class="r">merge(merge(merge(JAN, FEB, all=TRUE), 
+            MAR, all=TRUE), 
+      APR, all=TRUE)
+</code></pre>
+
+<p>However, that first option requires a lot of unnecessary typing and produces unnecessary objects that we then need to remember to remove, and the second option is not very reader-friendly&mdash;try doing a merge like that with, say, 12 <code>data.frames</code> if we had an entire year of data!</p>
+
+<p>Use <code>Reduce</code> instead, simply specifying all the objects to be merged in a <code>list</code>:</p>
+
+<pre><code class="r">Reduce(function(x, y) merge(x, y, all=TRUE), 
+       list(JAN, FEB, MAR, APR))
+</code></pre>
+
+<pre><code class="no-highlight">##   ID  JAN  FEB  MAR  APR
+## 1  2    X    E    R    F
+## 2  3 &lt;NA&gt;    F    X    D
+## 3  4    V &lt;NA&gt;    M    Q
+## 4  5    F    B &lt;NA&gt; &lt;NA&gt;
 </code></pre>
 
 </body>
