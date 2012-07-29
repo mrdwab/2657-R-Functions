@@ -37,7 +37,6 @@ dfcols.list = function(data, vectorize=FALSE) {
     dat.list = sapply(1:ncol(data), function(x) data[x])
   } else if (!isTRUE(vectorize)) {
     dat.list = lapply(names(data), function(x) data[x])
-    names(dat.list) = colnames(data)
   }
   dat.list
 }
