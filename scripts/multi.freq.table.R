@@ -1,6 +1,6 @@
 ## @knitr multifreqtable
 multi.freq.table = function(data, sep="", dropzero=FALSE,
-                            clean=TRUE, basic=FALSE) {
+                            clean=TRUE, basic=FALSE, useNA="always") {
   # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
@@ -22,7 +22,7 @@ multi.freq.table = function(data, sep="", dropzero=FALSE,
                         Pct.of.Resp = (colSums(data)/sum(data))*100,
                         Pct.of.Cases = (colSums(data)/nrow(data))*100)
   } else if (!isTRUE(basic)) {
-    counts = data.frame(table(data))
+    counts = data.frame(table(data, useNA = useNA))
     N = ncol(counts)
     counts$Combn = apply(counts[-N] == 1, 1, 
                          function(x) paste(names(counts[-N])[x],
