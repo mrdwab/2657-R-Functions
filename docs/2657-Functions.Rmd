@@ -33,7 +33,7 @@ The `concat.split` function takes a column with multiple values, splits the valu
 * `data`: the source `data.frame`.
 * `split.col`: the variable that needs to be split; can be specified either by the column number or the variable name.
 * `to.list`: logical; should the split column be returned as a single variable list (named "original-variable_list") or multiple new variables? If `to.list` is `TRUE`, the `mode` argument is ignored and a list of the original values are returned.
-* `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`).
+* `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`, like Boolean, but without assuming `0` when data is not available).
 * `sep`: the character separating each value (defaults to `","`).
 * `drop.col`: logical (whether to remove the original variable from the output or not; defaults to `TRUE`).
 
@@ -80,9 +80,45 @@ head(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE))
 str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
 ```
 
-## To Do
+## Advanced Usage
 
-* Modify the function so that you can split multiple columns in one go?
+It is also possible to use `concat.split` to split multiple columns at once. This can be done in stages, or it can be all wrapped in nested statements, as follows:
+
+```{r concat_split_advanced, eval=FALSE, tidy=FALSE}
+do.call(cbind, c(concat.test[1],
+                 lapply(lapply(2:ncol(concat.test),
+                               function(x) concat.test[x]),
+                        concat.split, split.col=1, drop=TRUE, sep=";|,")))
+```
+
+In the example above (working from the inside of the function outwards):
+
+* First, `lapply(2:ncol(concat.test), ...)` splits the columns of the `data.frame` into a list. 
+* Second, `lapply(lapply(...))` does the splitting work.
+    * Note the use of `sep=";|,"` to match multiple separators on which to split; if further separators are required, they can be specified by using the pipe symbol (`|`) *with no leading or trailing spaces*.
+* Finally, `do.call(cbind, ...)` is evaluated last, "binding" the data together by columns. In this case, the data being bound together is the first column from the `concat.test` dataset, and the splitted output of the remaining columns. 
+
+Alternatively, a similar approach can be taken using the function `dfcols.list` (see the "Snippets and Tips" section of this manual for the `dfcols.list` function).
+
+```{r dfcolslist, echo=FALSE, eval=TRUE}
+```
+
+```{r concat_split_advanced_2, tidy=FALSE}
+# Show just the first few lines, Boolean mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, sep=";|,"))))
+# Show just the first few lines, value mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, 
+                             sep=";|,", mode="value"))))
+# Show just the first few lines, list output mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, 
+                             sep=";|,", to.list=TRUE))))
+```
 
 ## References
 
@@ -91,6 +127,7 @@ See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10
 
 
 \newpage
+
 
 # df.sorter
 
@@ -161,6 +198,7 @@ head(df.sorter(dat, var.order= "co", at.start=FALSE))
 
 \newpage
 
+
 # multi.freq.table
 
 ## What it Does
@@ -202,6 +240,11 @@ multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=TRUE, clean=FALSE)
 multi.freq.table(dat, basic=TRUE)
 ```
 
+## To Do
+
+* Update docs with `useNA`.
+* Update function to deal with `NA` responses better.
+* Update function for dealing with different types of multiple response questions input formats.
 
 ## References
 
@@ -209,6 +252,7 @@ multi.freq.table(dat, basic=TRUE)
 See: [http://stackoverflow.com/q/11348391/1270695](http://stackoverflow.com/q/11348391/1270695) and [http://stackoverflow.com/q/11622660/1270695](http://stackoverflow.com/q/11622660/1270695)
 
 \newpage
+
 
 # row.extractor
 

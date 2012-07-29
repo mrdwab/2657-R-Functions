@@ -17,7 +17,7 @@
 <li><code>data</code>: the source <code>data.frame</code>.</li>
 <li><code>split.col</code>: the variable that needs to be split; can be specified either by the column number or the variable name.</li>
 <li><code>to.list</code>: logical; should the split column be returned as a single variable list (named &ldquo;original-variable_list&rdquo;) or multiple new variables? If <code>to.list</code> is <code>TRUE</code>, the <code>mode</code> argument is ignored and a list of the original values are returned.</li>
-<li><code>mode</code>: can be either <code>binary</code> or <code>value</code> (where <code>binary</code> is default and it recodes values to <code>1</code> or <code>NA</code>).</li>
+<li><code>mode</code>: can be either <code>binary</code> or <code>value</code> (where <code>binary</code> is default and it recodes values to <code>1</code> or <code>NA</code>, like Boolean, but without assuming <code>0</code> when data is not available).</li>
 <li><code>sep</code>: the character separating each value (defaults to <code>&quot;,&quot;</code>).</li>
 <li><code>drop.col</code>: logical (whether to remove the original variable from the output or not; defaults to <code>TRUE</code>).</li>
 </ul>
@@ -187,11 +187,90 @@ str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
 ##   ..$ : num  1 2 5
 </code></pre>
 
-<h2>To Do</h2>
+<h2>Advanced Usage</h2>
+
+<p>It is also possible to use <code>concat.split</code> to split multiple columns at once. This can be done in stages, or it can be all wrapped in nested statements, as follows:</p>
+
+<pre><code class="r">do.call(cbind, c(concat.test[1],
+                 lapply(lapply(2:ncol(concat.test),
+                               function(x) concat.test[x]),
+                        concat.split, split.col=1, drop=TRUE, sep=&quot;;|,&quot;)))
+</code></pre>
+
+<p>In the example above (working from the inside of the function outwards):</p>
 
 <ul>
-<li>Modify the function so that you can split multiple columns in one go?</li>
+<li>First, <code>lapply(2:ncol(concat.test), ...)</code> splits the columns of the <code>data.frame</code> into a list. </li>
+<li>Second, <code>lapply(lapply(...))</code> does the splitting work.
+
+<ul>
+<li>Note the use of <code>sep=&quot;;|,&quot;</code> to match multiple separators on which to split; if further separators are required, they can be specified by using the pipe symbol (<code>|</code>) <em>with no leading or trailing spaces</em>.</li>
+</ul></li>
+<li>Finally, <code>do.call(cbind, ...)</code> is evaluated last, &ldquo;binding&rdquo; the data together by columns. In this case, the data being bound together is the first column from the <code>concat.test</code> dataset, and the splitted output of the remaining columns. </li>
 </ul>
+
+<p>Alternatively, a similar approach can be taken using the function <code>dfcols.list</code> (see the &ldquo;Snippets and Tips&rdquo; section of this manual for the <code>dfcols.list</code> function).</p>
+
+<pre><code class="r"># Show just the first few lines, Boolean mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, sep=&quot;;|,&quot;))))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
+## 1   Boyd       1       1      NA       1       1       1   Reynolds     Albert
+## 2  Rufus       1       1      NA       1       1       1      Cohen       Bert
+## 3   Dana       1       1      NA       1       1       1     Pierce       &lt;NA&gt;
+## 4 Carole       1       1      NA       1       1       1      Colon   Michelle
+## 5 Ramona       1       1      NA      NA       1       1     Snyder      Joann
+## 6 Kelley       1       1      NA      NA       1       1      James    Roxanne
+##   Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
+## 1     Ortega      NA       1      NA       1
+## 2 Montgomery       1       1       1       1
+## 3       &lt;NA&gt;      NA       1      NA      NA
+## 4    Ballard       1      NA      NA       1
+## 5       &lt;NA&gt;       1       1       1      NA
+## 6       &lt;NA&gt;       1      NA      NA       1
+</code></pre>
+
+<pre><code class="r"># Show just the first few lines, value mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, 
+                             sep=&quot;;|,&quot;, mode=&quot;value&quot;))))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
+## 1   Boyd       1       2      NA       4       5       6   Reynolds     Albert
+## 2  Rufus       1       2      NA       4       5       6      Cohen       Bert
+## 3   Dana       1       2      NA       4       5       6     Pierce       &lt;NA&gt;
+## 4 Carole       1       2      NA       4       5       6      Colon   Michelle
+## 5 Ramona       1       2      NA      NA       5       6     Snyder      Joann
+## 6 Kelley       1       2      NA      NA       5       6      James    Roxanne
+##   Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
+## 1     Ortega      NA       2      NA       4
+## 2 Montgomery       1       2       3       4
+## 3       &lt;NA&gt;      NA       2      NA      NA
+## 4    Ballard       1      NA      NA       4
+## 5       &lt;NA&gt;       1       2       3      NA
+## 6       &lt;NA&gt;       1      NA      NA       4
+</code></pre>
+
+<pre><code class="r"># Show just the first few lines, list output mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, 
+                             sep=&quot;;|,&quot;, to.list=TRUE))))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name    Likes_list            Siblings_list Hates_list
+## 1   Boyd 1, 2, 4, 5, 6 Reynolds, Albert, Ortega       2, 4
+## 2  Rufus 1, 2, 4, 5, 6  Cohen, Bert, Montgomery 1, 2, 3, 4
+## 3   Dana 1, 2, 4, 5, 6                   Pierce          2
+## 4 Carole 1, 2, 4, 5, 6 Colon, Michelle, Ballard       1, 4
+## 5 Ramona    1, 2, 5, 6            Snyder, Joann    1, 2, 3
+## 6 Kelley    1, 2, 5, 6           James, Roxanne       1, 4
+</code></pre>
 
 <h2>References</h2>
 
@@ -507,6 +586,14 @@ multi.freq.table(dat, basic=TRUE)
 ## E    9       18.75           45
 </code></pre>
 
+<h2>To Do</h2>
+
+<ul>
+<li>Update docs with <code>useNA</code>.</li>
+<li>Update function to deal with <code>NA</code> responses better.</li>
+<li>Update function for dealing with different types of multiple response questions input formats.</li>
+</ul>
+
 <h2>References</h2>
 
 <p><code>apply</code> shortcut for creating the <code>Combn</code> column in the output by <a href="http://stackoverflow.com/users/906490/justin">Justin</a><br/><br/>
@@ -785,7 +872,7 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 <h1>multi.freq.table</h1>
 
 <pre><code class="r">multi.freq.table = function(data, sep=&quot;&quot;, dropzero=FALSE,
-                            clean=TRUE, basic=FALSE) {
+                            clean=TRUE, basic=FALSE, useNA=&quot;always&quot;) {
   # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
@@ -807,7 +894,7 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
                         Pct.of.Resp = (colSums(data)/sum(data))*100,
                         Pct.of.Cases = (colSums(data)/nrow(data))*100)
   } else if (!isTRUE(basic)) {
-    counts = data.frame(table(data))
+    counts = data.frame(table(data, useNA = useNA))
     N = ncol(counts)
     counts$Combn = apply(counts[-N] == 1, 1, 
                          function(x) paste(names(counts[-N])[x],
@@ -1015,7 +1102,6 @@ temp_1
     dat.list = sapply(1:ncol(data), function(x) data[x])
   } else if (!isTRUE(vectorize)) {
     dat.list = lapply(names(data), function(x) data[x])
-    names(dat.list) = colnames(data)
   }
   dat.list
 }
@@ -1037,17 +1123,17 @@ dat
 dfcols.list(dat)
 </code></pre>
 
-<pre><code class="no-highlight">## $A
+<pre><code class="no-highlight">## [[1]]
 ##   A
 ## 1 1
 ## 2 2
 ## 
-## $B
+## [[2]]
 ##   B
 ## 1 3
 ## 2 4
 ## 
-## $C
+## [[3]]
 ##   C
 ## 1 5
 ## 2 6
@@ -1372,7 +1458,7 @@ pre .vhdl .literal { color: rgb(163, 21, 21); }
 <li><code>data</code>: the source <code>data.frame</code>.</li>
 <li><code>split.col</code>: the variable that needs to be split; can be specified either by the column number or the variable name.</li>
 <li><code>to.list</code>: logical; should the split column be returned as a single variable list (named &ldquo;original-variable_list&rdquo;) or multiple new variables? If <code>to.list</code> is <code>TRUE</code>, the <code>mode</code> argument is ignored and a list of the original values are returned.</li>
-<li><code>mode</code>: can be either <code>binary</code> or <code>value</code> (where <code>binary</code> is default and it recodes values to <code>1</code> or <code>NA</code>).</li>
+<li><code>mode</code>: can be either <code>binary</code> or <code>value</code> (where <code>binary</code> is default and it recodes values to <code>1</code> or <code>NA</code>, like Boolean, but without assuming <code>0</code> when data is not available).</li>
 <li><code>sep</code>: the character separating each value (defaults to <code>&quot;,&quot;</code>).</li>
 <li><code>drop.col</code>: logical (whether to remove the original variable from the output or not; defaults to <code>TRUE</code>).</li>
 </ul>
@@ -1542,11 +1628,90 @@ str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
 ##   ..$ : num  1 2 5
 </code></pre>
 
-<h2>To Do</h2>
+<h2>Advanced Usage</h2>
+
+<p>It is also possible to use <code>concat.split</code> to split multiple columns at once. This can be done in stages, or it can be all wrapped in nested statements, as follows:</p>
+
+<pre><code class="r">do.call(cbind, c(concat.test[1],
+                 lapply(lapply(2:ncol(concat.test),
+                               function(x) concat.test[x]),
+                        concat.split, split.col=1, drop=TRUE, sep=&quot;;|,&quot;)))
+</code></pre>
+
+<p>In the example above (working from the inside of the function outwards):</p>
 
 <ul>
-<li>Modify the function so that you can split multiple columns in one go?</li>
+<li>First, <code>lapply(2:ncol(concat.test), ...)</code> splits the columns of the <code>data.frame</code> into a list. </li>
+<li>Second, <code>lapply(lapply(...))</code> does the splitting work.
+
+<ul>
+<li>Note the use of <code>sep=&quot;;|,&quot;</code> to match multiple separators on which to split; if further separators are required, they can be specified by using the pipe symbol (<code>|</code>) <em>with no leading or trailing spaces</em>.</li>
+</ul></li>
+<li>Finally, <code>do.call(cbind, ...)</code> is evaluated last, &ldquo;binding&rdquo; the data together by columns. In this case, the data being bound together is the first column from the <code>concat.test</code> dataset, and the splitted output of the remaining columns. </li>
 </ul>
+
+<p>Alternatively, a similar approach can be taken using the function <code>dfcols.list</code> (see the &ldquo;Snippets and Tips&rdquo; section of this manual for the <code>dfcols.list</code> function).</p>
+
+<pre><code class="r"># Show just the first few lines, Boolean mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, sep=&quot;;|,&quot;))))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
+## 1   Boyd       1       1      NA       1       1       1   Reynolds     Albert
+## 2  Rufus       1       1      NA       1       1       1      Cohen       Bert
+## 3   Dana       1       1      NA       1       1       1     Pierce       &lt;NA&gt;
+## 4 Carole       1       1      NA       1       1       1      Colon   Michelle
+## 5 Ramona       1       1      NA      NA       1       1     Snyder      Joann
+## 6 Kelley       1       1      NA      NA       1       1      James    Roxanne
+##   Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
+## 1     Ortega      NA       1      NA       1
+## 2 Montgomery       1       1       1       1
+## 3       &lt;NA&gt;      NA       1      NA      NA
+## 4    Ballard       1      NA      NA       1
+## 5       &lt;NA&gt;       1       1       1      NA
+## 6       &lt;NA&gt;       1      NA      NA       1
+</code></pre>
+
+<pre><code class="r"># Show just the first few lines, value mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, 
+                             sep=&quot;;|,&quot;, mode=&quot;value&quot;))))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
+## 1   Boyd       1       2      NA       4       5       6   Reynolds     Albert
+## 2  Rufus       1       2      NA       4       5       6      Cohen       Bert
+## 3   Dana       1       2      NA       4       5       6     Pierce       &lt;NA&gt;
+## 4 Carole       1       2      NA       4       5       6      Colon   Michelle
+## 5 Ramona       1       2      NA      NA       5       6     Snyder      Joann
+## 6 Kelley       1       2      NA      NA       5       6      James    Roxanne
+##   Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
+## 1     Ortega      NA       2      NA       4
+## 2 Montgomery       1       2       3       4
+## 3       &lt;NA&gt;      NA       2      NA      NA
+## 4    Ballard       1      NA      NA       4
+## 5       &lt;NA&gt;       1       2       3      NA
+## 6       &lt;NA&gt;       1      NA      NA       4
+</code></pre>
+
+<pre><code class="r"># Show just the first few lines, list output mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, 
+                             sep=&quot;;|,&quot;, to.list=TRUE))))
+</code></pre>
+
+<pre><code class="no-highlight">##     Name    Likes_list            Siblings_list Hates_list
+## 1   Boyd 1, 2, 4, 5, 6 Reynolds, Albert, Ortega       2, 4
+## 2  Rufus 1, 2, 4, 5, 6  Cohen, Bert, Montgomery 1, 2, 3, 4
+## 3   Dana 1, 2, 4, 5, 6                   Pierce          2
+## 4 Carole 1, 2, 4, 5, 6 Colon, Michelle, Ballard       1, 4
+## 5 Ramona    1, 2, 5, 6            Snyder, Joann    1, 2, 3
+## 6 Kelley    1, 2, 5, 6           James, Roxanne       1, 4
+</code></pre>
 
 <h2>References</h2>
 
@@ -1862,6 +2027,14 @@ multi.freq.table(dat, basic=TRUE)
 ## E    9       18.75           45
 </code></pre>
 
+<h2>To Do</h2>
+
+<ul>
+<li>Update docs with <code>useNA</code>.</li>
+<li>Update function to deal with <code>NA</code> responses better.</li>
+<li>Update function for dealing with different types of multiple response questions input formats.</li>
+</ul>
+
 <h2>References</h2>
 
 <p><code>apply</code> shortcut for creating the <code>Combn</code> column in the output by <a href="http://stackoverflow.com/users/906490/justin">Justin</a><br/><br/>
@@ -2140,7 +2313,7 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 <h1>multi.freq.table</h1>
 
 <pre><code class="r">multi.freq.table = function(data, sep=&quot;&quot;, dropzero=FALSE,
-                            clean=TRUE, basic=FALSE) {
+                            clean=TRUE, basic=FALSE, useNA=&quot;always&quot;) {
   # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
@@ -2162,7 +2335,7 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
                         Pct.of.Resp = (colSums(data)/sum(data))*100,
                         Pct.of.Cases = (colSums(data)/nrow(data))*100)
   } else if (!isTRUE(basic)) {
-    counts = data.frame(table(data))
+    counts = data.frame(table(data, useNA = useNA))
     N = ncol(counts)
     counts$Combn = apply(counts[-N] == 1, 1, 
                          function(x) paste(names(counts[-N])[x],
@@ -2370,7 +2543,6 @@ temp_1
     dat.list = sapply(1:ncol(data), function(x) data[x])
   } else if (!isTRUE(vectorize)) {
     dat.list = lapply(names(data), function(x) data[x])
-    names(dat.list) = colnames(data)
   }
   dat.list
 }
@@ -2392,17 +2564,17 @@ dat
 dfcols.list(dat)
 </code></pre>
 
-<pre><code class="no-highlight">## $A
+<pre><code class="no-highlight">## [[1]]
 ##   A
 ## 1 1
 ## 2 2
 ## 
-## $B
+## [[2]]
 ##   B
 ## 1 3
 ## 2 4
 ## 
-## $C
+## [[3]]
 ##   C
 ## 1 5
 ## 2 6
