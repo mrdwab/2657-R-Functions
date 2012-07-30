@@ -212,6 +212,7 @@ The `multi.freq.table` function takes a data frame containing Boolean responses 
 * `dropzero`: Should combinations with a frequency of zero be dropped from the final table? Defaults to `FALSE`.
 * `clean`: Should the original tabulated data be retained or dropped from the final table? Defaults to `TRUE`.
 * `basic`: Should a basic table of each item, rather than combinations of items, be created? Defaults to `FALSE`.
+* `useNA`: How should `NA` values be treated in the tabulation stage? Defaults to `"always"`.
 
 ## Examples
 
@@ -242,7 +243,6 @@ multi.freq.table(dat, basic=TRUE)
 
 ## To Do
 
-* Update docs with `useNA`.
 * Update function to deal with `NA` responses better.
 * Update function for dealing with different types of multiple response questions input formats.
 
