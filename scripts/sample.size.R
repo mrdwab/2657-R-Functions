@@ -23,10 +23,14 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
   if (identical(what, "sample")) {
     if (is.null(c.int)) {
       c.int = 5
-      message("NOTE! Confidence interval set to 5.\n
+      message("NOTE! Confidence interval set to 5.
       To override, set c.int to desired value.\n")
     } else if (!is.null(c.int) == 1) {
       c.int = c.int
+    }
+    if (!is.null(samp.size)) {
+      message("NOTE! 'samp.size' value provided but ignored.
+      See output for actual sample size(s).\n")
     }
     ss = (z^2 * (distribution/100) * 
       (1-(distribution/100)))/((c.int/100)^2)
@@ -36,8 +40,8 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
       stop("Missing 'samp.size' with no default value.")
     }
     if (!is.null(c.int)) {
-      message("NOTE! 'c.int' value provided but ignored.\n
-      See output for actual 'c.int' value(s).\n")
+      message("NOTE! 'c.int' value provided but ignored.
+      See output for actual confidence interval value(s).\n")
     }
     ss = ((population*samp.size-samp.size)/(population-samp.size))
     c.int = round(sqrt((z^2 * (distribution/100) * 
