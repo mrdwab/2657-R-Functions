@@ -1,6 +1,6 @@
 ## @knitr multifreqtable
 multi.freq.table = function(data, sep="", dropzero=FALSE,
-                            clean=TRUE, basic=FALSE, useNA="always") {
+                            clean=TRUE, basic=FALSE, useNA="ifany") {
   # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
