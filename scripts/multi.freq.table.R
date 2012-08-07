@@ -5,6 +5,7 @@ multi.freq.table = function(data, sep="", dropzero=FALSE,
   #   to the possible combinations of each variable.
   #
   # === EXAMPLES ===
+  #
   #     set.seed(1)
   #     dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE), 
   #                      B = sample(c(0, 1), 20, replace=TRUE), 

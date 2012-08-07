@@ -13,7 +13,8 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
   #       is being calculated.
   # distribution: Response distribution
   # 
-  # Usage:
+  # === EXAMPLES ===
+  #
   #   sample.size(300)
   #   sample.size(300, 150, what="confidence")
   
@@ -22,7 +23,7 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
   if (identical(what, "sample")) {
     if (is.null(c.int)) {
       c.int = 5
-      message("NOTE! Confidence interval set to 5.
+      message("NOTE! Confidence interval set to 5.\n
       To override, set c.int to desired value.\n")
     } else if (!is.null(c.int) == 1) {
       c.int = c.int
@@ -35,7 +36,7 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
       stop("Missing 'samp.size' with no default value.")
     }
     if (!is.null(c.int)) {
-      message("NOTE! 'c.int' value provided but ignored.
+      message("NOTE! 'c.int' value provided but ignored.\n
       See output for actual 'c.int' value(s).\n")
     }
     ss = ((population*samp.size-samp.size)/(population-samp.size))
@@ -45,10 +46,10 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
     stop("'what' must be either 'sample' or 'confidence'")
   }
   
-  RES    = data.frame(population = population, 
-                      conf.level = c.lev, 
-                      conf.int = c.int, 
-                      distribution = distribution,
-                      sample.size = round(samp.size, digits = 0))
+  RES = data.frame(population = population,
+                   conf.level = c.lev,
+                   conf.int = c.int,
+                   distribution = distribution,
+                   sample.size = round(samp.size, digits = 0))
   RES
 }
