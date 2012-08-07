@@ -7,8 +7,6 @@
 
 <title>concat.split</h1>
 
-<h2>What it Does</h2>
-
 <p>The <code>concat.split</code> function takes a column with multiple values, splits the values into a list or into separate columns, and returns a new <code>data.frame</code>.</p>
 
 <h2>Arguments</h2>
@@ -280,8 +278,6 @@ head(do.call(cbind, c(concat.test[1],
 
 <h1>df.sorter</h1>
 
-<h2>What it Does</h2>
-
 <p>The <code>df.sorter</code> function allows you to sort a <code>data.frame</code> by columns or rows or both. You can also quickly subset data columns by using the <code>var.order</code> argument.</p>
 
 <h2>Arguments</h2>
@@ -464,8 +460,6 @@ head(df.sorter(dat, var.order= &quot;co&quot;, at.start=FALSE))
 
 <h1>multi.freq.table</h1>
 
-<h2>What it Does</h2>
-
 <p>The <code>multi.freq.table</code> function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers. In addition to tabulating the frequency (<code>Freq</code>), there are two other columns in the output: <em>Percent of Responses</em> (<code>Pct.of.Resp</code>) and <em>Percent of Cases</em> (<code>Pct.of.Cases</code>). <em>Percent of Responses</em> is the frequency divided by the total number of answers provided; this column should sum to 100%. <em>Percent of Cases</em> is the frequency divided by the total number of valid cases; this column would mot likely sum to more than 100% since each respondent (case) can select multiple answers.</p>
 
 <h2>Arguments</h2>
@@ -476,6 +470,7 @@ head(df.sorter(dat, var.order= &quot;co&quot;, at.start=FALSE))
 <li><code>dropzero</code>: Should combinations with a frequency of zero be dropped from the final table? Defaults to <code>FALSE</code>.</li>
 <li><code>clean</code>: Should the original tabulated data be retained or dropped from the final table? Defaults to <code>TRUE</code>.</li>
 <li><code>basic</code>: Should a basic table of each item, rather than combinations of items, be created? Defaults to <code>FALSE</code>.</li>
+<li><code>useNA</code>: How should <code>NA</code> values be treated in the tabulation stage? Defaults to <code>&quot;always&quot;</code>.</li>
 </ul>
 
 <h2>Examples</h2>
@@ -589,7 +584,6 @@ multi.freq.table(dat, basic=TRUE)
 <h2>To Do</h2>
 
 <ul>
-<li>Update docs with <code>useNA</code>.</li>
 <li>Update function to deal with <code>NA</code> responses better.</li>
 <li>Update function for dealing with different types of multiple response questions input formats.</li>
 </ul>
@@ -602,8 +596,6 @@ See: <a href="http://stackoverflow.com/q/11348391/1270695">http://stackoverflow.
 <p>\newpage</p>
 
 <h1>row.extractor</h1>
-
-<h2>What it Does</h2>
 
 <p>The <code>row.extractor</code> function takes a <code>data.frame</code> and extracts rows with the <code>min</code>, <code>median</code>, or <code>max</code> values of a given variable, or extracts rows with specific quantiles of a given variable.</p>
 
@@ -691,10 +683,165 @@ row.extractor(dat, &quot;V3&quot;, seq(0.1, 1, 0.1))
 ## 11 11  1.51178 2.40 29
 </code></pre>
 
+<h2>To Do</h2>
+
+<ul>
+<li>Add some error checking to make sure a valid <code>what</code> is provided.</li>
+</ul>
+
 <h2>References</h2>
 
 <p><code>which.quantile</code> function by <a href="http://stackoverflow.com/users/755257/cbeleites">cbeleites</a><br/><br/>
 See: <a href="http://stackoverflow.com/q/10256503/1270695">http://stackoverflow.com/q/10256503/1270695</a></p>
+
+<p>\newpage</p>
+
+<h1>sample.size</h1>
+
+<p>The <code>sample.size</code> function either calculates the optimum survey sample size when provided with a population size, or the confidence interval of using a certain sample size with a given population. It can be used to generate tables (<code>data.frame</code>s) of different combinations of inputs of the following arguments, which can be useful for showing the effect of each of these in sample size calculation.</p>
+
+<h2>The Arguments</h2>
+
+<ul>
+<li><code>population</code>: The population size for which a sample size needs to be calculated.</li>
+<li><code>samp.size</code>: The sample size. 
+
+<ul>
+<li>This argument is only used when calculating the confidence interval, and defaults to <code>NULL</code>.</li>
+</ul></li>
+<li><code>c.lev</code>: The desired confidence level. Defaults to a reasonable 95%.</li>
+<li><code>c.int</code>: The confidence interval.
+
+<ul>
+<li>This argument is only used when calculating the sample size.</li>
+<li>If not specified when calculating the sample size, defaults to 5% and a message is provided indicating this; this is also the default action if <code>c.int = NULL</code>.</li>
+</ul></li>
+<li><code>what</code>: Should the function calculate the desired sample size or the confidence interval?
+
+<ul>
+<li>Accepted values are <code>&quot;sample&quot;</code> and <code>&quot;confidence&quot;</code> (quoted), and defaults to &ldquo;<code>sample</code>&rdquo;.</li>
+</ul></li>
+<li><code>distribution</code>: Response distribution. Defaults to 50%, which will give you the largest sample size. </li>
+</ul>
+
+<h2>Examples</h2>
+
+<pre><code class="r"># Load the function!
+# require(RCurl)
+# baseURL = c(&quot;https://raw.github.com/mrdwab/2657-R-Functions/master/&quot;)
+source(textConnection(getURL(paste0(baseURL, &quot;scripts/sample.size.R&quot;))))
+# What should our sample size be for a population of 300?
+# All defaults accepted.
+sample.size(population = 300)
+</code></pre>
+
+<pre><code class="no-highlight">## NOTE! Confidence interval set to 5.  To override, set c.int to desired value.
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95        5           50         169
+</code></pre>
+
+<pre><code class="r"># What sample should we take for a population of 300
+#   at a confidence level of 97%?
+sample.size(population = 300, c.lev = 97)
+</code></pre>
+
+<pre><code class="no-highlight">## NOTE! Confidence interval set to 5.  To override, set c.int to desired value.
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         97        5           50         183
+</code></pre>
+
+<pre><code class="r"># What about if we change our confidence interval?
+sample.size(population = 300, c.int = 2.5, what = &quot;sample&quot;)
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95      2.5           50         251
+</code></pre>
+
+<pre><code class="r"># What about if we want to determine the confidence interval
+#   of a sample of 140 from a population of 300? A confidence
+#   level of 95% is assumed.
+sample.size(population = 300, samp.size = 140, what = &quot;confidence&quot;)
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95     6.06           50         140
+</code></pre>
+
+<h2>Advanced Usage</h2>
+
+<p>As the function is vectorized, it is possible to easily make tables with multiple scenarios.</p>
+
+<pre><code class="r"># What should the sample be for populations of 300 to 500 by 50?
+sample.size(population=c(300, 350, 400, 450, 500))
+</code></pre>
+
+<pre><code class="no-highlight">## NOTE! Confidence interval set to 5.  To override, set c.int to desired value.
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95        5           50         169
+## 2        350         95        5           50         183
+## 3        400         95        5           50         196
+## 4        450         95        5           50         207
+## 5        500         95        5           50         217
+</code></pre>
+
+<pre><code class="r"># How does varying confidence levels or confidence intervals
+#   affect the sample size?
+sample.size(population=300, 
+            c.lev=rep(c(95, 96, 97, 98, 99), times = 3),
+            c.int=rep(c(2.5, 5, 10), each=5))
+</code></pre>
+
+<pre><code class="no-highlight">##    population conf.level conf.int distribution sample.size
+## 1         300         95      2.5           50         251
+## 2         300         96      2.5           50         255
+## 3         300         97      2.5           50         259
+## 4         300         98      2.5           50         264
+## 5         300         99      2.5           50         270
+## 6         300         95      5.0           50         169
+## 7         300         96      5.0           50         176
+## 8         300         97      5.0           50         183
+## 9         300         98      5.0           50         193
+## 10        300         99      5.0           50         207
+## 11        300         95     10.0           50          73
+## 12        300         96     10.0           50          78
+## 13        300         97     10.0           50          85
+## 14        300         98     10.0           50          93
+## 15        300         99     10.0           50         107
+</code></pre>
+
+<pre><code class="r"># What is are the confidence intervals for a sample of
+#   150, 160, and 170 from a population of 300?
+sample.size(population=300, 
+            samp.size = c(150, 160, 170), 
+            what=&quot;confidence&quot;)
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95     5.67           50         150
+## 2        300         95     5.30           50         160
+## 3        300         95     4.96           50         170
+</code></pre>
+
+<p>Note that the use of <code>rep()</code> is required in constructing the arguments for the advanced usage examples where more than one argument takes on multiple values.</p>
+
+<h2>References</h2>
+
+<p>See the <em>2657 Productions News</em> site for how this function progressively developed<sup>[<a href="http://news.mrdwab.com/2010/09/10/a-sample-size-calculator-function-for-r/">http://news.mrdwab.com/2010/09/10/a-sample-size-calculator-function-for-r/</a>].</sup> The <code>sample.size</code> function is based on the following formulas<sup>[See:</sup> Creative Research Systems. (n.d.). <em>Sample size formulas for our sample size calculator</em>. Retrieved from: <a href="http://www.surveysystem.com/sample-size-formula.htm">http://www.surveysystem.com/sample-size-formula.htm</a>. Archived on 07 August 2012 at <a href="http://www.webcitation.org/69kNjMuKe">http://www.webcitation.org/69kNjMuKe</a>.]:</p>
+
+<p>$$
+\large 
+\begin{array}{rcl}
+ss &=& \frac{-Z^2\times p\times(1-p)}{c^2} \\ \\
+pss &=& \frac{ss}{1+\frac{ss-1}{pop}}
+\end{array}
+$$</p>
 
 <p>\newpage</p>
 
@@ -872,11 +1019,12 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 <h1>multi.freq.table</h1>
 
 <pre><code class="r">multi.freq.table = function(data, sep=&quot;&quot;, dropzero=FALSE,
-                            clean=TRUE, basic=FALSE, useNA=&quot;always&quot;) {
+                            clean=TRUE, basic=FALSE, useNA=&quot;ifany&quot;) {
   # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
   # === EXAMPLES ===
+  #
   #     set.seed(1)
   #     dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE), 
   #                      B = sample(c(0, 1), 20, replace=TRUE), 
@@ -994,6 +1142,79 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
     }
     data[which.quantile(data, extract.by, what), ]           # quantile
   }
+}
+</code></pre>
+
+<p>\newpage</p>
+
+<h1>sample.size</h1>
+
+<pre><code class="r">sample.size = function(population, samp.size=NULL, c.lev=95, 
+                       c.int=NULL, what = &quot;sample&quot;, 
+                       distribution=50) {
+  # Returns a data.frame of sample sizes or confidence
+  #   intervals for different conditions provided by 
+  #   the following arguments.
+  #
+  # populaton: Population size
+  # samp.size: Sample size
+  # c.lev: Confidence level
+  # c.int: Confidence interval (+/-)
+  # what: Whether sample size or confidence interval
+  #       is being calculated.
+  # distribution: Response distribution
+  # 
+  # === EXAMPLES ===
+  #
+  #   sample.size(300)
+  #   sample.size(300, 150, what=&quot;confidence&quot;)
+  #   sample.size(c(300, 400, 500), c.lev=97)
+
+  z = qnorm(.5+c.lev/200)
+
+  if (identical(what, &quot;sample&quot;)) {
+    if (is.null(c.int)) {
+      c.int = 5
+
+      message(&quot;NOTE! Confidence interval set to 5.
+      To override, set c.int to desired value.\n&quot;)
+
+    } else if (!is.null(c.int) == 1) {
+      c.int = c.int
+    }
+
+    if (!is.null(samp.size)) {
+      message(&quot;NOTE! &#39;samp.size&#39; value provided but ignored.
+      See output for actual sample size(s).\n&quot;)
+    }
+
+    ss = (z^2 * (distribution/100) * 
+      (1-(distribution/100)))/((c.int/100)^2)
+    samp.size = ss/(1 + ((ss-1)/population))    
+
+  } else if (identical(what, &quot;confidence&quot;)) {
+    if (is.null(samp.size)) {
+      stop(&quot;Missing &#39;samp.size&#39; with no default value.&quot;)
+    }
+    if (!is.null(c.int)) {
+      message(&quot;NOTE! &#39;c.int&#39; value provided but ignored.
+      See output for actual confidence interval value(s).\n&quot;)
+    }
+
+    ss = ((population*samp.size-samp.size)/(population-samp.size))
+    c.int = round(sqrt((z^2 * (distribution/100) * 
+      (1-(distribution/100)))/ss)*100, digits = 2)
+
+  } else if (what %in% c(&quot;sample&quot;, &quot;confidence&quot;) == 0) {
+    stop(&quot;&#39;what&#39; must be either &#39;sample&#39; or &#39;confidence&#39;&quot;)
+  }
+
+  RES = data.frame(population = population,
+                   conf.level = c.lev,
+                   conf.int = c.int,
+                   distribution = distribution,
+                   sample.size = round(samp.size, digits = 0))
+  RES
 }
 </code></pre>
 
@@ -1448,8 +1669,6 @@ pre .vhdl .literal { color: rgb(163, 21, 21); }
 
 <h1>concat.split</h1>
 
-<h2>What it Does</h2>
-
 <p>The <code>concat.split</code> function takes a column with multiple values, splits the values into a list or into separate columns, and returns a new <code>data.frame</code>.</p>
 
 <h2>Arguments</h2>
@@ -1721,8 +1940,6 @@ head(do.call(cbind, c(concat.test[1],
 
 <h1>df.sorter</h1>
 
-<h2>What it Does</h2>
-
 <p>The <code>df.sorter</code> function allows you to sort a <code>data.frame</code> by columns or rows or both. You can also quickly subset data columns by using the <code>var.order</code> argument.</p>
 
 <h2>Arguments</h2>
@@ -1905,8 +2122,6 @@ head(df.sorter(dat, var.order= &quot;co&quot;, at.start=FALSE))
 
 <h1>multi.freq.table</h1>
 
-<h2>What it Does</h2>
-
 <p>The <code>multi.freq.table</code> function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers. In addition to tabulating the frequency (<code>Freq</code>), there are two other columns in the output: <em>Percent of Responses</em> (<code>Pct.of.Resp</code>) and <em>Percent of Cases</em> (<code>Pct.of.Cases</code>). <em>Percent of Responses</em> is the frequency divided by the total number of answers provided; this column should sum to 100%. <em>Percent of Cases</em> is the frequency divided by the total number of valid cases; this column would mot likely sum to more than 100% since each respondent (case) can select multiple answers.</p>
 
 <h2>Arguments</h2>
@@ -1917,6 +2132,7 @@ head(df.sorter(dat, var.order= &quot;co&quot;, at.start=FALSE))
 <li><code>dropzero</code>: Should combinations with a frequency of zero be dropped from the final table? Defaults to <code>FALSE</code>.</li>
 <li><code>clean</code>: Should the original tabulated data be retained or dropped from the final table? Defaults to <code>TRUE</code>.</li>
 <li><code>basic</code>: Should a basic table of each item, rather than combinations of items, be created? Defaults to <code>FALSE</code>.</li>
+<li><code>useNA</code>: How should <code>NA</code> values be treated in the tabulation stage? Defaults to <code>&quot;always&quot;</code>.</li>
 </ul>
 
 <h2>Examples</h2>
@@ -2030,7 +2246,6 @@ multi.freq.table(dat, basic=TRUE)
 <h2>To Do</h2>
 
 <ul>
-<li>Update docs with <code>useNA</code>.</li>
 <li>Update function to deal with <code>NA</code> responses better.</li>
 <li>Update function for dealing with different types of multiple response questions input formats.</li>
 </ul>
@@ -2043,8 +2258,6 @@ See: <a href="http://stackoverflow.com/q/11348391/1270695">http://stackoverflow.
 <p>\newpage</p>
 
 <h1>row.extractor</h1>
-
-<h2>What it Does</h2>
 
 <p>The <code>row.extractor</code> function takes a <code>data.frame</code> and extracts rows with the <code>min</code>, <code>median</code>, or <code>max</code> values of a given variable, or extracts rows with specific quantiles of a given variable.</p>
 
@@ -2132,10 +2345,165 @@ row.extractor(dat, &quot;V3&quot;, seq(0.1, 1, 0.1))
 ## 11 11  1.51178 2.40 29
 </code></pre>
 
+<h2>To Do</h2>
+
+<ul>
+<li>Add some error checking to make sure a valid <code>what</code> is provided.</li>
+</ul>
+
 <h2>References</h2>
 
 <p><code>which.quantile</code> function by <a href="http://stackoverflow.com/users/755257/cbeleites">cbeleites</a><br/><br/>
 See: <a href="http://stackoverflow.com/q/10256503/1270695">http://stackoverflow.com/q/10256503/1270695</a></p>
+
+<p>\newpage</p>
+
+<h1>sample.size</h1>
+
+<p>The <code>sample.size</code> function either calculates the optimum survey sample size when provided with a population size, or the confidence interval of using a certain sample size with a given population. It can be used to generate tables (<code>data.frame</code>s) of different combinations of inputs of the following arguments, which can be useful for showing the effect of each of these in sample size calculation.</p>
+
+<h2>The Arguments</h2>
+
+<ul>
+<li><code>population</code>: The population size for which a sample size needs to be calculated.</li>
+<li><code>samp.size</code>: The sample size. 
+
+<ul>
+<li>This argument is only used when calculating the confidence interval, and defaults to <code>NULL</code>.</li>
+</ul></li>
+<li><code>c.lev</code>: The desired confidence level. Defaults to a reasonable 95%.</li>
+<li><code>c.int</code>: The confidence interval.
+
+<ul>
+<li>This argument is only used when calculating the sample size.</li>
+<li>If not specified when calculating the sample size, defaults to 5% and a message is provided indicating this; this is also the default action if <code>c.int = NULL</code>.</li>
+</ul></li>
+<li><code>what</code>: Should the function calculate the desired sample size or the confidence interval?
+
+<ul>
+<li>Accepted values are <code>&quot;sample&quot;</code> and <code>&quot;confidence&quot;</code> (quoted), and defaults to &ldquo;<code>sample</code>&rdquo;.</li>
+</ul></li>
+<li><code>distribution</code>: Response distribution. Defaults to 50%, which will give you the largest sample size. </li>
+</ul>
+
+<h2>Examples</h2>
+
+<pre><code class="r"># Load the function!
+# require(RCurl)
+# baseURL = c(&quot;https://raw.github.com/mrdwab/2657-R-Functions/master/&quot;)
+source(textConnection(getURL(paste0(baseURL, &quot;scripts/sample.size.R&quot;))))
+# What should our sample size be for a population of 300?
+# All defaults accepted.
+sample.size(population = 300)
+</code></pre>
+
+<pre><code class="no-highlight">## NOTE! Confidence interval set to 5.  To override, set c.int to desired value.
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95        5           50         169
+</code></pre>
+
+<pre><code class="r"># What sample should we take for a population of 300
+#   at a confidence level of 97%?
+sample.size(population = 300, c.lev = 97)
+</code></pre>
+
+<pre><code class="no-highlight">## NOTE! Confidence interval set to 5.  To override, set c.int to desired value.
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         97        5           50         183
+</code></pre>
+
+<pre><code class="r"># What about if we change our confidence interval?
+sample.size(population = 300, c.int = 2.5, what = &quot;sample&quot;)
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95      2.5           50         251
+</code></pre>
+
+<pre><code class="r"># What about if we want to determine the confidence interval
+#   of a sample of 140 from a population of 300? A confidence
+#   level of 95% is assumed.
+sample.size(population = 300, samp.size = 140, what = &quot;confidence&quot;)
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95     6.06           50         140
+</code></pre>
+
+<h2>Advanced Usage</h2>
+
+<p>As the function is vectorized, it is possible to easily make tables with multiple scenarios.</p>
+
+<pre><code class="r"># What should the sample be for populations of 300 to 500 by 50?
+sample.size(population=c(300, 350, 400, 450, 500))
+</code></pre>
+
+<pre><code class="no-highlight">## NOTE! Confidence interval set to 5.  To override, set c.int to desired value.
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95        5           50         169
+## 2        350         95        5           50         183
+## 3        400         95        5           50         196
+## 4        450         95        5           50         207
+## 5        500         95        5           50         217
+</code></pre>
+
+<pre><code class="r"># How does varying confidence levels or confidence intervals
+#   affect the sample size?
+sample.size(population=300, 
+            c.lev=rep(c(95, 96, 97, 98, 99), times = 3),
+            c.int=rep(c(2.5, 5, 10), each=5))
+</code></pre>
+
+<pre><code class="no-highlight">##    population conf.level conf.int distribution sample.size
+## 1         300         95      2.5           50         251
+## 2         300         96      2.5           50         255
+## 3         300         97      2.5           50         259
+## 4         300         98      2.5           50         264
+## 5         300         99      2.5           50         270
+## 6         300         95      5.0           50         169
+## 7         300         96      5.0           50         176
+## 8         300         97      5.0           50         183
+## 9         300         98      5.0           50         193
+## 10        300         99      5.0           50         207
+## 11        300         95     10.0           50          73
+## 12        300         96     10.0           50          78
+## 13        300         97     10.0           50          85
+## 14        300         98     10.0           50          93
+## 15        300         99     10.0           50         107
+</code></pre>
+
+<pre><code class="r"># What is are the confidence intervals for a sample of
+#   150, 160, and 170 from a population of 300?
+sample.size(population=300, 
+            samp.size = c(150, 160, 170), 
+            what=&quot;confidence&quot;)
+</code></pre>
+
+<pre><code class="no-highlight">##   population conf.level conf.int distribution sample.size
+## 1        300         95     5.67           50         150
+## 2        300         95     5.30           50         160
+## 3        300         95     4.96           50         170
+</code></pre>
+
+<p>Note that the use of <code>rep()</code> is required in constructing the arguments for the advanced usage examples where more than one argument takes on multiple values.</p>
+
+<h2>References</h2>
+
+<p>See the <em>2657 Productions News</em> site for how this function progressively developed<sup>[<a href="http://news.mrdwab.com/2010/09/10/a-sample-size-calculator-function-for-r/">http://news.mrdwab.com/2010/09/10/a-sample-size-calculator-function-for-r/</a>].</sup> The <code>sample.size</code> function is based on the following formulas<sup>[See:</sup> Creative Research Systems. (n.d.). <em>Sample size formulas for our sample size calculator</em>. Retrieved from: <a href="http://www.surveysystem.com/sample-size-formula.htm">http://www.surveysystem.com/sample-size-formula.htm</a>. Archived on 07 August 2012 at <a href="http://www.webcitation.org/69kNjMuKe">http://www.webcitation.org/69kNjMuKe</a>.]:</p>
+
+<p>$$
+\large 
+\begin{array}{rcl}
+ss &=& \frac{-Z^2\times p\times(1-p)}{c^2} \\ \\
+pss &=& \frac{ss}{1+\frac{ss-1}{pop}}
+\end{array}
+$$</p>
 
 <p>\newpage</p>
 
@@ -2313,11 +2681,12 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
 <h1>multi.freq.table</h1>
 
 <pre><code class="r">multi.freq.table = function(data, sep=&quot;&quot;, dropzero=FALSE,
-                            clean=TRUE, basic=FALSE, useNA=&quot;always&quot;) {
+                            clean=TRUE, basic=FALSE, useNA=&quot;ifany&quot;) {
   # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
   # === EXAMPLES ===
+  #
   #     set.seed(1)
   #     dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE), 
   #                      B = sample(c(0, 1), 20, replace=TRUE), 
@@ -2435,6 +2804,79 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
     }
     data[which.quantile(data, extract.by, what), ]           # quantile
   }
+}
+</code></pre>
+
+<p>\newpage</p>
+
+<h1>sample.size</h1>
+
+<pre><code class="r">sample.size = function(population, samp.size=NULL, c.lev=95, 
+                       c.int=NULL, what = &quot;sample&quot;, 
+                       distribution=50) {
+  # Returns a data.frame of sample sizes or confidence
+  #   intervals for different conditions provided by 
+  #   the following arguments.
+  #
+  # populaton: Population size
+  # samp.size: Sample size
+  # c.lev: Confidence level
+  # c.int: Confidence interval (+/-)
+  # what: Whether sample size or confidence interval
+  #       is being calculated.
+  # distribution: Response distribution
+  # 
+  # === EXAMPLES ===
+  #
+  #   sample.size(300)
+  #   sample.size(300, 150, what=&quot;confidence&quot;)
+  #   sample.size(c(300, 400, 500), c.lev=97)
+
+  z = qnorm(.5+c.lev/200)
+
+  if (identical(what, &quot;sample&quot;)) {
+    if (is.null(c.int)) {
+      c.int = 5
+
+      message(&quot;NOTE! Confidence interval set to 5.
+      To override, set c.int to desired value.\n&quot;)
+
+    } else if (!is.null(c.int) == 1) {
+      c.int = c.int
+    }
+
+    if (!is.null(samp.size)) {
+      message(&quot;NOTE! &#39;samp.size&#39; value provided but ignored.
+      See output for actual sample size(s).\n&quot;)
+    }
+
+    ss = (z^2 * (distribution/100) * 
+      (1-(distribution/100)))/((c.int/100)^2)
+    samp.size = ss/(1 + ((ss-1)/population))    
+
+  } else if (identical(what, &quot;confidence&quot;)) {
+    if (is.null(samp.size)) {
+      stop(&quot;Missing &#39;samp.size&#39; with no default value.&quot;)
+    }
+    if (!is.null(c.int)) {
+      message(&quot;NOTE! &#39;c.int&#39; value provided but ignored.
+      See output for actual confidence interval value(s).\n&quot;)
+    }
+
+    ss = ((population*samp.size-samp.size)/(population-samp.size))
+    c.int = round(sqrt((z^2 * (distribution/100) * 
+      (1-(distribution/100)))/ss)*100, digits = 2)
+
+  } else if (what %in% c(&quot;sample&quot;, &quot;confidence&quot;) == 0) {
+    stop(&quot;&#39;what&#39; must be either &#39;sample&#39; or &#39;confidence&#39;&quot;)
+  }
+
+  RES = data.frame(population = population,
+                   conf.level = c.lev,
+                   conf.int = c.int,
+                   distribution = distribution,
+                   sample.size = round(samp.size, digits = 0))
+  RES
 }
 </code></pre>
 
