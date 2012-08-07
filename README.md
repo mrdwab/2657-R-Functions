@@ -21,7 +21,9 @@ Functions include:
 
     >> Use to extract rows which contan a specified column's `min`, `median`, or `max` values, or to extract rows with specified quantiles.
 
-- Sample Size Calculator (to determine the sample size for a given population)
+1. `sample.size.R`
+
+    >> Use to determine the desired sample size of a given population, or the confidence interval for a given population and sample. 
 
 ## Extras
 
