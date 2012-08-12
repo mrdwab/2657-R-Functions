@@ -523,10 +523,12 @@ The `multi.freq.table` function takes a data frame containing Boolean responses 
 
 * `data`: The multiple responses that need to be tabulated.
 * `sep`: The desired separator for collapsing the combinations of options; defaults to `""` (collapsing with no space between each option name).
-* `dropzero`: Should combinations with a frequency of zero be dropped from the final table? Defaults to `FALSE`.
-* `clean`: Should the original tabulated data be retained or dropped from the final table? Defaults to `TRUE`.
+* `NAto0`: Should `NA` values be converted to `0`.
+    * Defaults to `TRUE`, in which case, the number of valid cases should be the same as the number of cases overall.
+    * If set to `FALSE`, any rows with `NA` values will be dropped as invalid cases.
 * `basic`: Should a basic table of each item, rather than combinations of items, be created? Defaults to `FALSE`.
-* `useNA`: How should `NA` values be treated in the tabulation stage? Defaults to `"always"`.
+* `dropzero`: Should combinations with a frequency of zero be dropped from the final table? Defaults to `TRUE`.
+* `clean`: Should the original tabulated data be retained or dropped from the final table? Defaults to `TRUE`.
 
 ## Examples
 
@@ -540,36 +542,51 @@ source(textConnection(getURL(paste0(baseURL, "scripts/multi.freq.table.R"))))
 # Make up some data
 set.seed(1)
 dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE),
-                 B = sample(c(0, 1), 20, replace=TRUE),
-                 C = sample(c(0, 1), 20, replace=TRUE),
-                 D = sample(c(0, 1), 20, replace=TRUE),
-                 E = sample(c(0, 1), 20, replace=TRUE))
+                 B = sample(c(0, 1, NA), 20, 
+                            prob=c(.3, .6, .1), replace=TRUE),
+                 C = sample(c(0, 1, NA), 20, 
+                            prob=c(.7, .2, .1), replace=TRUE),
+                 D = sample(c(0, 1, NA), 20, 
+                            prob=c(.3, .6, .1), replace=TRUE),
+                 E = sample(c(0, 1, NA), 20, 
+                            prob=c(.4, .4, .2), replace=TRUE))
 # View your data
 dat
 ```
 
 ```
-##    A B C D E
-## 1  0 1 1 1 0
-## 2  0 0 1 0 1
-## 3  1 1 1 0 0
-## 4  1 0 1 0 0
-## 5  0 0 1 1 1
-## 6  1 0 1 0 0
-## 7  1 0 0 0 1
-## 8  1 0 0 1 0
-## 9  1 1 1 0 0
-## 10 0 0 1 1 0
-## 11 0 0 0 0 0
-## 12 0 1 1 1 0
-## 13 1 0 0 0 1
-## 14 0 0 0 0 1
-## 15 1 1 0 0 1
-## 16 0 1 0 1 1
-## 17 1 1 0 1 0
-## 18 1 0 1 0 0
-## 19 0 1 1 1 1
-## 20 1 0 0 1 1
+##    A  B C  D  E
+## 1  0 NA 1 NA  0
+## 2  0  1 0  1  0
+## 3  1  0 1  1  1
+## 4  1  1 0  1  1
+## 5  0  1 0  0  0
+## 6  1  1 1  1  1
+## 7  1  1 0  1  0
+## 8  1  1 0  0  1
+## 9  1  0 1  1  1
+## 10 0  1 0  0  1
+## 11 0  1 0  1  1
+## 12 0  1 1  0  1
+## 13 1  1 0  1  0
+## 14 0  1 0  1 NA
+## 15 1  0 0  1  0
+## 16 0  0 0  0  0
+## 17 1  0 0  0  0
+## 18 1  1 0  1  0
+## 19 0  0 0  0 NA
+## 20 1  1 0 NA  0
+```
+
+```r
+# How many cases have "NA" values?
+table(is.na(rowSums(dat)))
+```
+
+```
+## 
+## FALSE  TRUE 
+##    16     4 
 ```
 
 ```r
@@ -578,57 +595,72 @@ multi.freq.table(dat)
 ```
 
 ```
+## Total cases: 20 Valid cases: 20 Total responses: 48 Valid responses: 48
+```
+
+```
 ##    Combn Freq Pct.of.Resp Pct.of.Cases
-## 1           1       2.083            5
-## 2      A    0       0.000            0
-## 3      B    0       0.000            0
-## 4     AB    0       0.000            0
-## 5      C    0       0.000            0
-## 6     AC    3       6.250           15
-## 7     BC    0       0.000            0
-## 8    ABC    2       4.167           10
-## 9      D    0       0.000            0
-## 10    AD    1       2.083            5
-## 11    BD    0       0.000            0
-## 12   ABD    1       2.083            5
-## 13    CD    1       2.083            5
-## 14   ACD    0       0.000            0
-## 15   BCD    2       4.167           10
-## 16  ABCD    0       0.000            0
-## 17     E    1       2.083            5
-## 18    AE    2       4.167           10
-## 19    BE    0       0.000            0
-## 20   ABE    1       2.083            5
-## 21    CE    1       2.083            5
-## 22   ACE    0       0.000            0
-## 23   BCE    0       0.000            0
-## 24  ABCE    0       0.000            0
-## 25    DE    0       0.000            0
-## 26   ADE    1       2.083            5
-## 27   BDE    1       2.083            5
-## 28  ABDE    0       0.000            0
-## 29   CDE    1       2.083            5
-## 30  ACDE    0       0.000            0
-## 31  BCDE    1       2.083            5
-## 32 ABCDE    0       0.000            0
+## 1           2       4.167           10
+## 2      A    1       2.083            5
+## 3      B    1       2.083            5
+## 4     AB    1       4.167            5
+## 5      C    1       2.083            5
+## 6     AD    1       4.167            5
+## 7     BD    2       8.333           10
+## 8    ABD    3      18.750           15
+## 9     BE    1       4.167            5
+## 10   ABE    1       6.250            5
+## 11   BCE    1       6.250            5
+## 12   BDE    1       6.250            5
+## 13  ABDE    1       8.333            5
+## 14  ACDE    2      16.667           10
+## 15 ABCDE    1      10.417            5
 ```
 
 ```r
 # Tabulate only on variables "A", "B", and "D", with a different
-# separator, dropping any zero frequency values, and keeping the original tabulations.
-# Note that there are no solitary "B" responses.
-multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=TRUE, clean=FALSE)
+# separator, keep any zero frequency values, and keeping the 
+# original tabulations. There are no solitary "D" responses.
+multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=FALSE, clean=FALSE)
+```
+
+```
+## Total cases: 20 Valid cases: 20 Total responses: 35 Valid responses: 35
 ```
 
 ```
 ##   A B D Freq Combn Pct.of.Resp Pct.of.Cases
-## 1 0 0 0    3            10.714           15
-## 2 1 0 0    5     A      17.857           25
-## 4 1 1 0    3   A-B      10.714           15
-## 5 0 0 1    2     D       7.143           10
-## 6 1 0 1    2   A-D       7.143           10
-## 7 0 1 1    4   B-D      14.286           20
-## 8 1 1 1    1 A-B-D       3.571            5
+## 1 0 0 0    3             8.571           15
+## 2 1 0 0    1     A       2.857            5
+## 3 0 1 0    3     B       8.571           15
+## 4 1 1 0    2   A-B      11.429           10
+## 5 0 0 1    0     D       0.000            0
+## 6 1 0 1    3   A-D      17.143           15
+## 7 0 1 1    3   B-D      17.143           15
+## 8 1 1 1    5 A-B-D      42.857           25
+```
+
+```r
+# As above, but without converting "NA" to "0".
+# Note the difference in the number of valid cases.
+multi.freq.table(dat[c(1, 2, 4)], NAto0=FALSE, 
+                 sep="-", dropzero=FALSE, clean=FALSE)
+```
+
+```
+## Total cases: 20 Valid cases: 18 Total responses: 35 Valid responses: 33
+```
+
+```
+##   A B D Freq Combn Pct.of.Resp Pct.of.Cases
+## 1 0 0 0    2             6.061       11.111
+## 2 1 0 0    1     A       3.030        5.556
+## 3 0 1 0    3     B       9.091       16.667
+## 4 1 1 0    1   A-B       6.061        5.556
+## 5 0 0 1    0     D       0.000        0.000
+## 6 1 0 1    3   A-D      18.182       16.667
+## 7 0 1 1    3   B-D      18.182       16.667
+## 8 1 1 1    5 A-B-D      45.455       27.778
 ```
 
 ```r
@@ -637,19 +669,22 @@ multi.freq.table(dat, basic=TRUE)
 ```
 
 ```
+## Total cases: 20 Valid cases: 20 Total responses: 48 Valid responses: 48
+```
+
+```
 ##   Freq Pct.of.Resp Pct.of.Cases
 ## A   11       22.92           55
-## B    8       16.67           40
-## C   11       22.92           55
-## D    9       18.75           45
-## E    9       18.75           45
+## B   13       27.08           65
+## C    5       10.42           25
+## D   11       22.92           55
+## E    8       16.67           40
 ```
 
 
 ## To Do
 
-* Update function to deal with `NA` responses better.
-* Update function for dealing with different types of multiple response questions input formats.
+* Update function for dealing with different types of multiple response questions input formats, for example if questions are not in boolean form to begin with.
 
 ## References
 
@@ -1111,8 +1146,8 @@ df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE )
 
 
 ```r
-multi.freq.table = function(data, sep="", dropzero=FALSE,
-                            clean=TRUE, basic=FALSE, useNA="ifany") {
+multi.freq.table = function(data, sep="", NAto0=TRUE, basic=FALSE, 
+                            dropzero=TRUE, clean=TRUE) {
   # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
@@ -1130,17 +1165,37 @@ multi.freq.table = function(data, sep="", dropzero=FALSE,
   # See: http://stackoverflow.com/q/11348391/1270695
   #      http://stackoverflow.com/q/11622660/1270695
   
+  if(!is.data.frame(data)) {
+    stop("Input must be a data frame.")
+  }
+  
+  CASES = nrow(data)
+  RESPS = sum(data, na.rm=TRUE)
+  
+  if(isTRUE(NAto0)) {
+    data[is.na(data)] = 0
+    VALID = CASES
+    VRESP = RESPS
+  } else if(!isTRUE(NAto0)) {
+    data = data[complete.cases(data), ]
+    VALID = CASES - (CASES - nrow(data))
+    VRESP = sum(data)
+  }
+  
   if(isTRUE(basic)) {
     counts = data.frame(Freq = colSums(data),
                         Pct.of.Resp = (colSums(data)/sum(data))*100,
                         Pct.of.Cases = (colSums(data)/nrow(data))*100)
   } else if (!isTRUE(basic)) {
-    counts = data.frame(table(data, useNA = useNA))
+    counts = data.frame(table(data))
+    Z = counts[, c(intersect(names(data), names(counts)))]
+    Z = rowSums(sapply(Z, as.numeric)-1)
+    if(Z[1] == 0) { Z[1] = 1 }
     N = ncol(counts)
     counts$Combn = apply(counts[-N] == 1, 1, 
                          function(x) paste(names(counts[-N])[x],
                                            collapse=sep))
-    counts$Pct.of.Resp = (counts$Freq/sum(data))*100
+    counts$Pct.of.Resp = (Z*counts$Freq/sum(data))*100
     counts$Pct.of.Cases = (counts$Freq/nrow(data))*100
     if (isTRUE(dropzero)) {
       counts = counts[counts$Freq != 0, ]
@@ -1153,6 +1208,10 @@ multi.freq.table = function(data, sep="", dropzero=FALSE,
                           Pct.of.Cases = counts$Pct.of.Cases)
     }
   }
+  message("Total cases:     ", CASES, "\n",
+  "Valid cases:     ", VALID, "\n",
+  "Total responses: ", RESPS, "\n",
+  "Valid responses: ", VRESP)
   counts
 }
 ```

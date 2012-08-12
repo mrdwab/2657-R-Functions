@@ -204,10 +204,12 @@ The `multi.freq.table` function takes a data frame containing Boolean responses 
 
 * `data`: The multiple responses that need to be tabulated.
 * `sep`: The desired separator for collapsing the combinations of options; defaults to `""` (collapsing with no space between each option name).
-* `dropzero`: Should combinations with a frequency of zero be dropped from the final table? Defaults to `FALSE`.
-* `clean`: Should the original tabulated data be retained or dropped from the final table? Defaults to `TRUE`.
+* `NAto0`: Should `NA` values be converted to `0`.
+    * Defaults to `TRUE`, in which case, the number of valid cases should be the same as the number of cases overall.
+    * If set to `FALSE`, any rows with `NA` values will be dropped as invalid cases.
 * `basic`: Should a basic table of each item, rather than combinations of items, be created? Defaults to `FALSE`.
-* `useNA`: How should `NA` values be treated in the tabulation stage? Defaults to `"always"`.
+* `dropzero`: Should combinations with a frequency of zero be dropped from the final table? Defaults to `TRUE`.
+* `clean`: Should the original tabulated data be retained or dropped from the final table? Defaults to `TRUE`.
 
 ## Examples
 
@@ -220,26 +222,35 @@ source(textConnection(getURL(paste0(baseURL, "scripts/multi.freq.table.R"))))
 # Make up some data
 set.seed(1)
 dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE),
-                 B = sample(c(0, 1), 20, replace=TRUE),
-                 C = sample(c(0, 1), 20, replace=TRUE),
-                 D = sample(c(0, 1), 20, replace=TRUE),
-                 E = sample(c(0, 1), 20, replace=TRUE))
+                 B = sample(c(0, 1, NA), 20, 
+                            prob=c(.3, .6, .1), replace=TRUE),
+                 C = sample(c(0, 1, NA), 20, 
+                            prob=c(.7, .2, .1), replace=TRUE),
+                 D = sample(c(0, 1, NA), 20, 
+                            prob=c(.3, .6, .1), replace=TRUE),
+                 E = sample(c(0, 1, NA), 20, 
+                            prob=c(.4, .4, .2), replace=TRUE))
 # View your data
 dat
+# How many cases have "NA" values?
+table(is.na(rowSums(dat)))
 # Apply the function with all defaults accepted
 multi.freq.table(dat)
 # Tabulate only on variables "A", "B", and "D", with a different
-# separator, dropping any zero frequency values, and keeping the original tabulations.
-# Note that there are no solitary "B" responses.
-multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=TRUE, clean=FALSE)
+# separator, keep any zero frequency values, and keeping the 
+# original tabulations. There are no solitary "D" responses.
+multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=FALSE, clean=FALSE)
+# As above, but without converting "NA" to "0".
+# Note the difference in the number of valid cases.
+multi.freq.table(dat[c(1, 2, 4)], NAto0=FALSE, 
+                 sep="-", dropzero=FALSE, clean=FALSE)
 # View a basic table.
 multi.freq.table(dat, basic=TRUE)
 ```
 
 ## To Do
 
-* Update function to deal with `NA` responses better.
-* Update function for dealing with different types of multiple response questions input formats.
+* Update function for dealing with different types of multiple response questions input formats, for example if questions are not in boolean form to begin with.
 
 ## References
 
