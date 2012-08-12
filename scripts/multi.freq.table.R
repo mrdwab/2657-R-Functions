@@ -1,6 +1,6 @@
 ## @knitr multifreqtable
-multi.freq.table = function(data, sep="", dropzero=TRUE,
-                            clean=TRUE, basic=FALSE, NAto0=TRUE) {
+multi.freq.table = function(data, sep="", NAto0=TRUE, basic=FALSE, 
+                            dropzero=TRUE, clean=TRUE) {
   # Takes boolean multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
