@@ -87,7 +87,7 @@ multi.freq.table = function(data, sep="", boolean=TRUE,
     }
     if (isTRUE(basic)) {
       ROWS = levels(unlist(data))
-      OUT = table(as.integer(unlist(data)))
+      OUT = table(unlist(data))
       PCT = (OUT/sum(OUT)) * 100
       OUT = data.frame(ROWS, OUT, PCT, row.names=NULL)
       OUT = data.frame(Item = OUT[, 1], Freq = OUT[, 3], 
@@ -97,7 +97,7 @@ multi.freq.table = function(data, sep="", boolean=TRUE,
               "Total responses: ", RESPS, "\n")
       OUT
     } else if (!isTRUE(basic)) {
-      Combos = apply(data, 1, function(x) paste0(sort(x), collapse = "-"))
+      Combos = apply(data, 1, function(x) paste0(sort(x), collapse = sep))
       Weight = as.numeric(rowSums(!is.na(data)))
       OUT = data.frame(table(Combos, Weight))
       OUT = OUT[OUT$Freq > 0, ]
