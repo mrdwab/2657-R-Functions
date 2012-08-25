@@ -6,6 +6,9 @@
 
 
 
+
+
+
 \pagestyle{plain}
 \tableofcontents
 \cleardoublepage
@@ -36,17 +39,6 @@ First load some data from a CSV stored at [github](http://github.com). The URL i
 
 ```r
 require(RCurl)
-```
-
-```
-## Loading required package: RCurl
-```
-
-```
-## Loading required package: bitops
-```
-
-```r
 baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
 temp = getURL(paste0(baseURL, "data/concatenated-cells.csv"))
 concat.test = read.csv(textConnection(temp))
@@ -57,7 +49,7 @@ dim(concat.test)
 ```
 
 ```
-## [1] 48  4
+[1] 48  4
 ```
 
 ```r
@@ -66,13 +58,13 @@ head(concat.test)
 ```
 
 ```
-##     Name     Likes                   Siblings    Hates
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;
-## 3   Dana 1,2,4,5,6                     Pierce       2;
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;
-## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;
-## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;
+    Name     Likes                   Siblings    Hates
+1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;
+2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;
+3   Dana 1,2,4,5,6                     Pierce       2;
+4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;
+5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;
+6 Kelley   1,2,5,6          James , Roxanne ,     1;4;
 ```
 
 
@@ -90,20 +82,20 @@ head(concat.split(concat.test, 2))
 ```
 
 ```
-##     Name     Likes                   Siblings    Hates Likes_1 Likes_2 Likes_3
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;       1       1      NA
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA
-## 3   Dana 1,2,4,5,6                     Pierce       2;       1       1      NA
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;       1       1      NA
-## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;       1       1      NA
-## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;       1       1      NA
-##   Likes_4 Likes_5 Likes_6
-## 1       1       1       1
-## 2       1       1       1
-## 3       1       1       1
-## 4       1       1       1
-## 5      NA       1       1
-## 6      NA       1       1
+    Name     Likes                   Siblings    Hates Likes_1 Likes_2 Likes_3
+1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;       1       1      NA
+2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA
+3   Dana 1,2,4,5,6                     Pierce       2;       1       1      NA
+4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;       1       1      NA
+5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;       1       1      NA
+6 Kelley   1,2,5,6          James , Roxanne ,     1;4;       1       1      NA
+  Likes_4 Likes_5 Likes_6
+1       1       1       1
+2       1       1       1
+3       1       1       1
+4       1       1       1
+5      NA       1       1
+6      NA       1       1
 ```
 
 ```r
@@ -112,20 +104,20 @@ head(concat.split(concat.test, "Likes", drop.col=TRUE))
 ```
 
 ```
-##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
-## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       1      NA       1
-## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA       1
-## 3   Dana                     Pierce       2;       1       1      NA       1
-## 4 Carole Colon , Michelle , Ballard     1;4;       1       1      NA       1
-## 5 Ramona           Snyder , Joann ,   1;2;3;       1       1      NA      NA
-## 6 Kelley          James , Roxanne ,     1;4;       1       1      NA      NA
-##   Likes_5 Likes_6
-## 1       1       1
-## 2       1       1
-## 3       1       1
-## 4       1       1
-## 5       1       1
-## 6       1       1
+    Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
+1   Boyd Reynolds , Albert , Ortega     2;4;       1       1      NA       1
+2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA       1
+3   Dana                     Pierce       2;       1       1      NA       1
+4 Carole Colon , Michelle , Ballard     1;4;       1       1      NA       1
+5 Ramona           Snyder , Joann ,   1;2;3;       1       1      NA      NA
+6 Kelley          James , Roxanne ,     1;4;       1       1      NA      NA
+  Likes_5 Likes_6
+1       1       1
+2       1       1
+3       1       1
+4       1       1
+5       1       1
+6       1       1
 ```
 
 ```r
@@ -134,13 +126,13 @@ head(concat.split(concat.test, "Hates", sep=";", drop.col=TRUE))
 ```
 
 ```
-##     Name     Likes                   Siblings Hates_1 Hates_2 Hates_3 Hates_4
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega      NA       1      NA       1
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1       1       1
-## 3   Dana 1,2,4,5,6                     Pierce      NA       1      NA      NA
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1      NA      NA       1
-## 5 Ramona   1,2,5,6           Snyder , Joann ,       1       1       1      NA
-## 6 Kelley   1,2,5,6          James , Roxanne ,       1      NA      NA       1
+    Name     Likes                   Siblings Hates_1 Hates_2 Hates_3 Hates_4
+1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega      NA       1      NA       1
+2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1       1       1
+3   Dana 1,2,4,5,6                     Pierce      NA       1      NA      NA
+4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1      NA      NA       1
+5 Ramona   1,2,5,6           Snyder , Joann ,       1       1       1      NA
+6 Kelley   1,2,5,6          James , Roxanne ,       1      NA      NA       1
 ```
 
 ```r
@@ -149,20 +141,20 @@ head(concat.split(concat.test, 2, mode="value", drop.col=TRUE))
 ```
 
 ```
-##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
-## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       2      NA       4
-## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       2      NA       4
-## 3   Dana                     Pierce       2;       1       2      NA       4
-## 4 Carole Colon , Michelle , Ballard     1;4;       1       2      NA       4
-## 5 Ramona           Snyder , Joann ,   1;2;3;       1       2      NA      NA
-## 6 Kelley          James , Roxanne ,     1;4;       1       2      NA      NA
-##   Likes_5 Likes_6
-## 1       5       6
-## 2       5       6
-## 3       5       6
-## 4       5       6
-## 5       5       6
-## 6       5       6
+    Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
+1   Boyd Reynolds , Albert , Ortega     2;4;       1       2      NA       4
+2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       2      NA       4
+3   Dana                     Pierce       2;       1       2      NA       4
+4 Carole Colon , Michelle , Ballard     1;4;       1       2      NA       4
+5 Ramona           Snyder , Joann ,   1;2;3;       1       2      NA      NA
+6 Kelley          James , Roxanne ,     1;4;       1       2      NA      NA
+  Likes_5 Likes_6
+1       5       6
+2       5       6
+3       5       6
+4       5       6
+5       5       6
+6       5       6
 ```
 
 ```r
@@ -171,13 +163,13 @@ head(concat.split(concat.test, 3, drop.col=TRUE))
 ```
 
 ```
-##     Name     Likes    Hates Siblings_1 Siblings_2 Siblings_3
-## 1   Boyd 1,2,4,5,6     2;4;   Reynolds     Albert     Ortega
-## 2  Rufus 1,2,4,5,6 1;2;3;4;      Cohen       Bert Montgomery
-## 3   Dana 1,2,4,5,6       2;     Pierce       <NA>       <NA>
-## 4 Carole 1,2,4,5,6     1;4;      Colon   Michelle    Ballard
-## 5 Ramona   1,2,5,6   1;2;3;     Snyder      Joann       <NA>
-## 6 Kelley   1,2,5,6     1;4;      James    Roxanne       <NA>
+    Name     Likes    Hates Siblings_1 Siblings_2 Siblings_3
+1   Boyd 1,2,4,5,6     2;4;   Reynolds     Albert     Ortega
+2  Rufus 1,2,4,5,6 1;2;3;4;      Cohen       Bert Montgomery
+3   Dana 1,2,4,5,6       2;     Pierce       <NA>       <NA>
+4 Carole 1,2,4,5,6     1;4;      Colon   Michelle    Ballard
+5 Ramona   1,2,5,6   1;2;3;     Snyder      Joann       <NA>
+6 Kelley   1,2,5,6     1;4;      James    Roxanne       <NA>
 ```
 
 ```r
@@ -186,13 +178,13 @@ head(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE))
 ```
 
 ```
-##     Name     Likes                   Siblings    Hates    Likes_list
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4; 1, 2, 4, 5, 6
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4; 1, 2, 4, 5, 6
-## 3   Dana 1,2,4,5,6                     Pierce       2; 1, 2, 4, 5, 6
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4; 1, 2, 4, 5, 6
-## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;    1, 2, 5, 6
-## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;    1, 2, 5, 6
+    Name     Likes                   Siblings    Hates    Likes_list
+1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4; 1, 2, 4, 5, 6
+2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4; 1, 2, 4, 5, 6
+3   Dana 1,2,4,5,6                     Pierce       2; 1, 2, 4, 5, 6
+4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4; 1, 2, 4, 5, 6
+5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;    1, 2, 5, 6
+6 Kelley   1,2,5,6          James , Roxanne ,     1;4;    1, 2, 5, 6
 ```
 
 ```r
@@ -203,19 +195,19 @@ str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
 ```
 
 ```
-## 'data.frame':	10 obs. of  2 variables:
-##  $ Likes     : Factor w/ 5 levels "1,2,3,4,5","1,2,4,5",..: 3 3 3 3 5 5 3 3 3 4
-##  $ Likes_list:List of 10
-##   ..$ : num  1 2 4 5 6
-##   ..$ : num  1 2 4 5 6
-##   ..$ : num  1 2 4 5 6
-##   ..$ : num  1 2 4 5 6
-##   ..$ : num  1 2 5 6
-##   ..$ : num  1 2 5 6
-##   ..$ : num  1 2 4 5 6
-##   ..$ : num  1 2 4 5 6
-##   ..$ : num  1 2 4 5 6
-##   ..$ : num  1 2 5
+'data.frame':	10 obs. of  2 variables:
+ $ Likes     : Factor w/ 5 levels "1,2,3,4,5","1,2,4,5",..: 3 3 3 3 5 5 3 3 3 4
+ $ Likes_list:List of 10
+  ..$ : num  1 2 4 5 6
+  ..$ : num  1 2 4 5 6
+  ..$ : num  1 2 4 5 6
+  ..$ : num  1 2 4 5 6
+  ..$ : num  1 2 5 6
+  ..$ : num  1 2 5 6
+  ..$ : num  1 2 4 5 6
+  ..$ : num  1 2 4 5 6
+  ..$ : num  1 2 4 5 6
+  ..$ : num  1 2 5
 ```
 
 
@@ -253,20 +245,20 @@ head(do.call(cbind, c(concat.test[1],
 ```
 
 ```
-##     Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
-## 1   Boyd       1       1      NA       1       1       1   Reynolds     Albert
-## 2  Rufus       1       1      NA       1       1       1      Cohen       Bert
-## 3   Dana       1       1      NA       1       1       1     Pierce       <NA>
-## 4 Carole       1       1      NA       1       1       1      Colon   Michelle
-## 5 Ramona       1       1      NA      NA       1       1     Snyder      Joann
-## 6 Kelley       1       1      NA      NA       1       1      James    Roxanne
-##   Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
-## 1     Ortega      NA       1      NA       1
-## 2 Montgomery       1       1       1       1
-## 3       <NA>      NA       1      NA      NA
-## 4    Ballard       1      NA      NA       1
-## 5       <NA>       1       1       1      NA
-## 6       <NA>       1      NA      NA       1
+    Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
+1   Boyd       1       1      NA       1       1       1   Reynolds     Albert
+2  Rufus       1       1      NA       1       1       1      Cohen       Bert
+3   Dana       1       1      NA       1       1       1     Pierce       <NA>
+4 Carole       1       1      NA       1       1       1      Colon   Michelle
+5 Ramona       1       1      NA      NA       1       1     Snyder      Joann
+6 Kelley       1       1      NA      NA       1       1      James    Roxanne
+  Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
+1     Ortega      NA       1      NA       1
+2 Montgomery       1       1       1       1
+3       <NA>      NA       1      NA      NA
+4    Ballard       1      NA      NA       1
+5       <NA>       1       1       1      NA
+6       <NA>       1      NA      NA       1
 ```
 
 ```r
@@ -278,20 +270,20 @@ head(do.call(cbind, c(concat.test[1],
 ```
 
 ```
-##     Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
-## 1   Boyd       1       2      NA       4       5       6   Reynolds     Albert
-## 2  Rufus       1       2      NA       4       5       6      Cohen       Bert
-## 3   Dana       1       2      NA       4       5       6     Pierce       <NA>
-## 4 Carole       1       2      NA       4       5       6      Colon   Michelle
-## 5 Ramona       1       2      NA      NA       5       6     Snyder      Joann
-## 6 Kelley       1       2      NA      NA       5       6      James    Roxanne
-##   Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
-## 1     Ortega      NA       2      NA       4
-## 2 Montgomery       1       2       3       4
-## 3       <NA>      NA       2      NA      NA
-## 4    Ballard       1      NA      NA       4
-## 5       <NA>       1       2       3      NA
-## 6       <NA>       1      NA      NA       4
+    Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
+1   Boyd       1       2      NA       4       5       6   Reynolds     Albert
+2  Rufus       1       2      NA       4       5       6      Cohen       Bert
+3   Dana       1       2      NA       4       5       6     Pierce       <NA>
+4 Carole       1       2      NA       4       5       6      Colon   Michelle
+5 Ramona       1       2      NA      NA       5       6     Snyder      Joann
+6 Kelley       1       2      NA      NA       5       6      James    Roxanne
+  Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
+1     Ortega      NA       2      NA       4
+2 Montgomery       1       2       3       4
+3       <NA>      NA       2      NA      NA
+4    Ballard       1      NA      NA       4
+5       <NA>       1       2       3      NA
+6       <NA>       1      NA      NA       4
 ```
 
 ```r
@@ -303,13 +295,13 @@ head(do.call(cbind, c(concat.test[1],
 ```
 
 ```
-##     Name    Likes_list            Siblings_list Hates_list
-## 1   Boyd 1, 2, 4, 5, 6 Reynolds, Albert, Ortega       2, 4
-## 2  Rufus 1, 2, 4, 5, 6  Cohen, Bert, Montgomery 1, 2, 3, 4
-## 3   Dana 1, 2, 4, 5, 6                   Pierce          2
-## 4 Carole 1, 2, 4, 5, 6 Colon, Michelle, Ballard       1, 4
-## 5 Ramona    1, 2, 5, 6            Snyder, Joann    1, 2, 3
-## 6 Kelley    1, 2, 5, 6           James, Roxanne       1, 4
+    Name    Likes_list            Siblings_list Hates_list
+1   Boyd 1, 2, 4, 5, 6 Reynolds, Albert, Ortega       2, 4
+2  Rufus 1, 2, 4, 5, 6  Cohen, Bert, Montgomery 1, 2, 3, 4
+3   Dana 1, 2, 4, 5, 6                   Pierce          2
+4 Carole 1, 2, 4, 5, 6 Colon, Michelle, Ballard       1, 4
+5 Ramona    1, 2, 5, 6            Snyder, Joann    1, 2, 3
+6 Kelley    1, 2, 5, 6           James, Roxanne       1, 4
 ```
 
 
@@ -363,22 +355,22 @@ dat
 ```
 
 ```
-##    id times measure1 score1 code1 measure2 score2 code2
-## 1   1     1  -0.6265    145   DAB  -0.7075    299   CEB
-## 2   1     2   0.1836    180   DCB   0.3646    224   ECD
-## 3   1     3  -0.8356    148   EBA   0.7685    222   DAE
-## 4   2     1   1.5953     56   AED  -0.1123    175   DBA
-## 5   2     2   0.3295    245   CEB   0.8811    260   DAC
-## 6   2     3  -0.8205    198   EBD   0.3981    216   DCA
-## 7   3     1   0.4874    234   BCA  -0.6120    300   CEA
-## 8   3     2   0.7383     32   CDA   0.3411    179   CAD
-## 9   3     3   0.5758    212   EBC  -1.1294    182   BEC
-## 10  4     1  -0.3054    120   BED   1.4330    234   CDE
-## 11  4     2   1.5118    239   EDB   1.9804    231   CAB
-## 12  4     3   0.3898    188   DEB  -0.3672    160   DBE
-## 13  5     1  -0.6212    226   DBA  -1.0441    154   EDB
-## 14  5     2  -2.2147    159   DAC   0.5697    238   BDE
-## 15  5     3   1.1249    152   AED  -0.1351    277   DCE
+   id times measure1 score1 code1 measure2 score2 code2
+1   1     1  -0.6265    145   DAB  -0.7075    299   CEB
+2   1     2   0.1836    180   DCB   0.3646    224   ECD
+3   1     3  -0.8356    148   EBA   0.7685    222   DAE
+4   2     1   1.5953     56   AED  -0.1123    175   DBA
+5   2     2   0.3295    245   CEB   0.8811    260   DAC
+6   2     3  -0.8205    198   EBD   0.3981    216   DCA
+7   3     1   0.4874    234   BCA  -0.6120    300   CEA
+8   3     2   0.7383     32   CDA   0.3411    179   CAD
+9   3     3   0.5758    212   EBC  -1.1294    182   BEC
+10  4     1  -0.3054    120   BED   1.4330    234   CDE
+11  4     2   1.5118    239   EDB   1.9804    231   CAB
+12  4     3   0.3898    188   DEB  -0.3672    160   DBE
+13  5     1  -0.6212    226   DBA  -1.0441    154   EDB
+14  5     2  -2.2147    159   DAC   0.5697    238   BDE
+15  5     3   1.1249    152   AED  -0.1351    277   DCE
 ```
 
 ```r
@@ -389,13 +381,13 @@ head(df.sorter(dat, var.order = c("id", "ti", "cod", "mea", "sco")))
 ```
 
 ```
-##   id times code1 code2 measure1 measure2 score1 score2
-## 1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
-## 2  1     2   DCB   ECD   0.1836   0.3646    180    224
-## 3  1     3   EBA   DAE  -0.8356   0.7685    148    222
-## 4  2     1   AED   DBA   1.5953  -0.1123     56    175
-## 5  2     2   CEB   DAC   0.3295   0.8811    245    260
-## 6  2     3   EBD   DCA  -0.8205   0.3981    198    216
+  id times code1 code2 measure1 measure2 score1 score2
+1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
+2  1     2   DCB   ECD   0.1836   0.3646    180    224
+3  1     3   EBA   DAE  -0.8356   0.7685    148    222
+4  2     1   AED   DBA   1.5953  -0.1123     56    175
+5  2     2   CEB   DAC   0.3295   0.8811    245    260
+6  2     3   EBD   DCA  -0.8205   0.3981    198    216
 ```
 
 ```r
@@ -404,13 +396,13 @@ head(df.sorter(dat, var.order = c(1, 2, 5, 8, 3, 6, 4, 7)))
 ```
 
 ```
-##   id times code1 code2 measure1 measure2 score1 score2
-## 1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
-## 2  1     2   DCB   ECD   0.1836   0.3646    180    224
-## 3  1     3   EBA   DAE  -0.8356   0.7685    148    222
-## 4  2     1   AED   DBA   1.5953  -0.1123     56    175
-## 5  2     2   CEB   DAC   0.3295   0.8811    245    260
-## 6  2     3   EBD   DCA  -0.8205   0.3981    198    216
+  id times code1 code2 measure1 measure2 score1 score2
+1  1     1   DAB   CEB  -0.6265  -0.7075    145    299
+2  1     2   DCB   ECD   0.1836   0.3646    180    224
+3  1     3   EBA   DAE  -0.8356   0.7685    148    222
+4  2     1   AED   DBA   1.5953  -0.1123     56    175
+5  2     2   CEB   DAC   0.3295   0.8811    245    260
+6  2     3   EBD   DCA  -0.8205   0.3981    198    216
 ```
 
 ```r
@@ -420,13 +412,13 @@ head(df.sorter(dat, var.order = c("id", "tim", "cod", "mea", "sco"),
 ```
 
 ```
-##    id times code1 code2 measure1 measure2 score1 score2
-## 1   1     1   DAB   CEB  -0.6265  -0.7075    145    299
-## 4   2     1   AED   DBA   1.5953  -0.1123     56    175
-## 7   3     1   BCA   CEA   0.4874  -0.6120    234    300
-## 10  4     1   BED   CDE  -0.3054   1.4330    120    234
-## 13  5     1   DBA   EDB  -0.6212  -1.0441    226    154
-## 2   1     2   DCB   ECD   0.1836   0.3646    180    224
+   id times code1 code2 measure1 measure2 score1 score2
+1   1     1   DAB   CEB  -0.6265  -0.7075    145    299
+4   2     1   AED   DBA   1.5953  -0.1123     56    175
+7   3     1   BCA   CEA   0.4874  -0.6120    234    300
+10  4     1   BED   CDE  -0.3054   1.4330    120    234
+13  5     1   DBA   EDB  -0.6212  -1.0441    226    154
+2   1     2   DCB   ECD   0.1836   0.3646    180    224
 ```
 
 ```r
@@ -436,13 +428,13 @@ head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"),
 ```
 
 ```
-##    id times score1 score2 code1 code2
-## 4   2     1     56    175   AED   DBA
-## 10  4     1    120    234   BED   CDE
-## 1   1     1    145    299   DAB   CEB
-## 13  5     1    226    154   DBA   EDB
-## 7   3     1    234    300   BCA   CEA
-## 8   3     2     32    179   CDA   CAD
+   id times score1 score2 code1 code2
+4   2     1     56    175   AED   DBA
+10  4     1    120    234   BED   CDE
+1   1     1    145    299   DAB   CEB
+13  5     1    226    154   DBA   EDB
+7   3     1    234    300   BCA   CEA
+8   3     2     32    179   CDA   CAD
 ```
 
 ```r
@@ -452,13 +444,13 @@ head(df.sorter(dat, var.order = c("id", "tim", "sco", "cod"),
 ```
 
 ```
-##    id times score1 score2 code1 code2
-## 4   2     1     56    175   AED   DBA
-## 10  4     1    120    234   BED   CDE
-## 1   1     1    145    299   DAB   CEB
-## 13  5     1    226    154   DBA   EDB
-## 7   3     1    234    300   BCA   CEA
-## 8   3     2     32    179   CDA   CAD
+   id times score1 score2 code1 code2
+4   2     1     56    175   AED   DBA
+10  4     1    120    234   BED   CDE
+1   1     1    145    299   DAB   CEB
+13  5     1    226    154   DBA   EDB
+7   3     1    234    300   BCA   CEA
+8   3     2     32    179   CDA   CAD
 ```
 
 ```r
@@ -467,13 +459,13 @@ head(df.sorter(dat, col.sort = c("times", "id")))
 ```
 
 ```
-##    id times measure1 score1 code1 measure2 score2 code2
-## 1   1     1  -0.6265    145   DAB  -0.7075    299   CEB
-## 4   2     1   1.5953     56   AED  -0.1123    175   DBA
-## 7   3     1   0.4874    234   BCA  -0.6120    300   CEA
-## 10  4     1  -0.3054    120   BED   1.4330    234   CDE
-## 13  5     1  -0.6212    226   DBA  -1.0441    154   EDB
-## 2   1     2   0.1836    180   DCB   0.3646    224   ECD
+   id times measure1 score1 code1 measure2 score2 code2
+1   1     1  -0.6265    145   DAB  -0.7075    299   CEB
+4   2     1   1.5953     56   AED  -0.1123    175   DBA
+7   3     1   0.4874    234   BCA  -0.6120    300   CEA
+10  4     1  -0.3054    120   BED   1.4330    234   CDE
+13  5     1  -0.6212    226   DBA  -1.0441    154   EDB
+2   1     2   0.1836    180   DCB   0.3646    224   ECD
 ```
 
 ```r
@@ -481,13 +473,13 @@ head(df.sorter(dat, col.sort = c("code1"))) # Sorting by character values
 ```
 
 ```
-##    id times measure1 score1 code1 measure2 score2 code2
-## 4   2     1   1.5953     56   AED  -0.1123    175   DBA
-## 15  5     3   1.1249    152   AED  -0.1351    277   DCE
-## 7   3     1   0.4874    234   BCA  -0.6120    300   CEA
-## 10  4     1  -0.3054    120   BED   1.4330    234   CDE
-## 8   3     2   0.7383     32   CDA   0.3411    179   CAD
-## 5   2     2   0.3295    245   CEB   0.8811    260   DAC
+   id times measure1 score1 code1 measure2 score2 code2
+4   2     1   1.5953     56   AED  -0.1123    175   DBA
+15  5     3   1.1249    152   AED  -0.1351    277   DCE
+7   3     1   0.4874    234   BCA  -0.6120    300   CEA
+10  4     1  -0.3054    120   BED   1.4330    234   CDE
+8   3     2   0.7383     32   CDA   0.3411    179   CAD
+5   2     2   0.3295    245   CEB   0.8811    260   DAC
 ```
 
 ```r
@@ -496,13 +488,13 @@ head(df.sorter(dat, var.order= "co", at.start=FALSE))
 ```
 
 ```
-##   code1 code2 score1 score2
-## 1   DAB   CEB    145    299
-## 2   DCB   ECD    180    224
-## 3   EBA   DAE    148    222
-## 4   AED   DBA     56    175
-## 5   CEB   DAC    245    260
-## 6   EBD   DCA    198    216
+  code1 code2 score1 score2
+1   DAB   CEB    145    299
+2   DCB   ECD    180    224
+3   EBA   DAE    148    222
+4   AED   DBA     56    175
+5   CEB   DAC    245    260
+6   EBD   DCA    198    216
 ```
 
 
@@ -565,27 +557,27 @@ dat
 ```
 
 ```
-##    A  B C  D  E
-## 1  0 NA 1 NA  0
-## 2  0  1 0  1  0
-## 3  1  0 1  1  1
-## 4  1  1 0  1  1
-## 5  0  1 0  0  0
-## 6  1  1 1  1  1
-## 7  1  1 0  1  0
-## 8  1  1 0  0  1
-## 9  1  0 1  1  1
-## 10 0  1 0  0  1
-## 11 0  1 0  1  1
-## 12 0  1 1  0  1
-## 13 1  1 0  1  0
-## 14 0  1 0  1 NA
-## 15 1  0 0  1  0
-## 16 0  0 0  0  0
-## 17 1  0 0  0  0
-## 18 1  1 0  1  0
-## 19 0  0 0  0 NA
-## 20 1  1 0 NA  0
+   A  B C  D  E
+1  0 NA 1 NA  0
+2  0  1 0  1  0
+3  1  0 1  1  1
+4  1  1 0  1  1
+5  0  1 0  0  0
+6  1  1 1  1  1
+7  1  1 0  1  0
+8  1  1 0  0  1
+9  1  0 1  1  1
+10 0  1 0  0  1
+11 0  1 0  1  1
+12 0  1 1  0  1
+13 1  1 0  1  0
+14 0  1 0  1 NA
+15 1  0 0  1  0
+16 0  0 0  0  0
+17 1  0 0  0  0
+18 1  1 0  1  0
+19 0  0 0  0 NA
+20 1  1 0 NA  0
 ```
 
 ```r
@@ -594,9 +586,9 @@ table(is.na(rowSums(dat)))
 ```
 
 ```
-## 
-## FALSE  TRUE 
-##    16     4 
+
+FALSE  TRUE 
+   16     4 
 ```
 
 ```r
@@ -605,26 +597,22 @@ multi.freq.table(dat)
 ```
 
 ```
-## Total cases: 20 Valid cases: 20 Total responses: 48 Valid responses: 48
-```
-
-```
-##    Combn Freq Weighted.Freq Pct.of.Resp Pct.of.Cases
-## 1           2             2       4.167           10
-## 2      A    1             1       2.083            5
-## 3      B    1             1       2.083            5
-## 4     AB    1             2       4.167            5
-## 5      C    1             1       2.083            5
-## 6     AD    1             2       4.167            5
-## 7     BD    2             4       8.333           10
-## 8    ABD    3             9      18.750           15
-## 9     BE    1             2       4.167            5
-## 10   ABE    1             3       6.250            5
-## 11   BCE    1             3       6.250            5
-## 12   BDE    1             3       6.250            5
-## 13  ABDE    1             4       8.333            5
-## 14  ACDE    2             8      16.667           10
-## 15 ABCDE    1             5      10.417            5
+   Combn Freq Weighted.Freq Pct.of.Resp Pct.of.Cases
+1           2             2       4.167           10
+2      A    1             1       2.083            5
+3      B    1             1       2.083            5
+4     AB    1             2       4.167            5
+5      C    1             1       2.083            5
+6     AD    1             2       4.167            5
+7     BD    2             4       8.333           10
+8    ABD    3             9      18.750           15
+9     BE    1             2       4.167            5
+10   ABE    1             3       6.250            5
+11   BCE    1             3       6.250            5
+12   BDE    1             3       6.250            5
+13  ABDE    1             4       8.333            5
+14  ACDE    2             8      16.667           10
+15 ABCDE    1             5      10.417            5
 ```
 
 ```r
@@ -635,19 +623,15 @@ multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=FALSE, clean=FALSE)
 ```
 
 ```
-## Total cases: 20 Valid cases: 20 Total responses: 35 Valid responses: 35
-```
-
-```
-##   A B D Freq Combn Weighted.Freq Pct.of.Resp Pct.of.Cases
-## 1 0 0 0    3                   3       8.571           15
-## 2 1 0 0    1     A             1       2.857            5
-## 3 0 1 0    3     B             3       8.571           15
-## 4 1 1 0    2   A-B             4      11.429           10
-## 5 0 0 1    0     D             0       0.000            0
-## 6 1 0 1    3   A-D             6      17.143           15
-## 7 0 1 1    3   B-D             6      17.143           15
-## 8 1 1 1    5 A-B-D            15      42.857           25
+  A B D Freq Combn Weighted.Freq Pct.of.Resp Pct.of.Cases
+1 0 0 0    3                   3       8.571           15
+2 1 0 0    1     A             1       2.857            5
+3 0 1 0    3     B             3       8.571           15
+4 1 1 0    2   A-B             4      11.429           10
+5 0 0 1    0     D             0       0.000            0
+6 1 0 1    3   A-D             6      17.143           15
+7 0 1 1    3   B-D             6      17.143           15
+8 1 1 1    5 A-B-D            15      42.857           25
 ```
 
 ```r
@@ -658,19 +642,15 @@ multi.freq.table(dat[c(1, 2, 4)], NAto0=FALSE,
 ```
 
 ```
-## Total cases: 20 Valid cases: 18 Total responses: 35 Valid responses: 33
-```
-
-```
-##   A B D Freq Combn Weighted.Freq Pct.of.Resp Pct.of.Cases
-## 1 0 0 0    2                   2       6.061       11.111
-## 2 1 0 0    1     A             1       3.030        5.556
-## 3 0 1 0    3     B             3       9.091       16.667
-## 4 1 1 0    1   A-B             2       6.061        5.556
-## 5 0 0 1    0     D             0       0.000        0.000
-## 6 1 0 1    3   A-D             6      18.182       16.667
-## 7 0 1 1    3   B-D             6      18.182       16.667
-## 8 1 1 1    5 A-B-D            15      45.455       27.778
+  A B D Freq Combn Weighted.Freq Pct.of.Resp Pct.of.Cases
+1 0 0 0    2                   2       6.061       11.111
+2 1 0 0    1     A             1       3.030        5.556
+3 0 1 0    3     B             3       9.091       16.667
+4 1 1 0    1   A-B             2       6.061        5.556
+5 0 0 1    0     D             0       0.000        0.000
+6 1 0 1    3   A-D             6      18.182       16.667
+7 0 1 1    3   B-D             6      18.182       16.667
+8 1 1 1    5 A-B-D            15      45.455       27.778
 ```
 
 ```r
@@ -679,16 +659,12 @@ multi.freq.table(dat, basic=TRUE)
 ```
 
 ```
-## Total cases: 20 Valid cases: 20 Total responses: 48 Valid responses: 48
-```
-
-```
-##   Freq Pct.of.Resp Pct.of.Cases
-## A   11       22.92           55
-## B   13       27.08           65
-## C    5       10.42           25
-## D   11       22.92           55
-## E    8       16.67           40
+  Freq Pct.of.Resp Pct.of.Cases
+A   11       22.92           55
+B   13       27.08           65
+C    5       10.42           25
+D   11       22.92           55
+E    8       16.67           40
 ```
 
 
@@ -711,17 +687,17 @@ dat2
 ```
 
 ```
-##    Reason.1 Reason.2 Reason.3
-## 1       one      two    three
-## 2       one    three     <NA>
-## 3       two    three     <NA>
-## 4       one     <NA>     <NA>
-## 5       two     <NA>     <NA>
-## 6     three      two     <NA>
-## 7       one    three     <NA>
-## 8       one      two    three
-## 9      <NA>     <NA>     <NA>
-## 10      two     <NA>     <NA>
+   Reason.1 Reason.2 Reason.3
+1       one      two    three
+2       one    three     <NA>
+3       two    three     <NA>
+4       one     <NA>     <NA>
+5       two     <NA>     <NA>
+6     three      two     <NA>
+7       one    three     <NA>
+8       one      two    three
+9      <NA>     <NA>     <NA>
+10      two     <NA>     <NA>
 ```
 
 ```r
@@ -731,8 +707,8 @@ multi.freq.table(dat2, boolean=FALSE)
 ```
 
 ```
-## Error: Input variables must be factors.  Please provide factors using the
-## 'factors' argument or convert your data to factor before using function.
+Error: Input variables must be factors.  Please provide factors using the
+'factors' argument or convert your data to factor before using function.
 ```
 
 ```r
@@ -742,17 +718,13 @@ multi.freq.table(dat2, boolean=FALSE,
 ```
 
 ```
-## Total cases: 10 Total responses: 17
-```
-
-```
-##         Combos Freq Weighted.Freq Pct.of.Resp Pct.of.Cases
-## 1                 1             1       5.882           10
-## 8          one    1             1       5.882           10
-## 12         two    2             2      11.765           20
-## 15    onethree    2             4      23.529           20
-## 17    threetwo    2             4      23.529           20
-## 22 onethreetwo    2             6      35.294           20
+        Combos Freq Weighted.Freq Pct.of.Resp Pct.of.Cases
+1                 1             1       5.882           10
+8          one    1             1       5.882           10
+12         two    2             2      11.765           20
+15    onethree    2             4      23.529           20
+17    threetwo    2             4      23.529           20
+22 onethreetwo    2             6      35.294           20
 ```
 
 ```r
@@ -763,14 +735,10 @@ multi.freq.table(dat2, boolean=FALSE,
 ```
 
 ```
-## Total cases: 10 Total responses: 17
-```
-
-```
-##    Item Freq Pct.of.Resp Pct.of.Cases
-## 1   one    5       29.41           50
-## 2   two    6       35.29           60
-## 3 three    6       35.29           60
+   Item Freq Pct.of.Resp Pct.of.Cases
+1   one    5       29.41           50
+2   two    6       35.29           60
+3 three    6       35.29           60
 ```
 
 
@@ -795,7 +763,7 @@ dim(computer)
 ```
 
 ```
-## [1] 100  20
+[1] 100  20
 ```
 
 ```r
@@ -803,10 +771,10 @@ names(computer)
 ```
 
 ```
-##  [1] "id"       "ms_word"  "ms_excel" "ms_ppt"   "ms_outlk" "ms_pub"  
-##  [7] "ms_proj"  "ms_acc"   "netscape" "int_expl" "adobe_rd" "endnote" 
-## [13] "spss"     "quality1" "quality2" "quality3" "quality4" "quality5"
-## [19] "quality6" "gender"  
+ [1] "id"       "ms_word"  "ms_excel" "ms_ppt"   "ms_outlk" "ms_pub"  
+ [7] "ms_proj"  "ms_acc"   "netscape" "int_expl" "adobe_rd" "endnote" 
+[13] "spss"     "quality1" "quality2" "quality3" "quality4" "quality5"
+[19] "quality6" "gender"  
 ```
 
 ```r
@@ -819,13 +787,13 @@ lapply(instructor.quality, levels)[[1]]
 ```
 
 ```
-## [1] "Ability to provide practical examples" 
-## [2] "Ability to answer questions positively"
-## [3] "Ability to clearly explain concepts"   
-## [4] "Ability to instruct at a suitable pace"
-## [5] "Knowledge of software"                 
-## [6] "Humour"                                
-## [7] "Other"                                 
+[1] "Ability to provide practical examples" 
+[2] "Ability to answer questions positively"
+[3] "Ability to clearly explain concepts"   
+[4] "Ability to instruct at a suitable pace"
+[5] "Knowledge of software"                 
+[6] "Humour"                                
+[7] "Other"                                 
 ```
 
 ```r
@@ -843,18 +811,14 @@ multi.freq.table(data.frame(instructor.quality),
 ```
 
 ```
-## Total cases: 100 Total responses: 260
-```
-
-```
-##   Item Freq Pct.of.Resp Pct.of.Cases
-## 1   Q1   47      18.077           47
-## 2   Q2   59      22.692           59
-## 3   Q3   55      21.154           55
-## 4   Q4   43      16.538           43
-## 5   Q5    0       0.000            0
-## 6   Q6   47      18.077           47
-## 7   Q7    9       3.462            9
+  Item Freq Pct.of.Resp Pct.of.Cases
+1   Q1   47      18.077           47
+2   Q2   59      22.692           59
+3   Q3   55      21.154           55
+4   Q4   43      16.538           43
+5   Q5    0       0.000            0
+6   Q6   47      18.077           47
+7   Q7    9       3.462            9
 ```
 
 ```r
@@ -865,32 +829,24 @@ list(head(multi.freq.table(data.frame(instructor.quality),
 ```
 
 ```
-## Total cases: 100 Total responses: 260
-```
+[[1]]
+   Combos Freq Weighted.Freq Pct.of.Resp Pct.of.Cases
+1      Q1    1             1      0.3846            1
+21     Q2    3             3      1.1538            3
+31     Q3    2             2      0.7692            2
+37     Q4    2             2      0.7692            2
+39     Q6    3             3      1.1538            3
+41  Q1-Q2    8            16      6.1538            8
 
-```
-## Total cases: 100 Total responses: 260
-```
+[[2]]
+               Combos Freq Weighted.Freq Pct.of.Resp Pct.of.Cases
+133       Q1-Q3-Q6-Q7    1             4       1.538            1
+141       Q2-Q3-Q4-Q6    4            16       6.154            4
+151       Q3-Q4-Q6-Q7    1             4       1.538            1
+161    Q1-Q2-Q3-Q4-Q6    1             5       1.923            1
+164    Q1-Q2-Q3-Q6-Q7    1             5       1.923            1
+201 Q1-Q2-Q3-Q4-Q6-Q7    1             6       2.308            1
 
-```
-## [[1]]
-##    Combos Freq Weighted.Freq Pct.of.Resp Pct.of.Cases
-## 1      Q1    1             1      0.3846            1
-## 21     Q2    3             3      1.1538            3
-## 31     Q3    2             2      0.7692            2
-## 37     Q4    2             2      0.7692            2
-## 39     Q6    3             3      1.1538            3
-## 41  Q1-Q2    8            16      6.1538            8
-## 
-## [[2]]
-##                Combos Freq Weighted.Freq Pct.of.Resp Pct.of.Cases
-## 133       Q1-Q3-Q6-Q7    1             4       1.538            1
-## 141       Q2-Q3-Q4-Q6    4            16       6.154            4
-## 151       Q3-Q4-Q6-Q7    1             4       1.538            1
-## 161    Q1-Q2-Q3-Q4-Q6    1             5       1.923            1
-## 164    Q1-Q2-Q3-Q6-Q7    1             5       1.923            1
-## 201 Q1-Q2-Q3-Q4-Q6-Q7    1             6       2.308            1
-## 
 ```
 
 ```r
@@ -906,23 +862,19 @@ multi.freq.table(data.frame(instructors.sw), basic=TRUE)
 ```
 
 ```
-## Total cases: 100 Valid cases: 100 Total responses: 551 Valid responses: 551
-```
-
-```
-##          Freq Pct.of.Resp Pct.of.Cases
-## ms_word    77      13.975           77
-## ms_excel   48       8.711           48
-## ms_ppt     55       9.982           55
-## ms_outlk   52       9.437           52
-## ms_pub     19       3.448           19
-## ms_proj    21       3.811           21
-## ms_acc     57      10.345           57
-## netscape   10       1.815           10
-## int_expl   84      15.245           84
-## adobe_rd   48       8.711           48
-## endnote    55       9.982           55
-## spss       25       4.537           25
+         Freq Pct.of.Resp Pct.of.Cases
+ms_word    77      13.975           77
+ms_excel   48       8.711           48
+ms_ppt     55       9.982           55
+ms_outlk   52       9.437           52
+ms_pub     19       3.448           19
+ms_proj    21       3.811           21
+ms_acc     57      10.345           57
+netscape   10       1.815           10
+int_expl   84      15.245           84
+adobe_rd   48       8.711           48
+endnote    55       9.982           55
+spss       25       4.537           25
 ```
 
 ```r
@@ -934,46 +886,38 @@ list(head(multi.freq.table(data.frame(instructors.sw), sep="-")),
 ```
 
 ```
-## Total cases: 100 Valid cases: 100 Total responses: 551 Valid responses: 551
-```
+[[1]]
+                                           Combn Freq Weighted.Freq Pct.of.Resp
+1                 ms_word-ms_excel-ms_ppt-ms_acc    1             4      0.7260
+2 ms_word-ms_excel-ms_ppt-ms_outlk-ms_pub-ms_acc    1             6      1.0889
+3                                       int_expl    2             2      0.3630
+4                               ms_word-int_expl    1             2      0.3630
+5                        ms_word-ms_ppt-int_expl    1             3      0.5445
+6                      ms_word-ms_outlk-int_expl    1             3      0.5445
+  Pct.of.Cases
+1            1
+2            1
+3            2
+4            1
+5            1
+6            1
 
-```
-## Total cases: 100 Valid cases: 100 Total responses: 551 Valid responses: 551
-```
+[[2]]
+                                                                     Combn Freq
+91 ms_word-ms_excel-ms_outlk-ms_pub-ms_proj-int_expl-adobe_rd-endnote-spss    1
+92           ms_word-ms_excel-ms_ppt-ms_acc-int_expl-adobe_rd-endnote-spss    1
+93                  ms_word-ms_outlk-ms_acc-int_expl-adobe_rd-endnote-spss    1
+94           ms_word-ms_ppt-ms_outlk-ms_acc-int_expl-adobe_rd-endnote-spss    1
+95                    ms_word-ms_pub-ms_acc-int_expl-adobe_rd-endnote-spss    1
+96                  ms_outlk-ms_proj-ms_acc-int_expl-adobe_rd-endnote-spss    1
+   Weighted.Freq Pct.of.Resp Pct.of.Cases
+91             9       1.633            1
+92             8       1.452            1
+93             7       1.270            1
+94             8       1.452            1
+95             7       1.270            1
+96             7       1.270            1
 
-```
-## [[1]]
-##                                            Combn Freq Weighted.Freq Pct.of.Resp
-## 1                 ms_word-ms_excel-ms_ppt-ms_acc    1             4      0.7260
-## 2 ms_word-ms_excel-ms_ppt-ms_outlk-ms_pub-ms_acc    1             6      1.0889
-## 3                                       int_expl    2             2      0.3630
-## 4                               ms_word-int_expl    1             2      0.3630
-## 5                        ms_word-ms_ppt-int_expl    1             3      0.5445
-## 6                      ms_word-ms_outlk-int_expl    1             3      0.5445
-##   Pct.of.Cases
-## 1            1
-## 2            1
-## 3            2
-## 4            1
-## 5            1
-## 6            1
-## 
-## [[2]]
-##                                                                      Combn Freq
-## 91 ms_word-ms_excel-ms_outlk-ms_pub-ms_proj-int_expl-adobe_rd-endnote-spss    1
-## 92           ms_word-ms_excel-ms_ppt-ms_acc-int_expl-adobe_rd-endnote-spss    1
-## 93                  ms_word-ms_outlk-ms_acc-int_expl-adobe_rd-endnote-spss    1
-## 94           ms_word-ms_ppt-ms_outlk-ms_acc-int_expl-adobe_rd-endnote-spss    1
-## 95                    ms_word-ms_pub-ms_acc-int_expl-adobe_rd-endnote-spss    1
-## 96                  ms_outlk-ms_proj-ms_acc-int_expl-adobe_rd-endnote-spss    1
-##    Weighted.Freq Pct.of.Resp Pct.of.Cases
-## 91             9       1.633            1
-## 92             8       1.452            1
-## 93             7       1.270            1
-## 94             8       1.452            1
-## 95             7       1.270            1
-## 96             7       1.270            1
-## 
 ```
 
 
@@ -1015,13 +959,13 @@ summary(dat)
 ```
 
 ```
-##        V1             V2               V3              V4       
-##  Min.   : 1.0   Min.   :-2.215   Min.   :0.000   Min.   : 2.00  
-##  1st Qu.:13.2   1st Qu.:-0.372   1st Qu.:0.347   1st Qu.: 8.25  
-##  Median :25.5   Median : 0.129   Median :0.590   Median :13.00  
-##  Mean   :25.5   Mean   : 0.100   Mean   :0.774   Mean   :14.80  
-##  3rd Qu.:37.8   3rd Qu.: 0.728   3rd Qu.:1.175   3rd Qu.:20.75  
-##  Max.   :50.0   Max.   : 1.595   Max.   :2.400   Max.   :29.00  
+       V1             V2               V3              V4       
+ Min.   : 1.0   Min.   :-2.215   Min.   :0.000   Min.   : 2.00  
+ 1st Qu.:13.2   1st Qu.:-0.372   1st Qu.:0.347   1st Qu.: 8.25  
+ Median :25.5   Median : 0.129   Median :0.590   Median :13.00  
+ Mean   :25.5   Mean   : 0.100   Mean   :0.774   Mean   :14.80  
+ 3rd Qu.:37.8   3rd Qu.: 0.728   3rd Qu.:1.175   3rd Qu.:20.75  
+ Max.   :50.0   Max.   : 1.595   Max.   :2.400   Max.   :29.00  
 ```
 
 ```r
@@ -1030,15 +974,15 @@ row.extractor(dat, 4)
 ```
 
 ```
-##    V1      V2   V3 V4
-## 28 28 -1.4708 0.00  2
-## 47 47  0.3646 1.28 13
-## 29 29 -0.4782 0.07 13
-## 11 11  1.5118 2.40 29
-## 14 14 -2.2147 0.03 29
-## 18 18  0.9438 1.47 29
-## 19 19  0.8212 0.15 29
-## 50 50  0.8811 0.47 29
+   V1      V2   V3 V4
+28 28 -1.4708 0.00  2
+47 47  0.3646 1.28 13
+29 29 -0.4782 0.07 13
+11 11  1.5118 2.40 29
+14 14 -2.2147 0.03 29
+18 18  0.9438 1.47 29
+19 19  0.8212 0.15 29
+50 50  0.8811 0.47 29
 ```
 
 ```r
@@ -1047,8 +991,8 @@ row.extractor(dat, "V4", "min")
 ```
 
 ```
-##    V1     V2 V3 V4
-## 28 28 -1.471  0  2
+   V1     V2 V3 V4
+28 28 -1.471  0  2
 ```
 
 ```r
@@ -1059,9 +1003,9 @@ row.extractor(dat, "V4", "median")
 ```
 
 ```
-##    V1      V2   V3 V4
-## 47 47  0.3646 1.28 13
-## 29 29 -0.4782 0.07 13
+   V1      V2   V3 V4
+47 47  0.3646 1.28 13
+29 29 -0.4782 0.07 13
 ```
 
 ```r
@@ -1070,17 +1014,17 @@ row.extractor(dat, "V3", seq(0.1, 1, 0.1))
 ```
 
 ```
-##    V1       V2   V3 V4
-## 10 10 -0.30539 0.14 22
-## 26 26 -0.05613 0.29 16
-## 39 39  1.10003 0.37 13
-## 41 41 -0.16452 0.54 10
-## 30 30  0.41794 0.59 26
-## 44 44  0.55666 0.70  5
-## 37 37 -0.39429 1.06 21
-## 49 49 -0.11235 1.22 14
-## 34 34 -0.05381 1.52 19
-## 11 11  1.51178 2.40 29
+   V1       V2   V3 V4
+10 10 -0.30539 0.14 22
+26 26 -0.05613 0.29 16
+39 39  1.10003 0.37 13
+41 41 -0.16452 0.54 10
+30 30  0.41794 0.59 26
+44 44  0.55666 0.70  5
+37 37 -0.39429 1.06 21
+49 49 -0.11235 1.22 14
+34 34 -0.05381 1.52 19
+11 11  1.51178 2.40 29
 ```
 
 
@@ -1126,12 +1070,8 @@ sample.size(population = 300)
 ```
 
 ```
-## NOTE! Confidence interval set to 5.  To override, set c.int to desired value.
-```
-
-```
-##   population conf.level conf.int distribution sample.size
-## 1        300         95        5           50         169
+  population conf.level conf.int distribution sample.size
+1        300         95        5           50         169
 ```
 
 ```r
@@ -1141,12 +1081,8 @@ sample.size(population = 300, c.lev = 97)
 ```
 
 ```
-## NOTE! Confidence interval set to 5.  To override, set c.int to desired value.
-```
-
-```
-##   population conf.level conf.int distribution sample.size
-## 1        300         97        5           50         183
+  population conf.level conf.int distribution sample.size
+1        300         97        5           50         183
 ```
 
 ```r
@@ -1155,8 +1091,8 @@ sample.size(population = 300, c.int = 2.5, what = "sample")
 ```
 
 ```
-##   population conf.level conf.int distribution sample.size
-## 1        300         95      2.5           50         251
+  population conf.level conf.int distribution sample.size
+1        300         95      2.5           50         251
 ```
 
 ```r
@@ -1167,8 +1103,8 @@ sample.size(population = 300, samp.size = 140, what = "confidence")
 ```
 
 ```
-##   population conf.level conf.int distribution sample.size
-## 1        300         95     6.06           50         140
+  population conf.level conf.int distribution sample.size
+1        300         95     6.06           50         140
 ```
 
 
@@ -1183,16 +1119,12 @@ sample.size(population=c(300, 350, 400, 450, 500))
 ```
 
 ```
-## NOTE! Confidence interval set to 5.  To override, set c.int to desired value.
-```
-
-```
-##   population conf.level conf.int distribution sample.size
-## 1        300         95        5           50         169
-## 2        350         95        5           50         183
-## 3        400         95        5           50         196
-## 4        450         95        5           50         207
-## 5        500         95        5           50         217
+  population conf.level conf.int distribution sample.size
+1        300         95        5           50         169
+2        350         95        5           50         183
+3        400         95        5           50         196
+4        450         95        5           50         207
+5        500         95        5           50         217
 ```
 
 ```r
@@ -1204,22 +1136,22 @@ sample.size(population=300,
 ```
 
 ```
-##    population conf.level conf.int distribution sample.size
-## 1         300         95      2.5           50         251
-## 2         300         96      2.5           50         255
-## 3         300         97      2.5           50         259
-## 4         300         98      2.5           50         264
-## 5         300         99      2.5           50         270
-## 6         300         95      5.0           50         169
-## 7         300         96      5.0           50         176
-## 8         300         97      5.0           50         183
-## 9         300         98      5.0           50         193
-## 10        300         99      5.0           50         207
-## 11        300         95     10.0           50          73
-## 12        300         96     10.0           50          78
-## 13        300         97     10.0           50          85
-## 14        300         98     10.0           50          93
-## 15        300         99     10.0           50         107
+   population conf.level conf.int distribution sample.size
+1         300         95      2.5           50         251
+2         300         96      2.5           50         255
+3         300         97      2.5           50         259
+4         300         98      2.5           50         264
+5         300         99      2.5           50         270
+6         300         95      5.0           50         169
+7         300         96      5.0           50         176
+8         300         97      5.0           50         183
+9         300         98      5.0           50         193
+10        300         99      5.0           50         207
+11        300         95     10.0           50          73
+12        300         96     10.0           50          78
+13        300         97     10.0           50          85
+14        300         98     10.0           50          93
+15        300         99     10.0           50         107
 ```
 
 ```r
@@ -1231,10 +1163,10 @@ sample.size(population=300,
 ```
 
 ```
-##   population conf.level conf.int distribution sample.size
-## 1        300         95     5.67           50         150
-## 2        300         95     5.30           50         160
-## 3        300         95     4.96           50         170
+  population conf.level conf.int distribution sample.size
+1        300         95     5.67           50         150
+2        300         95     5.30           50         160
+3        300         95     4.96           50         170
 ```
 
 
@@ -1773,16 +1705,16 @@ temp
 ```
 
 ```
-## $A
-##   A B
-## 1 1 3
-## 2 2 4
-## 
-## $B
-##   C D
-## 1 5 7
-## 2 6 8
-## 
+$A
+  A B
+1 1 3
+2 2 4
+
+$B
+  C D
+1 5 7
+2 6 8
+
 ```
 
 ```r
@@ -1793,7 +1725,7 @@ temp_1
 ```
 
 ```
-## Error: object 'temp_1' not found
+Error: object 'temp_1' not found
 ```
 
 ```r
@@ -1804,7 +1736,7 @@ ls(pattern="temp_")
 ```
 
 ```
-## [1] "temp_1" "temp_2"
+[1] "temp_1" "temp_2"
 ```
 
 ```r
@@ -1813,9 +1745,9 @@ temp_1
 ```
 
 ```
-##   A B
-## 1 1 3
-## 2 2 4
+  A B
+1 1 3
+2 2 4
 ```
 
 ```r
@@ -1823,9 +1755,9 @@ temp_2
 ```
 
 ```
-##   C D
-## 1 5 7
-## 2 6 8
+  C D
+1 5 7
+2 6 8
 ```
 
 
@@ -1855,9 +1787,9 @@ dat
 ```
 
 ```
-##   A B C
-## 1 1 3 5
-## 2 2 4 6
+  A B C
+1 1 3 5
+2 2 4 6
 ```
 
 ```r
@@ -1866,21 +1798,21 @@ dfcols.list(dat)
 ```
 
 ```
-## [[1]]
-##   A
-## 1 1
-## 2 2
-## 
-## [[2]]
-##   B
-## 1 3
-## 2 4
-## 
-## [[3]]
-##   C
-## 1 5
-## 2 6
-## 
+[[1]]
+  A
+1 1
+2 2
+
+[[2]]
+  B
+1 3
+2 4
+
+[[3]]
+  C
+1 5
+2 6
+
 ```
 
 ```r
@@ -1889,15 +1821,15 @@ dfcols.list(dat, vectorize=TRUE)
 ```
 
 ```
-## $A
-## [1] 1 2
-## 
-## $B
-## [1] 3 4
-## 
-## $C
-## [1] 5 6
-## 
+$A
+[1] 1 2
+
+$B
+[1] 3 4
+
+$C
+[1] 5 6
+
 ```
 
 
@@ -1957,10 +1889,10 @@ str(dat)
 ```
 
 ```
-## 'data.frame':	3 obs. of  3 variables:
-##  $ title     : Factor w/ 3 levels "title1","title2",..: 1 2 3
-##  $ author    : Factor w/ 3 levels "author1","author2",..: 1 2 3
-##  $ customerID: num  1 2 1
+'data.frame':	3 obs. of  3 variables:
+ $ title     : Factor w/ 3 levels "title1","title2",..: 1 2 3
+ $ author    : Factor w/ 3 levels "author1","author2",..: 1 2 3
+ $ customerID: num  1 2 1
 ```
 
 ```r
@@ -1972,10 +1904,10 @@ str(dat)
 ```
 
 ```
-## 'data.frame':	3 obs. of  3 variables:
-##  $ title     : chr  "title1" "title2" "title3"
-##  $ author    : chr  "author1" "author2" "author3"
-##  $ customerID: num  1 2 1
+'data.frame':	3 obs. of  3 variables:
+ $ title     : chr  "title1" "title2" "title3"
+ $ author    : chr  "author1" "author2" "author3"
+ $ customerID: num  1 2 1
 ```
 
 
@@ -2026,11 +1958,11 @@ Reduce(function(x, y) merge(x, y, all=TRUE),
 ```
 
 ```
-##   ID  JAN  FEB  MAR  APR
-## 1  2    X    E    R    F
-## 2  3 <NA>    F    X    D
-## 3  4    V <NA>    M    Q
-## 4  5    F    B <NA> <NA>
+  ID  JAN  FEB  MAR  APR
+1  2    X    E    R    F
+2  3 <NA>    F    X    D
+3  4    V <NA>    M    Q
+4  5    F    B <NA> <NA>
 ```
 
 

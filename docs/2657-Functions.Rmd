@@ -3,6 +3,10 @@
 
 \pagenumbering{gobble}
 
+```{r, echo=FALSE}
+opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
+```
+
 ```{r set-options, echo=FALSE, cache=FALSE}
 options(width=80)
 read_chunk("../scripts/concat.split.R")
@@ -40,7 +44,7 @@ The `concat.split` function takes a column with multiple values, splits the valu
 
 First load some data from a CSV stored at [github](http://github.com). The URL is an HTTPS, so we need to use `getURL` from `RCurl`.
 
-```{r concat_split_data_loading, tidy=FALSE}
+```{r concat_split_data_loading}
 require(RCurl)
 baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
 temp = getURL(paste0(baseURL, "data/concatenated-cells.csv"))
@@ -55,7 +59,7 @@ head(concat.test)
 
 Notice that the data have been entered in a very silly manner. Let's split it up!
 
-```{r concat_split_examples, tidy=FALSE}
+```{r concat_split_examples}
 # Load the function!
 # require(RCurl)
 # baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -83,7 +87,7 @@ str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
 
 It is also possible to use `concat.split` to split multiple columns at once. This can be done in stages, or it can be all wrapped in nested statements, as follows:
 
-```{r concat_split_advanced, eval=FALSE, tidy=FALSE}
+```{r concat_split_advanced, eval=FALSE}
 do.call(cbind, c(concat.test[1],
                  lapply(lapply(2:ncol(concat.test),
                                function(x) concat.test[x]),
@@ -102,7 +106,7 @@ Alternatively, a similar approach can be taken using the function `dfcols.list` 
 ```{r dfcolslist, echo=FALSE, eval=TRUE}
 ```
 
-```{r concat_split_advanced_2, tidy=FALSE}
+```{r concat_split_advanced_2}
 # Show just the first few lines, Boolean mode
 head(do.call(cbind, c(concat.test[1],
                       lapply(dfcols.list(concat.test[-1]),
@@ -148,7 +152,7 @@ The `df.sorter` function allows you to sort a `data.frame` by columns or rows or
 
 ## Examples
 
-```{r df_sorter_examples, tidy=FALSE}
+```{r df_sorter_examples}
 # Load the function!
 # require(RCurl)
 # baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -223,7 +227,7 @@ The `multi.freq.table` function takes a data frame containing Boolean responses 
 
 ### Boolean Data
 
-```{r multi_freq_table_examples, tidy=FALSE}
+```{r multi_freq_table_examples}
 # Load the function!
 # require(RCurl)
 # baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -260,7 +264,7 @@ multi.freq.table(dat, basic=TRUE)
 
 ### Non-Boolean Data
 
-```{r multi-freq-table2, tidy=FALSE}
+```{r multi-freq-table2}
 # Make up some data
 dat2 = structure(list(Reason.1 = c("one", "one", "two", "one", "two", 
                                    "three", "one", "one", NA, "two"), 
@@ -292,7 +296,7 @@ The following example is based on some data available from the University of Auc
 When the data are read into R, the factor labels are very long, which makes it difficult to see on the screen. Thus, in the first example that follows, the factor levels are first recoded before the multiple frequency tables are created. Additionally, the data for the binary information in the second example was coded in a common `1 = Yes` and `2 = No` format, but we need `0 = No` instead, so we need to do some recoding there too before using the function.
 
 
-```{r multi-freq-table-extended, tidy=FALSE}
+```{r multi-freq-table-extended}
 # Get the data
 library(foreign)
 temp = "http://cad.auckland.ac.nz/file.php/content/files/slc/"
@@ -361,7 +365,7 @@ The `row.extractor` function takes a `data.frame` and extracts rows with the `mi
 
 ## Examples
 
-```{r row_extractor_examples, tidy=FALSE}
+```{r row_extractor_examples}
 # Load the function!
 # require(RCurl)
 # baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -416,7 +420,7 @@ The `sample.size` function either calculates the optimum survey sample size when
 
 ## Examples
 
-```{r sample_size_exampes, tidy=FALSE}
+```{r sample_size_exampes}
 # Load the function!
 # require(RCurl)
 # baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
@@ -439,7 +443,7 @@ sample.size(population = 300, samp.size = 140, what = "confidence")
 
 As the function is vectorized, it is possible to easily make tables with multiple scenarios.
 
-```{r sample_size_advanced, tidy=FALSE}
+```{r sample_size_advanced}
 # What should the sample be for populations of 300 to 500 by 50?
 sample.size(population=c(300, 350, 400, 450, 500))
 # How does varying confidence levels or confidence intervals
@@ -490,35 +494,35 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 
 # concat.split
 
-```{r concatsplit, tidy=FALSE}
+```{r concatsplit}
 ```
 
 \newpage
 
 # df.sorter
 
-```{r dfsorter, tidy=FALSE}
+```{r dfsorter}
 ```
 
 \newpage
 
 # multi.freq.table
 
-```{r multifreqtable, tidy=FALSE}
+```{r multifreqtable}
 ```
 
 \newpage
 
 # row.extractor
 
-```{r rowextractor, tidy=FALSE}
+```{r rowextractor}
 ```
 
 \newpage
 
 # sample.size
 
-```{r samplesize, tidy=FALSE}
+```{r samplesize}
 ```
 
 \newpage
@@ -529,19 +533,19 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 
 ## Load All Scripts and Data Files From Multiple Directories
 
-```{r scriptsanddata, tidy=FALSE}
+```{r scriptsanddata}
 ```
 
 ## Convert a List of Data Frames Into Individual Data Frames
 
-```{r unlistdfs, tidy=FALSE}
+```{r unlistdfs}
 ```
 
 ### Example
 
 *Note that the list name must be quoted.*
 
-```{r unlistdfs_example, tidy=FALSE}
+```{r unlistdfs_example}
 # Sample data
 temp = list(A = data.frame(A = 1:2, B = 3:4), 
             B = data.frame(C = 5:6, D = 7:8))
@@ -561,12 +565,12 @@ temp_2
 
 ## Convert a Data Frame Into a List With Each Column Becoming a List Item
 
-```{r dfcolslist, tidy=FALSE}
+```{r dfcolslist}
 ```
 
 ### Examples
 
-```{r dfcolslist_examples, tidy=FALSE}
+```{r dfcolslist_examples}
 # Sample data
 dat = data.frame(A = c(1:2), B = c(3:4), C = c(5:6))
 dat
@@ -578,14 +582,14 @@ dfcols.list(dat, vectorize=TRUE)
 
 ## Rename an Object in the Workplace
 
-```{r rmmove, tidy=FALSE}
+```{r rmmove}
 ```
 
 ### Basic Usage
 
 If there is already an object with the same name in the workplace, the function will ask you if you want to replace the object or not. Otherwise, the basic usage is:
 
-```{r rmmove_example, eval=FALSE, tidy=FALSE}
+```{r rmmove_example, eval=FALSE}
 # Rename "object_1" to "object_2"
 mv(object_1, object_2)
 ```
@@ -604,7 +608,7 @@ In the example data below, `author` and `title` are automatically converted to f
 
 Use `sapply` to identify which variables are currently factors and convert them to `as.character`.
 
-```{r factortocharacter, tidy=FALSE}
+```{r factortocharacter}
 dat = data.frame(title = c("title1", "title2", "title3"),
                  author = c("author1", "author2", "author3"),
                  customerID = c(1, 2, 1))
@@ -622,7 +626,7 @@ The `merge` function in R only merges two objects at a time. This is usually fin
 
 Consider the following data, where we want to take monthly tables and merge them into an annual table:
 
-```{r reduce_sample_data, tidy=FALSE}
+```{r reduce_sample_data}
 set.seed(1)
 JAN = data.frame(ID = sample(5, 3), JAN = sample(LETTERS, 3))
 FEB = data.frame(ID = sample(5, 3), FEB = sample(LETTERS, 3))
@@ -632,7 +636,7 @@ APR = data.frame(ID = sample(5, 3), APR = sample(LETTERS, 3))
 
 If we wanted to merge these into a single `data.frame` using `merge`, we might end up creating several temporary objects and merging those, like this:
 
-```{r merge_nonsense_1, tidy=FALSE, eval=FALSE}
+```{r merge_nonsense_1, eval=FALSE}
 temp_1 = merge(JAN, FEB, all=TRUE)
 temp_2 = merge(temp_1, MAR, all=TRUE)
 temp_3 = merge(temp_2, APR, all=TRUE)
@@ -640,7 +644,7 @@ temp_3 = merge(temp_2, APR, all=TRUE)
 
 Or, we might nest a whole bunch of `merge` commands together, something like this:
 
-```{r merge_nonsense, tidy=FALSE, eval=FALSE}
+```{r merge_nonsense, eval=FALSE}
 merge(merge(merge(JAN, FEB, all=TRUE), 
             MAR, all=TRUE), 
       APR, all=TRUE)
@@ -650,7 +654,7 @@ However, that first option requires a lot of unnecessary typing and produces unn
 
 Use `Reduce` instead, simply specifying all the objects to be merged in a `list`:
 
-```{r merge_reduce, tidy=FALSE}
+```{r merge_reduce}
 Reduce(function(x, y) merge(x, y, all=TRUE), 
        list(JAN, FEB, MAR, APR))
 ```
@@ -659,7 +663,7 @@ Reduce(function(x, y) merge(x, y, all=TRUE),
 
 Sometimes you need to just check and see how much memory the objects in your workspace occupy.
 
-```{r memoryoccupy, tidy=FALSE, eval=FALSE}
+```{r memoryoccupy, eval=FALSE}
 sort(sapply(ls(), function(x) {object.size(get(x))}))
 ```
 
