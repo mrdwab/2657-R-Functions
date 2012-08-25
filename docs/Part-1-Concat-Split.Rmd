@@ -1,0 +1,109 @@
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width=80)
+opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
+read_chunk("../scripts/concat.split.R")
+read_chunk("../scripts/snippets.R")
+```
+
+# concat.split
+
+The `concat.split` function takes a column with multiple values, splits the values into a list or into separate columns, and returns a new `data.frame`.
+
+## Arguments
+
+* `data`: the source `data.frame`.
+* `split.col`: the variable that needs to be split; can be specified either by the column number or the variable name.
+* `to.list`: logical; should the split column be returned as a single variable list (named "original-variable_list") or multiple new variables? If `to.list` is `TRUE`, the `mode` argument is ignored and a list of the original values are returned.
+* `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`, like Boolean, but without assuming `0` when data is not available).
+* `sep`: the character separating each value (defaults to `","`).
+* `drop.col`: logical (whether to remove the original variable from the output or not; defaults to `TRUE`).
+
+## Examples
+
+First load some data from a CSV stored at [github](http://github.com). The URL is an HTTPS, so we need to use `getURL` from `RCurl`.
+
+```{r concat_split_data_loading}
+require(RCurl)
+baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+temp = getURL(paste0(baseURL, "data/concatenated-cells.csv"))
+concat.test = read.csv(textConnection(temp))
+rm(temp)
+
+# How big is the dataset?
+dim(concat.test)
+# Just show me the first few rows
+head(concat.test)
+```
+
+Notice that the data have been entered in a very silly manner. Let's split it up!
+
+```{r concat_split_examples}
+# Load the function!
+# require(RCurl)
+# baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+source(textConnection(getURL(paste0(baseURL, "scripts/concat.split.R"))))
+
+# Split up the second column, selecting by column number
+head(concat.split(concat.test, 2))
+# ... or by name, and drop the offensive first column
+head(concat.split(concat.test, "Likes", drop.col=TRUE))
+# The "Hates" column uses a different separator:
+head(concat.split(concat.test, "Hates", sep=";", drop.col=TRUE))
+# Retain the original values
+head(concat.split(concat.test, 2, mode="value", drop.col=TRUE))
+# Let's try splitting some strings... Same syntax
+head(concat.split(concat.test, 3, drop.col=TRUE))
+# Split up the "Likes column" into a list variable; retain original column
+head(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE))
+# View the structure of the output for the first 10 rows to verify 
+# that the new column is a list; note the difference between "Likes"
+# and "Likes_list".
+str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
+```
+
+## Advanced Usage
+
+It is also possible to use `concat.split` to split multiple columns at once. This can be done in stages, or it can be all wrapped in nested statements, as follows:
+
+```{r concat_split_advanced, eval=FALSE}
+do.call(cbind, c(concat.test[1],
+                 lapply(lapply(2:ncol(concat.test),
+                               function(x) concat.test[x]),
+                        concat.split, split.col=1, drop=TRUE, sep=";|,")))
+```
+
+In the example above (working from the inside of the function outwards):
+
+* First, `lapply(2:ncol(concat.test), ...)` splits the columns of the `data.frame` into a list. 
+* Second, `lapply(lapply(...))` does the splitting work.
+    * Note the use of `sep=";|,"` to match multiple separators on which to split; if further separators are required, they can be specified by using the pipe symbol (`|`) *with no leading or trailing spaces*.
+* Finally, `do.call(cbind, ...)` is evaluated last, "binding" the data together by columns. In this case, the data being bound together is the first column from the `concat.test` dataset, and the splitted output of the remaining columns. 
+
+Alternatively, a similar approach can be taken using the function `dfcols.list` (see the "Snippets and Tips" section of this manual for the `dfcols.list` function).
+
+```{r dfcolslist, echo=FALSE, eval=TRUE}
+```
+
+```{r concat_split_advanced_2}
+# Show just the first few lines, Boolean mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, sep=";|,"))))
+# Show just the first few lines, value mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, 
+                             sep=";|,", mode="value"))))
+# Show just the first few lines, list output mode
+head(do.call(cbind, c(concat.test[1],
+                      lapply(dfcols.list(concat.test[-1]),
+                             concat.split, split.col=1, drop=TRUE, 
+                             sep=";|,", to.list=TRUE))))
+```
+
+## References
+
+See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10100887/1270695)
+
+\newpage

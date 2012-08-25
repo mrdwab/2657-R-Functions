@@ -1,0 +1,64 @@
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width=80)
+opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
+read_chunk("../scripts/concat.split.R")
+read_chunk("../scripts/df.sorter.R")
+read_chunk("../scripts/multi.freq.table.R")
+read_chunk("../scripts/row.extractor.R")
+read_chunk("../scripts/sample.size.R")
+read_chunk("../scripts/snippets.R")
+```
+
+\part{The Functions}
+
+# Where to Get the Functions
+
+The most current source code for the functions described in this document follow.
+
+To load the functions, you can directly source them from the 2657 R Functions page at github: [https://github.com/mrdwab/2657-R-Functions](https://github.com/mrdwab/2657-R-Functions)
+
+You should be able to load the functions using the following (replace `-----------` with the function name^[The "snippets" in Part III of this document can all be loaded from the script `snippets.R`.]):
+
+```{r rcurl_load_scripts, eval=FALSE}
+require(RCurl)
+baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
+```
+
+\newpage
+
+# concat.split
+
+```{r concatsplit}
+```
+
+\newpage
+
+# df.sorter
+
+```{r dfsorter}
+```
+
+\newpage
+
+# multi.freq.table
+
+```{r multifreqtable}
+```
+
+\newpage
+
+# row.extractor
+
+```{r rowextractor}
+```
+
+\newpage
+
+# sample.size
+
+```{r samplesize}
+```
+
+\newpage

@@ -1,0 +1,158 @@
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width=80)
+opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
+read_chunk("../scripts/multi.freq.table.R")
+```
+
+# multi.freq.table
+
+The `multi.freq.table` function takes a data frame containing Boolean responses to multiple response questions and tabulates the number of responses by the possible combinations of answers. In addition to tabulating the frequency (`Freq`), there are two other columns in the output: *Percent of Responses* (`Pct.of.Resp`) and *Percent of Cases* (`Pct.of.Cases`). *Percent of Responses* is the frequency divided by the total number of answers provided; this column should sum to 100%. In some cases, for instance when a combination table is generated and there are cases where a respondent did not select any option, the *Percent of Responses* value would be more than 100%. *Percent of Cases* is the frequency divided by the total number of valid cases; this column would most likely sum to more than 100% when a basic table is produced since each respondent (case) can select multiple answers, but should sum to 100% with other tables.
+
+## Arguments
+
+* `data`: The multiple responses that need to be tabulated.
+* `sep`: The desired separator for collapsing the combinations of options; defaults to `""` (collapsing with no space between each option name).
+* `boolean`: Are you tabulating boolean data (see `dat` examples)? Defaults to `TRUE`.
+* `factors`: If you are trying to tabulate non-boolean data, and the data are not factors, you can specify the factors here (see `dat2` examples). 
+    * Defaults to `NULL` and is not used when `boolean = TRUE`.
+* `NAto0`: Should `NA` values be converted to `0`.
+    * Defaults to `TRUE`, in which case, the number of valid cases should be the same as the number of cases overall.
+    * If set to `FALSE`, any rows with `NA` values will be dropped as invalid cases.
+    * Only applies when `boolean = TRUE`.
+* `basic`: Should a basic table of each item, rather than combinations of items, be created? Defaults to `FALSE`.
+* `dropzero`: Should combinations with a frequency of zero be dropped from the final table? 
+    * Defaults to `TRUE`.
+    * Does not apply when `boolean = TRUE`.
+* `clean`: Should the original tabulated data be retained or dropped from the final table? 
+    * Defaults to `TRUE`.
+    * Does not apply when `boolean = TRUE`.
+
+## Examples
+
+### Boolean Data
+
+```{r multi_freq_table_examples}
+# Load the function!
+require(RCurl)
+baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+source(textConnection(getURL(paste0(baseURL, "scripts/multi.freq.table.R"))))
+
+# Make up some data
+set.seed(1)
+dat = data.frame(A = sample(c(0, 1), 20, replace=TRUE),
+                 B = sample(c(0, 1, NA), 20, 
+                            prob=c(.3, .6, .1), replace=TRUE),
+                 C = sample(c(0, 1, NA), 20, 
+                            prob=c(.7, .2, .1), replace=TRUE),
+                 D = sample(c(0, 1, NA), 20, 
+                            prob=c(.3, .6, .1), replace=TRUE),
+                 E = sample(c(0, 1, NA), 20, 
+                            prob=c(.4, .4, .2), replace=TRUE))
+# View your data
+dat
+# How many cases have "NA" values?
+table(is.na(rowSums(dat)))
+# Apply the function with all defaults accepted
+multi.freq.table(dat)
+# Tabulate only on variables "A", "B", and "D", with a different
+# separator, keep any zero frequency values, and keeping the 
+# original tabulations. There are no solitary "D" responses.
+multi.freq.table(dat[c(1, 2, 4)], sep="-", dropzero=FALSE, clean=FALSE)
+# As above, but without converting "NA" to "0".
+# Note the difference in the number of valid cases.
+multi.freq.table(dat[c(1, 2, 4)], NAto0=FALSE, 
+                 sep="-", dropzero=FALSE, clean=FALSE)
+# View a basic table.
+multi.freq.table(dat, basic=TRUE)
+```
+
+### Non-Boolean Data
+
+```{r multi-freq-table2}
+# Make up some data
+dat2 = structure(list(Reason.1 = c("one", "one", "two", "one", "two", 
+                                   "three", "one", "one", NA, "two"), 
+                      Reason.2 = c("two", "three", "three", NA, NA, 
+                                   "two", "three", "two", NA, NA), 
+                      Reason.3 = c("three", NA, NA, NA, NA, 
+                                   NA, NA, "three", NA, NA)), 
+                 .Names = c("Reason.1", "Reason.2", "Reason.3"), 
+                 class = "data.frame", 
+                 row.names = c(NA, -10L))
+# View your data
+dat2
+# The following will not work.
+# The data are not factored.
+multi.freq.table(dat2, boolean=FALSE)
+# Factor create the factors.
+multi.freq.table(dat2, boolean=FALSE, 
+                 factors = c("one", "two", "three"))
+# And, a basic table.
+multi.freq.table(dat2, boolean=FALSE,
+                 factors = c("one", "two", "three"),
+                 basic=TRUE)
+```
+
+### Extended Examples
+
+The following example is based on some data available from the University of Auckland's Student Learning Resources^[See: [http://www.cad.auckland.ac.nz/index.php?p=spss](http://www.cad.auckland.ac.nz/index.php?p=spss)].
+
+When the data are read into R, the factor labels are very long, which makes it difficult to see on the screen. Thus, in the first example that follows, the factor levels are first recoded before the multiple frequency tables are created. Additionally, the data for the binary information in the second example was coded in a common `1 = Yes` and `2 = No` format, but we need `0 = No` instead, so we need to do some recoding there too before using the function.
+
+
+```{r multi-freq-table-extended}
+# Get the data
+library(foreign)
+temp = "http://cad.auckland.ac.nz/file.php/content/files/slc/"
+computer = read.spss(paste0(temp, 
+                            "computer_multiple_response.sav"), 
+                     to.data.frame=TRUE)
+rm(temp)
+# Preview 
+dim(computer)
+names(computer)
+# First, let's just tabulate the instructor qualities.
+#   Extract the relevant columns, and relevel the factors.
+instructor.quality = 
+  computer[, grep("quali", names(computer))]
+# View the existing levels.
+lapply(instructor.quality, levels)[[1]]
+instructor.quality = lapply(instructor.quality,
+                            function(x) { levels(x) = 
+  list(Q1 = "Ability to provide practical examples",
+       Q2 = "Ability to answer questions positively",
+       Q3 = "Ability to clearly explain concepts",
+       Q4 = "Ability to instruct at a suitable pace",
+       Q5 = "Knowledge of Software",
+       Q6 = "Humour", Q7 = "Other"); x })
+# Now, apply multi.freq.table to the data.
+multi.freq.table(data.frame(instructor.quality),
+                 boolean=FALSE, basic=TRUE)
+list(head(multi.freq.table(data.frame(instructor.quality),
+                           boolean=FALSE, sep="-")),
+     tail(multi.freq.table(data.frame(instructor.quality),
+                           boolean=FALSE, sep="-")))
+# Now. let's look at the software.
+instructors.sw = computer[2:13]
+# These columns are coded as 1 = Yes and 2 = No,
+#   so, convert to integers, and subtract two, and
+#   take the absolute value to convert to binary.
+instructors.sw = lapply(instructors.sw, 
+                        function(x) abs(as.integer(x)-2))
+# Apply multi.freq.table
+multi.freq.table(data.frame(instructors.sw), basic=TRUE)
+# The output here is not pretty. To get prettier (or more meaningful)
+#   output, provide shorter names for the variables or use just a
+#   meaningful subset of the variables.
+list(head(multi.freq.table(data.frame(instructors.sw), sep="-")),
+     tail(multi.freq.table(data.frame(instructors.sw), sep="-")))
+```
+
+
+## References
+
+`apply` shortcut for creating the `Combn` column in the output by [Justin](http://stackoverflow.com/users/906490/justin)  
+See: [http://stackoverflow.com/q/11348391/1270695](http://stackoverflow.com/q/11348391/1270695) and [http://stackoverflow.com/q/11622660/1270695](http://stackoverflow.com/q/11622660/1270695)
+
+\newpage
