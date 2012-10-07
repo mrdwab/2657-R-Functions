@@ -1,7 +1,7 @@
 ## USEFUL SNIPPETS
 
 ## @knitr scriptsanddata
-load.scripts.and.data = function(path,
+load.scripts.and.data <- function(path,
                                  pattern=list(scripts = "*.R$",
                                               data = "*.rda$|*.Rdata$"), 
                                  ignore.case=TRUE) {
@@ -18,12 +18,12 @@ load.scripts.and.data = function(path,
                             full.names=TRUE, ignore.case=ignore.case)
   data.sources = list.files(path, pattern=pattern$data,
                             full.names=TRUE, ignore.case=ignore.case)
-  sapply(data.sources,load,.GlobalEnv)
-  sapply(file.sources,source,.GlobalEnv)
+  sapply(data.sources, load, .GlobalEnv)
+  sapply(file.sources, source, .GlobalEnv)
 }
 
 ## @knitr unlistdfs
-unlist.dfs = function(data) {
+unlist.dfs <- function(data) {
   # Specify the quoted name of the source list.
   q = get(data)
   prefix = paste0(data, "_", 1:length(q))
@@ -31,7 +31,7 @@ unlist.dfs = function(data) {
 }
 
 ## @knitr dfcolslist
-dfcols.list = function(data, vectorize=FALSE) {
+dfcols.list <- function(data, vectorize=FALSE) {
   # Specify the unquoted name of the data.frame to convert
   if (isTRUE(vectorize)) {
     dat.list = sapply(1:ncol(data), function(x) data[x])
@@ -44,12 +44,12 @@ dfcols.list = function(data, vectorize=FALSE) {
 ## @knitr rmmove
 mv <- function (a, b) {
   # Source: https://stat.ethz.ch/pipermail/r-help/2008-March/156035.html
-  anm <- deparse(substitute(a))
-  bnm <- deparse(substitute(b))
+  anm = deparse(substitute(a))
+  bnm = deparse(substitute(b))
   if (!exists(anm,where=1,inherits=FALSE))
     stop(paste(anm, "does not exist.\n"))
   if (exists(bnm,where=1,inherits=FALSE)) {
-    ans <- readline(paste("Overwrite ", bnm, "? (y/n) ", sep =  ""))
+    ans = readline(paste("Overwrite ", bnm, "? (y/n) ", sep =  ""))
     if (ans != "y")
       return(invisible())
   }
@@ -57,3 +57,26 @@ mv <- function (a, b) {
   rm(list = anm, pos = 1)
   invisible()
 }
+
+## @knitr tidyhtml
+tidyHTML <- function(URL, saveTidy = TRUE) {
+  require(XML)
+  URL1 = gsub("/", "%2F", URL)
+  URL1 = gsub(":", "%3A", URL1)
+  URL1 = paste("http://services.w3.org/tidy/tidy?docAddr=", URL1, "&indent=on", sep = "")
+  Parsed = htmlParse(URL1)
+  if (isTRUE(saveTidy)) saveXML(Parsed, file = basename(URL))
+  Parsed
+}
+
+## @knitr round2
+round2 <- function(x, n = 0) {
+  posneg = sign(x)
+  z = abs(x)*10^n
+  z = z + 0.5
+  z = trunc(z)
+  z = z/10^n
+  z*posneg
+}
+
+

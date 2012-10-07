@@ -72,7 +72,42 @@ If there is already an object with the same name in the workplace, the function 
 mv(object_1, object_2)
 ```
 
+## Scrape Data From a Poorly Formatted HTML Page
 
+Reformats a web page using HTML Tidy and uses the XML package to parse the resulting file. Can optionally save the reformatted page.
+
+```{r tidyhtml}
+```
+
+### Example
+
+```{r tidyhtml_example, eval=FALSE}
+# Set `saveTidy` to `TRUE` to save the resulting tidied file
+URL <- "http://www.bcn.gob.ni/estadisticas/trimestrales_y_mensuales/siec/datos/4.IMAE.htm"
+temp <- tidyHTML(URL, saveTidy = FALSE)
+```
+
+## "Rounding in Commerce"
+
+R rounds to even---something that some people might not be accustomed to or comfortable with. For the more commonly known rounding rule, use this `round2` function.
+
+```{r round2}
+```
+
+### Example
+
+```{r round2_example}
+x = c(1.85, 1.54, 1.65, 1.85, 1.84)
+round(x, 1)
+round2(x, 1)
+round(seq(0.5, 9.5, by=1))
+round2(seq(0.5, 9.5, by=1))
+```
+
+### References
+
+Original function: [http://www.webcitation.org/68djeLBtJ](http://www.webcitation.org/68djeLBtJ) -- see the comments section.    
+See also: [http://stackoverflow.com/questions/12688717/round-up-from-5-in-r/](http://stackoverflow.com/questions/12688717/round-up-from-5-in-r/).
 
 \newpage
 
@@ -137,10 +172,26 @@ Reduce(function(x, y) merge(x, y, all=TRUE),
        list(JAN, FEB, MAR, APR))
 ```
 
-### How Much Memory Are the Objects in Your Workspace Using?
+## How Much Memory Are the Objects in Your Workspace Using?
 
 Sometimes you need to just check and see how much memory the objects in your workspace occupy.
 
 ```{r memoryoccupy, eval=FALSE}
 sort(sapply(ls(), function(x) {object.size(get(x))}))
 ```
+
+## Convert a Table to a Data Frame
+
+Creating tables are easy and fast, but sometimes, it is more convenient to have the output as a `data.frame`. Get the `data.frame` by nesting the command in `as.data.frame.matrix`.
+
+```{r table_to_df}
+# A basic table
+x <- with(airquality, table(cut(Temp, quantile(Temp)), Month))
+str(x)
+x
+# The same table as a data.frame
+y <- as.data.frame.matrix(x)
+str(y)
+y
+```
+

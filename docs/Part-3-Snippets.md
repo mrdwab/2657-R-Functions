@@ -10,7 +10,7 @@
 
 
 ```r
-load.scripts.and.data = function(path,
+load.scripts.and.data <- function(path,
                                  pattern=list(scripts = "*.R$",
                                               data = "*.rda$|*.Rdata$"), 
                                  ignore.case=TRUE) {
@@ -27,8 +27,8 @@ load.scripts.and.data = function(path,
                             full.names=TRUE, ignore.case=ignore.case)
   data.sources = list.files(path, pattern=pattern$data,
                             full.names=TRUE, ignore.case=ignore.case)
-  sapply(data.sources,load,.GlobalEnv)
-  sapply(file.sources,source,.GlobalEnv)
+  sapply(data.sources, load, .GlobalEnv)
+  sapply(file.sources, source, .GlobalEnv)
 }
 ```
 
@@ -37,7 +37,7 @@ load.scripts.and.data = function(path,
 
 
 ```r
-unlist.dfs = function(data) {
+unlist.dfs <- function(data) {
   # Specify the quoted name of the source list.
   q = get(data)
   prefix = paste0(data, "_", 1:length(q))
@@ -119,7 +119,7 @@ temp_2
 
 
 ```r
-dfcols.list = function(data, vectorize=FALSE) {
+dfcols.list <- function(data, vectorize=FALSE) {
   # Specify the unquoted name of the data.frame to convert
   if (isTRUE(vectorize)) {
     dat.list = sapply(1:ncol(data), function(x) data[x])
@@ -193,12 +193,12 @@ $C
 ```r
 mv <- function (a, b) {
   # Source: https://stat.ethz.ch/pipermail/r-help/2008-March/156035.html
-  anm <- deparse(substitute(a))
-  bnm <- deparse(substitute(b))
+  anm = deparse(substitute(a))
+  bnm = deparse(substitute(b))
   if (!exists(anm,where=1,inherits=FALSE))
     stop(paste(anm, "does not exist.\n"))
   if (exists(bnm,where=1,inherits=FALSE)) {
-    ans <- readline(paste("Overwrite ", bnm, "? (y/n) ", sep =  ""))
+    ans = readline(paste("Overwrite ", bnm, "? (y/n) ", sep =  ""))
     if (ans != "y")
       return(invisible())
   }
@@ -220,7 +220,92 @@ mv(object_1, object_2)
 ```
 
 
+## Scrape Data From a Poorly Formatted HTML Page
 
+Reformats a web page using HTML Tidy and uses the XML package to parse the resulting file. Can optionally save the reformatted page.
+
+
+```r
+tidyHTML <- function(URL, saveTidy = TRUE) {
+  require(XML)
+  URL1 = gsub("/", "%2F", URL)
+  URL1 = gsub(":", "%3A", URL1)
+  URL1 = paste("http://services.w3.org/tidy/tidy?docAddr=", URL1, "&indent=on", sep = "")
+  Parsed = htmlParse(URL1)
+  if (isTRUE(saveTidy)) saveXML(Parsed, file = basename(URL))
+  Parsed
+}
+```
+
+
+### Example
+
+
+```r
+# Set `saveTidy` to `TRUE` to save the resulting tidied file
+URL <- "http://www.bcn.gob.ni/estadisticas/trimestrales_y_mensuales/siec/datos/4.IMAE.htm"
+temp <- tidyHTML(URL, saveTidy = FALSE)
+```
+
+
+## "Rounding in Commerce"
+
+R rounds to even---something that some people might not be accustomed to or comfortable with. For the more commonly known rounding rule, use this `round2` function.
+
+
+```r
+round2 <- function(x, n = 0) {
+  posneg = sign(x)
+  z = abs(x)*10^n
+  z = z + 0.5
+  z = trunc(z)
+  z = z/10^n
+  z*posneg
+}
+```
+
+
+### Example
+
+
+```r
+x = c(1.85, 1.54, 1.65, 1.85, 1.84)
+round(x, 1)
+```
+
+```
+[1] 1.8 1.5 1.6 1.8 1.8
+```
+
+```r
+round2(x, 1)
+```
+
+```
+[1] 1.9 1.5 1.7 1.9 1.8
+```
+
+```r
+round(seq(0.5, 9.5, by=1))
+```
+
+```
+ [1]  0  2  2  4  4  6  6  8  8 10
+```
+
+```r
+round2(seq(0.5, 9.5, by=1))
+```
+
+```
+ [1]  1  2  3  4  5  6  7  8  9 10
+```
+
+
+### References
+
+Original function: [http://www.webcitation.org/68djeLBtJ](http://www.webcitation.org/68djeLBtJ) -- see the comments section.    
+See also: [http://stackoverflow.com/questions/12688717/round-up-from-5-in-r/](http://stackoverflow.com/questions/12688717/round-up-from-5-in-r/).
 
 \newpage
 
@@ -320,7 +405,7 @@ Reduce(function(x, y) merge(x, y, all=TRUE),
 ```
 
 
-### How Much Memory Are the Objects in Your Workspace Using?
+## How Much Memory Are the Objects in Your Workspace Using?
 
 Sometimes you need to just check and see how much memory the objects in your workspace occupy.
 
@@ -328,4 +413,64 @@ Sometimes you need to just check and see how much memory the objects in your wor
 ```r
 sort(sapply(ls(), function(x) {object.size(get(x))}))
 ```
+
+
+## Convert a Table to a Data Frame
+
+Creating tables are easy and fast, but sometimes, it is more convenient to have the output as a `data.frame`. Get the `data.frame` by nesting the command in `as.data.frame.matrix`.
+
+
+```r
+# A basic table
+x <- with(airquality, table(cut(Temp, quantile(Temp)), Month))
+str(x)
+```
+
+```
+ 'table' int [1:4, 1:5] 24 5 1 0 3 15 7 5 0 2 ...
+ - attr(*, "dimnames")=List of 2
+  ..$      : chr [1:4] "(56,72]" "(72,79]" "(79,85]" "(85,97]"
+  ..$ Month: chr [1:5] "5" "6" "7" "8" ...
+```
+
+```r
+x
+```
+
+```
+         Month
+           5  6  7  8  9
+  (56,72] 24  3  0  1 10
+  (72,79]  5 15  2  9 10
+  (79,85]  1  7 19  7  5
+  (85,97]  0  5 10 14  5
+```
+
+```r
+# The same table as a data.frame
+y <- as.data.frame.matrix(x)
+str(y)
+```
+
+```
+'data.frame':	4 obs. of  5 variables:
+ $ 5: int  24 5 1 0
+ $ 6: int  3 15 7 5
+ $ 7: int  0 2 19 10
+ $ 8: int  1 9 7 14
+ $ 9: int  10 10 5 5
+```
+
+```r
+y
+```
+
+```
+         5  6  7  8  9
+(56,72] 24  3  0  1 10
+(72,79]  5 15  2  9 10
+(79,85]  1  7 19  7  5
+(85,97]  0  5 10 14  5
+```
+
 
