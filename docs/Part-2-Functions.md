@@ -57,11 +57,15 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
   #
   # See: http://stackoverflow.com/q/10100887/1270695
 
+  # Check to see if split.col is specified by name or position
   if (is.numeric(split.col)) split.col = split.col
   else split.col = which(colnames(data) %in% split.col)
   
+  # Split the data
   a = as.character(data[ , split.col])
   b = strsplit(a, sep)
+  
+  #### LIST ####
   
   if (isTRUE(to.list)) {
     varname = paste(names(data[split.col]), "_list", sep="")
@@ -74,6 +78,9 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
     } 
     if (isTRUE(drop.col)) data[-split.col]
     else data
+    
+  ### SEPARATE COLUMNS ###  
+    
   } else if (!isTRUE(to.list)) {
     if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
       what = "string"
@@ -83,27 +90,20 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
       ncol = max(as.numeric(unlist(b)))
     }
     
-    m = matrix(nrow = nrow(data), ncol = ncol)
-    v = vector("list", nrow(data))
-    
     if (identical(what, "string")) {
       temp = as.data.frame(t(sapply(b, '[', 1:ncol)))
       names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep="")
       temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
       temp1 = cbind(data, temp)
     } else if (identical(what, "numeric")) {
-      for (i in 1:nrow(data)) {
-        v[[i]] = as.numeric(strsplit(a, sep)[[i]])
-      }
-      
-      temp = v
-      
+      temp = lapply(b, as.numeric)
+      m = matrix(nrow = nrow(data), ncol = ncol)      
       for (i in 1:nrow(data)) {
         m[i, temp[[i]]] = temp[[i]]
       }
       
-      m = data.frame(m)
-      names(m) = paste(names(data[split.col]), "_", 1:ncol, sep="")
+      m = setNames(data.frame(m), 
+                   paste(names(data[split.col]), "_", 1:ncol, sep=""))
       
       if (is.null(mode) || identical(mode, "binary")) {
         temp1 = cbind(data, replace(m, m != "NA", 1))

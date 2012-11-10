@@ -1,13 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <!-- saved from url=(0014)about:internet -->
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
 <title>Where to Get the Functions</title>
-
-<base target="_blank"/>
 
 <style type="text/css">
 body, td {
@@ -53,6 +50,7 @@ pre {
    margin-top: 0;
    max-width: 95%;
    border: 1px solid #ccc;
+   white-space: pre-wrap;
 }
 
 pre code {
@@ -230,11 +228,15 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
   #
   # See: http://stackoverflow.com/q/10100887/1270695
 
+  # Check to see if split.col is specified by name or position
   if (is.numeric(split.col)) split.col = split.col
   else split.col = which(colnames(data) %in% split.col)
 
+  # Split the data
   a = as.character(data[ , split.col])
   b = strsplit(a, sep)
+
+  #### LIST ####
 
   if (isTRUE(to.list)) {
     varname = paste(names(data[split.col]), &quot;_list&quot;, sep=&quot;&quot;)
@@ -247,6 +249,9 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
     } 
     if (isTRUE(drop.col)) data[-split.col]
     else data
+
+  ### SEPARATE COLUMNS ###  
+
   } else if (!isTRUE(to.list)) {
     if (suppressWarnings(is.na(try(max(as.numeric(unlist(b))))))) {
       what = &quot;string&quot;
@@ -256,27 +261,20 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
       ncol = max(as.numeric(unlist(b)))
     }
 
-    m = matrix(nrow = nrow(data), ncol = ncol)
-    v = vector(&quot;list&quot;, nrow(data))
-
     if (identical(what, &quot;string&quot;)) {
       temp = as.data.frame(t(sapply(b, &#39;[&#39;, 1:ncol)))
       names(temp) = paste(names(data[split.col]), &quot;_&quot;, 1:ncol, sep=&quot;&quot;)
       temp = apply(temp, 2, function(x) gsub(&quot;^\\s+|\\s+$&quot;, &quot;&quot;, x))
       temp1 = cbind(data, temp)
     } else if (identical(what, &quot;numeric&quot;)) {
-      for (i in 1:nrow(data)) {
-        v[[i]] = as.numeric(strsplit(a, sep)[[i]])
-      }
-
-      temp = v
-
+      temp = lapply(b, as.numeric)
+      m = matrix(nrow = nrow(data), ncol = ncol)      
       for (i in 1:nrow(data)) {
         m[i, temp[[i]]] = temp[[i]]
       }
 
-      m = data.frame(m)
-      names(m) = paste(names(data[split.col]), &quot;_&quot;, 1:ncol, sep=&quot;&quot;)
+      m = setNames(data.frame(m), 
+                   paste(names(data[split.col]), &quot;_&quot;, 1:ncol, sep=&quot;&quot;))
 
       if (is.null(mode) || identical(mode, &quot;binary&quot;)) {
         temp1 = cbind(data, replace(m, m != &quot;NA&quot;, 1))

@@ -75,7 +75,8 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
         m[i, temp[[i]]] = temp[[i]]
       }
       
-      m = setNames(data.frame(m), paste(names(data[split.col]), "_", 1:ncol, sep=""))
+      m = setNames(data.frame(m), 
+                   paste(names(data[split.col]), "_", 1:ncol, sep=""))
       
       if (is.null(mode) || identical(mode, "binary")) {
         temp1 = cbind(data, replace(m, m != "NA", 1))
