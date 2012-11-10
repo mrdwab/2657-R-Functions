@@ -63,28 +63,19 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
       ncol = max(as.numeric(unlist(b)))
     }
     
-    m = matrix(nrow = nrow(data), ncol = ncol)
-#     v = vector("list", nrow(data))
-    
     if (identical(what, "string")) {
       temp = as.data.frame(t(sapply(b, '[', 1:ncol)))
       names(temp) = paste(names(data[split.col]), "_", 1:ncol, sep="")
       temp = apply(temp, 2, function(x) gsub("^\\s+|\\s+$", "", x))
       temp1 = cbind(data, temp)
     } else if (identical(what, "numeric")) {
-#       for (i in 1:nrow(data)) {
-#         v[[i]] = as.numeric(b[[i]])
-      v = lapply(b, as.numeric)
-#       }
-      
-      temp = v
-      
+      temp = lapply(b, as.numeric)
+      m = matrix(nrow = nrow(data), ncol = ncol)      
       for (i in 1:nrow(data)) {
         m[i, temp[[i]]] = temp[[i]]
       }
       
-      m = data.frame(m)
-      names(m) = paste(names(data[split.col]), "_", 1:ncol, sep="")
+      m = setNames(data.frame(m), paste(names(data[split.col]), "_", 1:ncol, sep=""))
       
       if (is.null(mode) || identical(mode, "binary")) {
         temp1 = cbind(data, replace(m, m != "NA", 1))
