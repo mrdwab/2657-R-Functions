@@ -75,7 +75,7 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
 #       for (i in 1:nrow(data)) {
 #         v[[i]] = as.numeric(b[[i]])
       v = lapply(b, as.numeric)
-      }
+#       }
       
       temp = v
       
