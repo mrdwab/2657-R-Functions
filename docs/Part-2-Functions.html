@@ -316,32 +316,22 @@ source(textConnection(getURL(paste0(baseURL, &quot;scripts/-----------.R&quot;))
     var.order = colnames(data)[var.order]
   else var.order = var.order
 
-  a = names(data)
-  b = length(var.order)
-  subs = vector(&quot;list&quot;, b)
-
   if (isTRUE(at.start)) {
-    for (i in 1:b) {
-      subs[[i]] = sort(grep(paste(&quot;^&quot;, var.order[i],
-                                  sep=&quot;&quot;, collapse=&quot;&quot;),
-                            a, value=TRUE))
-    }  
+    x = unlist(lapply(var.order, function(x) 
+      sort(grep(paste(&quot;^&quot;, x, sep=&quot;&quot;, collapse=&quot;&quot;), 
+                names(data), value = TRUE))))
   } else if (!isTRUE(at.start)) {
-    for (i in 1:b) {
-      subs[[i]] = sort(grep(var.order[i], a, value=TRUE))
-    }
+    x = unlist(lapply(var.order, function(x) 
+      sort(grep(x, names(data), value = TRUE))))
   }
 
-  x = unlist(subs)
-  y = data[ , x ]
+  y = data[, x]
 
   if (is.null(col.sort)) {
     y
   } else if (is.numeric(col.sort)) {
-    col.sort = colnames(y)[col.sort]
-    y[do.call(order, y[col.sort]), ]
+    y[do.call(order, y[colnames(y)[col.sort]]), ]
   } else if (!is.numeric(col.sort)) {
-    col.sort = col.sort
     y[do.call(order, y[col.sort]), ]
   }
 }

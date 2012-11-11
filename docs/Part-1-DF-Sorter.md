@@ -2,7 +2,6 @@
 
 
 
-
 # df.sorter
 
 The `df.sorter` function allows you to sort a `data.frame` by columns or rows or both. You can also quickly subset data columns by using the `var.order` argument.
