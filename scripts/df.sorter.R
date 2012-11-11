@@ -22,32 +22,22 @@ df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE )
     var.order = colnames(data)[var.order]
   else var.order = var.order
   
-  a = names(data)
-  b = length(var.order)
-  subs = vector("list", b)
-  
   if (isTRUE(at.start)) {
-    for (i in 1:b) {
-      subs[[i]] = sort(grep(paste("^", var.order[i],
-                                  sep="", collapse=""),
-                            a, value=TRUE))
-    }  
+    x = unlist(lapply(var.order, function(x) 
+      sort(grep(paste("^", x, sep="", collapse=""), 
+                names(data), value = TRUE))))
   } else if (!isTRUE(at.start)) {
-    for (i in 1:b) {
-      subs[[i]] = sort(grep(var.order[i], a, value=TRUE))
-    }
+    x = unlist(lapply(var.order, function(x) 
+      sort(grep(x, names(data), value = TRUE))))
   }
   
-  x = unlist(subs)
-  y = data[ , x ]
+  y = data[, x]
   
   if (is.null(col.sort)) {
     y
   } else if (is.numeric(col.sort)) {
-    col.sort = colnames(y)[col.sort]
-    y[do.call(order, y[col.sort]), ]
+    y[do.call(order, y[colnames(y)[col.sort]]), ]
   } else if (!is.numeric(col.sort)) {
-    col.sort = col.sort
     y[do.call(order, y[col.sort]), ]
   }
 }
