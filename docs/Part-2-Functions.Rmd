@@ -26,39 +26,39 @@ baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
 source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 ```
 
-\newpage
+\cleardoublepage
 
 # concat.split
 
 ```{r concatsplit}
 ```
 
-\newpage
+\cleardoublepage
 
 # df.sorter
 
 ```{r dfsorter}
 ```
 
-\newpage
+\cleardoublepage
 
 # multi.freq.table
 
 ```{r multifreqtable}
 ```
 
-\newpage
+\cleardoublepage
 
 # row.extractor
 
 ```{r rowextractor}
 ```
 
-\newpage
+\cleardoublepage
 
 # sample.size
 
 ```{r samplesize}
 ```
 
-\newpage
+\cleardoublepage

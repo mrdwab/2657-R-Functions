@@ -155,4 +155,4 @@ list(head(multi.freq.table(data.frame(instructors.sw), sep="-")),
 `apply` shortcut for creating the `Combn` column in the output by [Justin](http://stackoverflow.com/users/906490/justin)  
 See: [http://stackoverflow.com/q/11348391/1270695](http://stackoverflow.com/q/11348391/1270695) and [http://stackoverflow.com/q/11622660/1270695](http://stackoverflow.com/q/11622660/1270695)
 
-\newpage
+\cleardoublepage

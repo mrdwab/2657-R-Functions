@@ -147,4 +147,4 @@ pss &=& \frac{ss}{1+\frac{ss-1}{pop}}
 \end{array}
 $$
 
-\newpage
+\cleardoublepage

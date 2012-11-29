@@ -4,7 +4,7 @@
 \pagenumbering{gobble}
 \pagestyle{plain}
 \tableofcontents
-\cleardoublepage
+\cleardoublepage 
 
 \pagestyle{headings}
 \setcounter{page}{1}

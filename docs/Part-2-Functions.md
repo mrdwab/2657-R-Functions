@@ -20,7 +20,7 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 ```
 
 
-\newpage
+\cleardoublepage
 
 # concat.split
 
@@ -119,7 +119,7 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
 ```
 
 
-\newpage
+\cleardoublepage
 
 # df.sorter
 
@@ -170,7 +170,7 @@ df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE )
 ```
 
 
-\newpage
+\cleardoublepage
 
 # multi.freq.table
 
@@ -292,7 +292,7 @@ multi.freq.table = function(data, sep="", boolean=TRUE,
 ```
 
 
-\newpage
+\cleardoublepage
 
 # row.extractor
 
@@ -376,7 +376,7 @@ row.extractor = function(data, extract.by, what="all") {
 ```
 
 
-\newpage
+\cleardoublepage
 
 # sample.size
 
@@ -452,4 +452,4 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
 ```
 
 
-\newpage
+\cleardoublepage

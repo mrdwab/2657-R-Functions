@@ -292,4 +292,4 @@ head(do.call(cbind, c(concat.test[1],
 
 See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10100887/1270695)
 
-\newpage
+\cleardoublepage

@@ -190,4 +190,4 @@ head(df.sorter(dat, var.order= "co", at.start=FALSE))
 
 * Add an option to sort ascending or descending---at the moment, not supported.
 
-\newpage
+\cleardoublepage

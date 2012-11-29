@@ -51,4 +51,4 @@ row.extractor(dat, "V3", seq(0.1, 1, 0.1))
 `which.quantile` function by [cbeleites](http://stackoverflow.com/users/755257/cbeleites)  
 See: [http://stackoverflow.com/q/10256503/1270695](http://stackoverflow.com/q/10256503/1270695)
 
-\newpage
+\cleardoublepage
