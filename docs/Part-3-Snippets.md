@@ -307,6 +307,144 @@ round2(seq(0.5, 9.5, by=1))
 Original function: [http://www.webcitation.org/68djeLBtJ](http://www.webcitation.org/68djeLBtJ) -- see the comments section.    
 See also: [http://stackoverflow.com/questions/12688717/round-up-from-5-in-r/](http://stackoverflow.com/questions/12688717/round-up-from-5-in-r/).
 
+## `cbind` `data.frame`s When the Number of Rows are Not Equal
+
+`cbind()` does not work when trying to combine `data.frame`s with differing numbers of rows. This function takes a `list` of `data.frame`s, identifies how many extra rows are required to make `cbind` work correctly, and does the combining for you.
+
+The function also works with nested lists by first "flattening" them using the `LinearizeNestedList` by [Akhil S Bhel](https://sites.google.com/site/akhilsbehl/geekspace/articles/r/linearize_nested_lists_in_r). The first time you run the `CBIND()` function, it check your current environment to identify whether `LinearizeNestedList` is already available; if it is not, it will download and load the function from its [Gist page](https://gist.github.com/4205477). Subsequent calls to the function in the same session will not re-download the function. 
+
+
+```r
+CBIND <- function(datalist) {
+  if ("LinearizeNestedList" %in% ls(envir=.GlobalEnv) == FALSE) {
+    require(devtools)
+    suppressMessages(source_gist(4205477))
+    message("LinearizeNestedList loaded from https://gist.github.com/4205477")
+  }
+  datalist <- LinearizeNestedList(datalist)
+  nrows <- max(sapply(datalist, nrow))
+  expandmyrows <- function(mydata, rowsneeded) {
+    temp1 = names(mydata)
+    rowsneeded = rowsneeded - nrow(mydata)
+    temp2 = setNames(data.frame(
+      matrix(rep(NA, length(temp1) * rowsneeded),
+             ncol = length(temp1))), temp1)
+    rbind(mydata, temp2)
+  }
+  do.call(cbind, lapply(datalist, expandmyrows, rowsneeded = nrows))
+}
+```
+
+
+### Examples
+
+
+```r
+# Example data
+df1 <- data.frame(A = 1:5, B = letters[1:5])
+df2 <- data.frame(C = 1:3, D = letters[1:3])
+df3 <- data.frame(E = 1:8, F = letters[1:8], G = LETTERS[1:8])
+# Try to use cbind directly
+cbind(df1, df2, df3)
+```
+
+```
+Error: arguments imply differing number of rows: 5, 3, 8
+```
+
+```r
+# Use our new function
+CBIND(list(df1, df2, df3))
+```
+
+```
+  1.A  1.B 2.C  2.D 3.E 3.F 3.G
+1   1    a   1    a   1   a   A
+2   2    b   2    b   2   b   B
+3   3    c   3    c   3   c   C
+4   4    d  NA <NA>   4   d   D
+5   5    e  NA <NA>   5   e   E
+6  NA <NA>  NA <NA>   6   f   F
+7  NA <NA>  NA <NA>   7   g   G
+8  NA <NA>  NA <NA>   8   h   H
+```
+
+```r
+test1 <- list(df1, df2, df3)
+str(test1)
+```
+
+```
+List of 3
+ $ :'data.frame':	5 obs. of  2 variables:
+  ..$ A: int [1:5] 1 2 3 4 5
+  ..$ B: Factor w/ 5 levels "a","b","c","d",..: 1 2 3 4 5
+ $ :'data.frame':	3 obs. of  2 variables:
+  ..$ C: int [1:3] 1 2 3
+  ..$ D: Factor w/ 3 levels "a","b","c": 1 2 3
+ $ :'data.frame':	8 obs. of  3 variables:
+  ..$ E: int [1:8] 1 2 3 4 5 6 7 8
+  ..$ F: Factor w/ 8 levels "a","b","c","d",..: 1 2 3 4 5 6 7 8
+  ..$ G: Factor w/ 8 levels "A","B","C","D",..: 1 2 3 4 5 6 7 8
+```
+
+```r
+CBIND(test1)
+```
+
+```
+  1.A  1.B 2.C  2.D 3.E 3.F 3.G
+1   1    a   1    a   1   a   A
+2   2    b   2    b   2   b   B
+3   3    c   3    c   3   c   C
+4   4    d  NA <NA>   4   d   D
+5   5    e  NA <NA>   5   e   E
+6  NA <NA>  NA <NA>   6   f   F
+7  NA <NA>  NA <NA>   7   g   G
+8  NA <NA>  NA <NA>   8   h   H
+```
+
+```r
+test2 <- list(test1, df1)
+str(test2)
+```
+
+```
+List of 2
+ $ :List of 3
+  ..$ :'data.frame':	5 obs. of  2 variables:
+  .. ..$ A: int [1:5] 1 2 3 4 5
+  .. ..$ B: Factor w/ 5 levels "a","b","c","d",..: 1 2 3 4 5
+  ..$ :'data.frame':	3 obs. of  2 variables:
+  .. ..$ C: int [1:3] 1 2 3
+  .. ..$ D: Factor w/ 3 levels "a","b","c": 1 2 3
+  ..$ :'data.frame':	8 obs. of  3 variables:
+  .. ..$ E: int [1:8] 1 2 3 4 5 6 7 8
+  .. ..$ F: Factor w/ 8 levels "a","b","c","d",..: 1 2 3 4 5 6 7 8
+  .. ..$ G: Factor w/ 8 levels "A","B","C","D",..: 1 2 3 4 5 6 7 8
+ $ :'data.frame':	5 obs. of  2 variables:
+  ..$ A: int [1:5] 1 2 3 4 5
+  ..$ B: Factor w/ 5 levels "a","b","c","d",..: 1 2 3 4 5
+```
+
+```r
+CBIND(test2)
+```
+
+```
+  1/1.A 1/1.B 1/2.C 1/2.D 1/3.E 1/3.F 1/3.G 2.A  2.B
+1     1     a     1     a     1     a     A   1    a
+2     2     b     2     b     2     b     B   2    b
+3     3     c     3     c     3     c     C   3    c
+4     4     d    NA  <NA>     4     d     D   4    d
+5     5     e    NA  <NA>     5     e     E   5    e
+6    NA  <NA>    NA  <NA>     6     f     F  NA <NA>
+7    NA  <NA>    NA  <NA>     7     g     G  NA <NA>
+8    NA  <NA>    NA  <NA>     8     h     H  NA <NA>
+```
+
+
+
 \newpage
 
 # Tips
@@ -474,3 +612,4 @@ y
 ```
 
 
+ 
