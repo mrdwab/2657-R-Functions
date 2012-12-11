@@ -1,3 +1,21 @@
 .Rproj.user
 .Rhistory
-.RData
+.gitignore
+.directory
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+function.demos.R
+notes-and-tests.R
+scratchpad.R
+2657-R-Functions.Rproj
+docs/cache/**
+docs/*.html
