@@ -2,6 +2,21 @@
 
 RandomNames <- function(N = 100, cat = NULL, gender = NULL, 
                         MFprob = NULL, dataset = NULL) {
+  # Generates a `data.frame` of random names with the following columns:
+  #   "Gender", "FirstName", and "Surname". All arguments have preset
+  #   defaults, so the function can be run simply by typing `RandomNames()`,
+  #   which will generate 100 random male and female names.
+  #
+  # === EXAMPLES ===
+  #
+  #     RandomNames()
+  #     RandomNames(N = 20)
+  #     RandomNames(cat = "common", MFprob = c(.2, .8))
+  #
+  # See: 
+  #   - http://www.census.gov/genealogy/www/data/1990surnames/names_files.html
+  #   - http://random-name-generator.info/
+  
   if (is.null(dataset)) {
     if (isTRUE("CensusNames1990" %in% ls(envir=.GlobalEnv) == FALSE)) {
       require(RCurl)
@@ -57,8 +72,8 @@ RandomNames <- function(N = 100, cat = NULL, gender = NULL,
     firstnames <- sample(malenames, N, replace = TRUE)
   }
   
-  Surnames <- sample(surnames, N, replace = TRUE)
+  Surname <- sample(surnames, N, replace = TRUE)
   temp <- setNames(data.frame(do.call(rbind, strsplit(firstnames, "-"))),
                    c("Gender", "FirstName"))
-  cbind(temp, Surnames)
+  cbind(temp, Surname)
 }
