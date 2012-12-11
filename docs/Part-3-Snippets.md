@@ -59,16 +59,15 @@ temp
 ```
 
 ```
-$A
-  A B
-1 1 3
-2 2 4
-
-$B
-  C D
-1 5 7
-2 6 8
-
+## $A
+##   A B
+## 1 1 3
+## 2 2 4
+## 
+## $B
+##   C D
+## 1 5 7
+## 2 6 8
 ```
 
 ```r
@@ -79,7 +78,7 @@ temp_1
 ```
 
 ```
-Error: object 'temp_1' not found
+## Error: object 'temp_1' not found
 ```
 
 ```r
@@ -90,7 +89,7 @@ ls(pattern="temp_")
 ```
 
 ```
-[1] "temp_1" "temp_2"
+## [1] "temp_1" "temp_2"
 ```
 
 ```r
@@ -99,9 +98,9 @@ temp_1
 ```
 
 ```
-  A B
-1 1 3
-2 2 4
+##   A B
+## 1 1 3
+## 2 2 4
 ```
 
 ```r
@@ -109,9 +108,9 @@ temp_2
 ```
 
 ```
-  C D
-1 5 7
-2 6 8
+##   C D
+## 1 5 7
+## 2 6 8
 ```
 
 
@@ -141,9 +140,9 @@ dat
 ```
 
 ```
-  A B C
-1 1 3 5
-2 2 4 6
+##   A B C
+## 1 1 3 5
+## 2 2 4 6
 ```
 
 ```r
@@ -152,21 +151,20 @@ dfcols.list(dat)
 ```
 
 ```
-[[1]]
-  A
-1 1
-2 2
-
-[[2]]
-  B
-1 3
-2 4
-
-[[3]]
-  C
-1 5
-2 6
-
+## [[1]]
+##   A
+## 1 1
+## 2 2
+## 
+## [[2]]
+##   B
+## 1 3
+## 2 4
+## 
+## [[3]]
+##   C
+## 1 5
+## 2 6
 ```
 
 ```r
@@ -175,15 +173,14 @@ dfcols.list(dat, vectorize=TRUE)
 ```
 
 ```
-$A
-[1] 1 2
-
-$B
-[1] 3 4
-
-$C
-[1] 5 6
-
+## $A
+## [1] 1 2
+## 
+## $B
+## [1] 3 4
+## 
+## $C
+## [1] 5 6
 ```
 
 
@@ -274,7 +271,7 @@ round(x, 1)
 ```
 
 ```
-[1] 1.8 1.5 1.6 1.8 1.8
+## [1] 1.8 1.5 1.6 1.8 1.8
 ```
 
 ```r
@@ -282,7 +279,7 @@ round2(x, 1)
 ```
 
 ```
-[1] 1.9 1.5 1.7 1.9 1.8
+## [1] 1.9 1.5 1.7 1.9 1.8
 ```
 
 ```r
@@ -290,7 +287,7 @@ round(seq(0.5, 9.5, by=1))
 ```
 
 ```
- [1]  0  2  2  4  4  6  6  8  8 10
+##  [1]  0  2  2  4  4  6  6  8  8 10
 ```
 
 ```r
@@ -298,7 +295,7 @@ round2(seq(0.5, 9.5, by=1))
 ```
 
 ```
- [1]  1  2  3  4  5  6  7  8  9 10
+##  [1]  1  2  3  4  5  6  7  8  9 10
 ```
 
 
@@ -349,7 +346,7 @@ cbind(df1, df2, df3)
 ```
 
 ```
-Error: arguments imply differing number of rows: 5, 3, 8
+## Error: arguments imply differing number of rows: 5, 3, 8
 ```
 
 ```r
@@ -358,15 +355,15 @@ CBIND(list(df1, df2, df3))
 ```
 
 ```
-  1.A  1.B 2.C  2.D 3.E 3.F 3.G
-1   1    a   1    a   1   a   A
-2   2    b   2    b   2   b   B
-3   3    c   3    c   3   c   C
-4   4    d  NA <NA>   4   d   D
-5   5    e  NA <NA>   5   e   E
-6  NA <NA>  NA <NA>   6   f   F
-7  NA <NA>  NA <NA>   7   g   G
-8  NA <NA>  NA <NA>   8   h   H
+##   1.A  1.B 2.C  2.D 3.E 3.F 3.G
+## 1   1    a   1    a   1   a   A
+## 2   2    b   2    b   2   b   B
+## 3   3    c   3    c   3   c   C
+## 4   4    d  NA <NA>   4   d   D
+## 5   5    e  NA <NA>   5   e   E
+## 6  NA <NA>  NA <NA>   6   f   F
+## 7  NA <NA>  NA <NA>   7   g   G
+## 8  NA <NA>  NA <NA>   8   h   H
 ```
 
 ```r
@@ -375,17 +372,17 @@ str(test1)
 ```
 
 ```
-List of 3
- $ :'data.frame':	5 obs. of  2 variables:
-  ..$ A: int [1:5] 1 2 3 4 5
-  ..$ B: Factor w/ 5 levels "a","b","c","d",..: 1 2 3 4 5
- $ :'data.frame':	3 obs. of  2 variables:
-  ..$ C: int [1:3] 1 2 3
-  ..$ D: Factor w/ 3 levels "a","b","c": 1 2 3
- $ :'data.frame':	8 obs. of  3 variables:
-  ..$ E: int [1:8] 1 2 3 4 5 6 7 8
-  ..$ F: Factor w/ 8 levels "a","b","c","d",..: 1 2 3 4 5 6 7 8
-  ..$ G: Factor w/ 8 levels "A","B","C","D",..: 1 2 3 4 5 6 7 8
+## List of 3
+##  $ :'data.frame':	5 obs. of  2 variables:
+##   ..$ A: int [1:5] 1 2 3 4 5
+##   ..$ B: Factor w/ 5 levels "a","b","c","d",..: 1 2 3 4 5
+##  $ :'data.frame':	3 obs. of  2 variables:
+##   ..$ C: int [1:3] 1 2 3
+##   ..$ D: Factor w/ 3 levels "a","b","c": 1 2 3
+##  $ :'data.frame':	8 obs. of  3 variables:
+##   ..$ E: int [1:8] 1 2 3 4 5 6 7 8
+##   ..$ F: Factor w/ 8 levels "a","b","c","d",..: 1 2 3 4 5 6 7 8
+##   ..$ G: Factor w/ 8 levels "A","B","C","D",..: 1 2 3 4 5 6 7 8
 ```
 
 ```r
@@ -393,15 +390,15 @@ CBIND(test1)
 ```
 
 ```
-  1.A  1.B 2.C  2.D 3.E 3.F 3.G
-1   1    a   1    a   1   a   A
-2   2    b   2    b   2   b   B
-3   3    c   3    c   3   c   C
-4   4    d  NA <NA>   4   d   D
-5   5    e  NA <NA>   5   e   E
-6  NA <NA>  NA <NA>   6   f   F
-7  NA <NA>  NA <NA>   7   g   G
-8  NA <NA>  NA <NA>   8   h   H
+##   1.A  1.B 2.C  2.D 3.E 3.F 3.G
+## 1   1    a   1    a   1   a   A
+## 2   2    b   2    b   2   b   B
+## 3   3    c   3    c   3   c   C
+## 4   4    d  NA <NA>   4   d   D
+## 5   5    e  NA <NA>   5   e   E
+## 6  NA <NA>  NA <NA>   6   f   F
+## 7  NA <NA>  NA <NA>   7   g   G
+## 8  NA <NA>  NA <NA>   8   h   H
 ```
 
 ```r
@@ -410,21 +407,21 @@ str(test2)
 ```
 
 ```
-List of 2
- $ :List of 3
-  ..$ :'data.frame':	5 obs. of  2 variables:
-  .. ..$ A: int [1:5] 1 2 3 4 5
-  .. ..$ B: Factor w/ 5 levels "a","b","c","d",..: 1 2 3 4 5
-  ..$ :'data.frame':	3 obs. of  2 variables:
-  .. ..$ C: int [1:3] 1 2 3
-  .. ..$ D: Factor w/ 3 levels "a","b","c": 1 2 3
-  ..$ :'data.frame':	8 obs. of  3 variables:
-  .. ..$ E: int [1:8] 1 2 3 4 5 6 7 8
-  .. ..$ F: Factor w/ 8 levels "a","b","c","d",..: 1 2 3 4 5 6 7 8
-  .. ..$ G: Factor w/ 8 levels "A","B","C","D",..: 1 2 3 4 5 6 7 8
- $ :'data.frame':	5 obs. of  2 variables:
-  ..$ A: int [1:5] 1 2 3 4 5
-  ..$ B: Factor w/ 5 levels "a","b","c","d",..: 1 2 3 4 5
+## List of 2
+##  $ :List of 3
+##   ..$ :'data.frame':	5 obs. of  2 variables:
+##   .. ..$ A: int [1:5] 1 2 3 4 5
+##   .. ..$ B: Factor w/ 5 levels "a","b","c","d",..: 1 2 3 4 5
+##   ..$ :'data.frame':	3 obs. of  2 variables:
+##   .. ..$ C: int [1:3] 1 2 3
+##   .. ..$ D: Factor w/ 3 levels "a","b","c": 1 2 3
+##   ..$ :'data.frame':	8 obs. of  3 variables:
+##   .. ..$ E: int [1:8] 1 2 3 4 5 6 7 8
+##   .. ..$ F: Factor w/ 8 levels "a","b","c","d",..: 1 2 3 4 5 6 7 8
+##   .. ..$ G: Factor w/ 8 levels "A","B","C","D",..: 1 2 3 4 5 6 7 8
+##  $ :'data.frame':	5 obs. of  2 variables:
+##   ..$ A: int [1:5] 1 2 3 4 5
+##   ..$ B: Factor w/ 5 levels "a","b","c","d",..: 1 2 3 4 5
 ```
 
 ```r
@@ -432,16 +429,82 @@ CBIND(test2)
 ```
 
 ```
-  1/1.A 1/1.B 1/2.C 1/2.D 1/3.E 1/3.F 1/3.G 2.A  2.B
-1     1     a     1     a     1     a     A   1    a
-2     2     b     2     b     2     b     B   2    b
-3     3     c     3     c     3     c     C   3    c
-4     4     d    NA  <NA>     4     d     D   4    d
-5     5     e    NA  <NA>     5     e     E   5    e
-6    NA  <NA>    NA  <NA>     6     f     F  NA <NA>
-7    NA  <NA>    NA  <NA>     7     g     G  NA <NA>
-8    NA  <NA>    NA  <NA>     8     h     H  NA <NA>
+##   1/1.A 1/1.B 1/2.C 1/2.D 1/3.E 1/3.F 1/3.G 2.A  2.B
+## 1     1     a     1     a     1     a     A   1    a
+## 2     2     b     2     b     2     b     B   2    b
+## 3     3     c     3     c     3     c     C   3    c
+## 4     4     d    NA  <NA>     4     d     D   4    d
+## 5     5     e    NA  <NA>     5     e     E   5    e
+## 6    NA  <NA>    NA  <NA>     6     f     F  NA <NA>
+## 7    NA  <NA>    NA  <NA>     7     g     G  NA <NA>
+## 8    NA  <NA>    NA  <NA>     8     h     H  NA <NA>
 ```
+
+
+## Generate Random Names Using an Online Random Name Generator
+
+This function uses the random name generator from the [*Random Name Generator*](http://random-name-generator.info/) website^[See: [http://random-name-generator.info/](http://random-name-generator.info/)]. This is included here mostly for "fun", and to show how we can use form input parameters from some websites in our R scripts.
+
+> **Note**: Since there is no concept of a *seed* at the website from which these names are drawn, you should expect to get different names each time the function is run. If you want more control, but similar functionality, use the `RandomNames()` function instead.
+
+### Arguments
+
+* `number`: How many names do you want?
+* `gender`: Specify whether you want `"male"` names, `"female"` names, or `"both"`.
+* `type`: Specify whether you want `"common"`, `"average"`, or `"rare"` names.
+
+
+```r
+randomNamesOnline <- function(number = 100, gender = "both", type = "rare") {
+  gender <- tolower(gender); type <- tolower(type)
+  gender <- switch(gender, both = "&g=1", male = "&g=2", female = "&g=3",
+                   stop('"gender" must be either "male", "female", or, "both"'))
+  type <- switch(type, rare = "&st=3", average = "&st=2", common = "&st=1", 
+                 stop('"type" must be either "rare", "average", or "common"'))
+  tempURL <- paste("http://random-name-generator.info/random/?n=", 
+                   number, gender, type, sep = "", collapse = "")
+  temp <- suppressWarnings(readLines(tempURL))
+  temp <- gsub("\t|<li>|</ol>", "", temp[102:(102 + number - 1)])
+  temp
+}
+```
+
+
+### Examples
+
+
+```r
+randomNamesOnline(10)
+```
+
+```
+##  [1] "Sidney Ashmore"   "Olen Stein"       "Nelia Power"      "Tillie Sheffield"
+##  [5] "Elsy Gonsalves"   "Santos Cotter"    "Nigel Greenberg"  "Paz Mosier"      
+##  [9] "Katina Rountree"  "Coreen Hawks"
+```
+
+```r
+randomNamesOnline(10, gender = "both", type = "common")
+```
+
+```
+##  [1] "Virginia Martin" "Thomas Young"    "Kelly Turner"    "Judith James"   
+##  [5] "Jason Perez"     "Shawn Morgan"    "Nancy Rogers"    "Carolyn Wood"   
+##  [9] "Linda Mitchell"  "Jesse Brooks"
+```
+
+```r
+randomNamesOnline(10, "male", "average")
+```
+
+```
+##  [1] "Wm Rogers"            "Alejandro Hall"       "Francis Logan"       
+##  [4] "Pat Baker"            "Bobby Gonzales"       "Jon Spencer"         
+##  [7] "Lionel Hammond"       "Clinton Graham"       "Reginald Christensen"
+## [10] "Shaun Holt"
+```
+
+
 
 
 
@@ -466,10 +529,10 @@ str(dat)
 ```
 
 ```
-'data.frame':	3 obs. of  3 variables:
- $ title     : Factor w/ 3 levels "title1","title2",..: 1 2 3
- $ author    : Factor w/ 3 levels "author1","author2",..: 1 2 3
- $ customerID: num  1 2 1
+## 'data.frame':	3 obs. of  3 variables:
+##  $ title     : Factor w/ 3 levels "title1","title2",..: 1 2 3
+##  $ author    : Factor w/ 3 levels "author1","author2",..: 1 2 3
+##  $ customerID: num  1 2 1
 ```
 
 ```r
@@ -481,10 +544,10 @@ str(dat)
 ```
 
 ```
-'data.frame':	3 obs. of  3 variables:
- $ title     : chr  "title1" "title2" "title3"
- $ author    : chr  "author1" "author2" "author3"
- $ customerID: num  1 2 1
+## 'data.frame':	3 obs. of  3 variables:
+##  $ title     : chr  "title1" "title2" "title3"
+##  $ author    : chr  "author1" "author2" "author3"
+##  $ customerID: num  1 2 1
 ```
 
 
@@ -535,11 +598,11 @@ Reduce(function(x, y) merge(x, y, all=TRUE),
 ```
 
 ```
-  ID  JAN  FEB  MAR  APR
-1  2    X    E    R    F
-2  3 <NA>    F    X    D
-3  4    V <NA>    M    Q
-4  5    F    B <NA> <NA>
+##   ID  JAN  FEB  MAR  APR
+## 1  2    X    E    R    F
+## 2  3 <NA>    F    X    D
+## 3  4    V <NA>    M    Q
+## 4  5    F    B <NA> <NA>
 ```
 
 
@@ -565,10 +628,10 @@ str(x)
 ```
 
 ```
- 'table' int [1:4, 1:5] 24 5 1 0 3 15 7 5 0 2 ...
- - attr(*, "dimnames")=List of 2
-  ..$      : chr [1:4] "(56,72]" "(72,79]" "(79,85]" "(85,97]"
-  ..$ Month: chr [1:5] "5" "6" "7" "8" ...
+##  'table' int [1:4, 1:5] 24 5 1 0 3 15 7 5 0 2 ...
+##  - attr(*, "dimnames")=List of 2
+##   ..$      : chr [1:4] "(56,72]" "(72,79]" "(79,85]" "(85,97]"
+##   ..$ Month: chr [1:5] "5" "6" "7" "8" ...
 ```
 
 ```r
@@ -576,12 +639,12 @@ x
 ```
 
 ```
-         Month
-           5  6  7  8  9
-  (56,72] 24  3  0  1 10
-  (72,79]  5 15  2  9 10
-  (79,85]  1  7 19  7  5
-  (85,97]  0  5 10 14  5
+##          Month
+##            5  6  7  8  9
+##   (56,72] 24  3  0  1 10
+##   (72,79]  5 15  2  9 10
+##   (79,85]  1  7 19  7  5
+##   (85,97]  0  5 10 14  5
 ```
 
 ```r
@@ -591,12 +654,12 @@ str(y)
 ```
 
 ```
-'data.frame':	4 obs. of  5 variables:
- $ 5: int  24 5 1 0
- $ 6: int  3 15 7 5
- $ 7: int  0 2 19 10
- $ 8: int  1 9 7 14
- $ 9: int  10 10 5 5
+## 'data.frame':	4 obs. of  5 variables:
+##  $ 5: int  24 5 1 0
+##  $ 6: int  3 15 7 5
+##  $ 7: int  0 2 19 10
+##  $ 8: int  1 9 7 14
+##  $ 9: int  10 10 5 5
 ```
 
 ```r
@@ -604,11 +667,11 @@ y
 ```
 
 ```
-         5  6  7  8  9
-(56,72] 24  3  0  1 10
-(72,79]  5 15  2  9 10
-(79,85]  1  7 19  7  5
-(85,97]  0  5 10 14  5
+##          5  6  7  8  9
+## (56,72] 24  3  0  1 10
+## (72,79]  5 15  2  9 10
+## (79,85]  1  7 19  7  5
+## (85,97]  0  5 10 14  5
 ```
 
 

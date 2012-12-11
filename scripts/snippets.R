@@ -99,3 +99,16 @@ CBIND <- function(datalist) {
   do.call(cbind, lapply(datalist, expandmyrows, rowsneeded = nrows))
 }
 
+## @knitr randomnamesonline
+randomNamesOnline <- function(number = 100, gender = "both", type = "rare") {
+  gender <- tolower(gender); type <- tolower(type)
+  gender <- switch(gender, both = "&g=1", male = "&g=2", female = "&g=3",
+                   stop('"gender" must be either "male", "female", or, "both"'))
+  type <- switch(type, rare = "&st=3", average = "&st=2", common = "&st=1", 
+                 stop('"type" must be either "rare", "average", or "common"'))
+  tempURL <- paste("http://random-name-generator.info/random/?n=", 
+                   number, gender, type, sep = "", collapse = "")
+  temp <- suppressWarnings(readLines(tempURL))
+  temp <- gsub("\t|<li>|</ol>", "", temp[102:(102 + number - 1)])
+  temp
+}
