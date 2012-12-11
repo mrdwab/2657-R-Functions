@@ -294,6 +294,92 @@ multi.freq.table = function(data, sep="", boolean=TRUE,
 
 \cleardoublepage
 
+# RandomNames
+
+
+```r
+RandomNames <- function(N = 100, cat = NULL, gender = NULL, 
+                        MFprob = NULL, dataset = NULL) {
+  # Generates a `data.frame` of random names with the following columns:
+  #   "Gender", "FirstName", and "Surname". All arguments have preset
+  #   defaults, so the function can be run simply by typing `RandomNames()`,
+  #   which will generate 100 random male and female names.
+  #
+  # === EXAMPLES ===
+  #
+  #     RandomNames()
+  #     RandomNames(N = 20)
+  #     RandomNames(cat = "common", MFprob = c(.2, .8))
+  #
+  # See: 
+  #   - http://www.census.gov/genealogy/www/data/1990surnames/names_files.html
+  #   - http://random-name-generator.info/
+  
+  if (is.null(dataset)) {
+    if (isTRUE("CensusNames1990" %in% ls(envir=.GlobalEnv) == FALSE)) {
+      require(RCurl)
+      baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+      temp = getBinaryURL(paste0(baseURL, "data/CensusNames.RData"))
+      load(rawConnection(temp), envir=.GlobalEnv)
+      message("CensusNames1990 data downloaded from \n",
+              paste0(baseURL, "data/CensusNames.RData"), 
+              " and added to your workspace\n\n")
+      rm(temp, baseURL)
+    }
+    dataset <- CensusNames1990
+  }
+  TEMP <- dataset
+  possiblecats <- c("common", "rare", "average")
+  if(all(cat %in% possiblecats) == FALSE) 
+    stop('cat must be either "all", NULL,
+         or a combination of "common", "average", or "rare"')
+  possiblegenders <- c("male", "female", "both")
+  if (all(gender %in% possiblegenders) == FALSE) {
+    stop('gender must be either "both", NULL, "male", or "female"')
+  }
+  if (isTRUE(identical(gender, c("male", "female"))) || 
+        isTRUE(identical(gender, c("female", "male")))) {
+    gender <- "both"
+  }
+  if (is.null(cat) || cat == "all") {
+    surnames <- TEMP[["surnames"]][["Name"]]
+    malenames <- paste("M-", TEMP[["malenames"]][["Name"]], sep="")
+    femalenames <- paste("F-", TEMP[["femalenames"]][["Name"]], sep="")
+  } else {
+    surnames <- suppressWarnings(
+      with(TEMP[["surnames"]], 
+           TEMP[["surnames"]][Category == cat, "Name"]))
+    malenames <- paste("M-", suppressWarnings(
+      with(TEMP[["malenames"]], 
+           TEMP[["malenames"]][Category == cat, "Name"])), sep="")
+    femalenames <- paste("F-", suppressWarnings(
+      with(TEMP[["femalenames"]], 
+           TEMP[["femalenames"]][Category == cat, "Name"])), sep="")
+  }
+  
+  if (is.null(gender) || gender == "both") {
+    if (is.null(MFprob)) MFprob <- c(.5, .5)
+    firstnames <- sample(c(malenames, femalenames), N, replace = TRUE,
+                         prob = c(rep(MFprob[1]/length(malenames), 
+                                      length(malenames)),
+                                  rep(MFprob[2]/length(femalenames), 
+                                      length(femalenames))))
+  } else if (gender == "female") {
+    firstnames <- sample(femalenames, N, replace = TRUE)
+  } else if (gender == "male") {
+    firstnames <- sample(malenames, N, replace = TRUE)
+  }
+  
+  Surname <- sample(surnames, N, replace = TRUE)
+  temp <- setNames(data.frame(do.call(rbind, strsplit(firstnames, "-"))),
+                   c("Gender", "FirstName"))
+  cbind(temp, Surname)
+}
+```
+
+
+\cleardoublepage
+
 # row.extractor
 
 
@@ -448,6 +534,63 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
                    distribution = distribution,
                    sample.size = round(samp.size, digits = 0))
   RES
+}
+```
+
+
+\cleardoublepage
+
+# stringseed.sampling
+
+
+```r
+stringseed.sampling <- function(seedbase, N, n, write.output = FALSE) {
+  # Designed for batch sampling scenarios using alpha-numeric strings
+  #   as a `seedbase`. `N` represents the "population", and `n`, the
+  #   sample size needed. A vector is supplied for each argument (or,
+  #   alternatively, a data.frame with the required information).
+  #   Optionally, the function can write the output of the function
+  #   to a file.
+  #
+  # === EXAMPLE ===
+  #
+  #   stringseed.sampling(seedbase = c("Village 1", "Village 2", "Village 3"),
+  #                       N = c(150, 309, 297), n = c(15, 31, 30))
+  #
+  # See: http://stackoverflow.com/q/10910698/1270695
+  
+  require(digest)
+  hexval = paste0("0x", sapply(seedbase, digest, "crc32"))
+  seeds = type.convert(hexval) %% .Machine$integer.max
+  seedbase = as.character(seedbase)
+  
+  temp <- data.frame(seedbase, N, n, seeds)
+  if (length(seedbase) == 1) {
+    set.seed(temp$seeds)
+    sample.list <- sample(temp$N, temp$n)
+  } else {
+    sample.list <- setNames(
+      apply(temp[-1], 1, 
+            function(x) {set.seed(x[3]); sample(x[1], x[2])} ), 
+      temp[, 1])
+  }
+  
+  rm(.Random.seed, envir=globalenv()) # This is important!
+  
+  temp <- list(input = data.frame(seedbase = seedbase,
+                                  populations = N,
+                                  samplesizes = n,
+                                  seeds = seeds), 
+               samples = sample.list)
+  if(isTRUE(write.output)) {
+    write.csv(temp[[1]], 
+              file=paste("Sample frame generated on", 
+                         Sys.Date(), ".csv", collapse=""))
+    capture.output(temp[[2]], 
+                   file=paste("Samples generated on", 
+                              Sys.Date(), ".txt", collapse=""))
+  }
+  temp
 }
 ```
 

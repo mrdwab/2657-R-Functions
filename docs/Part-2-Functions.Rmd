@@ -1,12 +1,14 @@
 
 ```{r set-options, echo=FALSE, cache=FALSE}
 options(width=80)
-opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
+opts_chunk$set(comment = "##", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
 read_chunk("../scripts/concat.split.R")
 read_chunk("../scripts/df.sorter.R")
 read_chunk("../scripts/multi.freq.table.R")
+read_chunk("../scripts/random.names.R")
 read_chunk("../scripts/row.extractor.R")
 read_chunk("../scripts/sample.size.R")
+read_chunk("../scripts/stringseed.sampling.R")
 read_chunk("../scripts/snippets.R")
 ```
 
@@ -49,6 +51,13 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 
 \cleardoublepage
 
+# RandomNames
+
+```{r randomnames}
+```
+
+\cleardoublepage
+
 # row.extractor
 
 ```{r rowextractor}
@@ -59,6 +68,13 @@ source(textConnection(getURL(paste0(baseURL, "scripts/-----------.R"))))
 # sample.size
 
 ```{r samplesize}
+```
+
+\cleardoublepage
+
+# stringseed.sampling
+
+```{r stringseedsampling}
 ```
 
 \cleardoublepage

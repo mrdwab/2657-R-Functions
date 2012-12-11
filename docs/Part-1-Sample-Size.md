@@ -33,8 +33,8 @@ sample.size(population = 300)
 ```
 
 ```
-  population conf.level conf.int distribution sample.size
-1        300         95        5           50         169
+##   population conf.level conf.int distribution sample.size
+## 1        300         95        5           50         169
 ```
 
 ```r
@@ -44,8 +44,8 @@ sample.size(population = 300, c.lev = 97)
 ```
 
 ```
-  population conf.level conf.int distribution sample.size
-1        300         97        5           50         183
+##   population conf.level conf.int distribution sample.size
+## 1        300         97        5           50         183
 ```
 
 ```r
@@ -54,8 +54,8 @@ sample.size(population = 300, c.int = 2.5, what = "sample")
 ```
 
 ```
-  population conf.level conf.int distribution sample.size
-1        300         95      2.5           50         251
+##   population conf.level conf.int distribution sample.size
+## 1        300         95      2.5           50         251
 ```
 
 ```r
@@ -66,8 +66,8 @@ sample.size(population = 300, samp.size = 140, what = "confidence")
 ```
 
 ```
-  population conf.level conf.int distribution sample.size
-1        300         95     6.06           50         140
+##   population conf.level conf.int distribution sample.size
+## 1        300         95     6.06           50         140
 ```
 
 
@@ -82,12 +82,12 @@ sample.size(population=c(300, 350, 400, 450, 500))
 ```
 
 ```
-  population conf.level conf.int distribution sample.size
-1        300         95        5           50         169
-2        350         95        5           50         183
-3        400         95        5           50         196
-4        450         95        5           50         207
-5        500         95        5           50         217
+##   population conf.level conf.int distribution sample.size
+## 1        300         95        5           50         169
+## 2        350         95        5           50         183
+## 3        400         95        5           50         196
+## 4        450         95        5           50         207
+## 5        500         95        5           50         217
 ```
 
 ```r
@@ -99,22 +99,22 @@ sample.size(population=300,
 ```
 
 ```
-   population conf.level conf.int distribution sample.size
-1         300         95      2.5           50         251
-2         300         96      2.5           50         255
-3         300         97      2.5           50         259
-4         300         98      2.5           50         264
-5         300         99      2.5           50         270
-6         300         95      5.0           50         169
-7         300         96      5.0           50         176
-8         300         97      5.0           50         183
-9         300         98      5.0           50         193
-10        300         99      5.0           50         207
-11        300         95     10.0           50          73
-12        300         96     10.0           50          78
-13        300         97     10.0           50          85
-14        300         98     10.0           50          93
-15        300         99     10.0           50         107
+##    population conf.level conf.int distribution sample.size
+## 1         300         95      2.5           50         251
+## 2         300         96      2.5           50         255
+## 3         300         97      2.5           50         259
+## 4         300         98      2.5           50         264
+## 5         300         99      2.5           50         270
+## 6         300         95      5.0           50         169
+## 7         300         96      5.0           50         176
+## 8         300         97      5.0           50         183
+## 9         300         98      5.0           50         193
+## 10        300         99      5.0           50         207
+## 11        300         95     10.0           50          73
+## 12        300         96     10.0           50          78
+## 13        300         97     10.0           50          85
+## 14        300         98     10.0           50          93
+## 15        300         99     10.0           50         107
 ```
 
 ```r
@@ -126,10 +126,10 @@ sample.size(population=300,
 ```
 
 ```
-  population conf.level conf.int distribution sample.size
-1        300         95     5.67           50         150
-2        300         95     5.30           50         160
-3        300         95     4.96           50         170
+##   population conf.level conf.int distribution sample.size
+## 1        300         95     5.67           50         150
+## 2        300         95     5.30           50         160
+## 3        300         95     4.96           50         170
 ```
 
 

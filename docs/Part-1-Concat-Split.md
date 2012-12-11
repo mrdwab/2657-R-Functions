@@ -32,7 +32,7 @@ dim(concat.test)
 ```
 
 ```
-[1] 48  4
+## [1] 48  4
 ```
 
 ```r
@@ -41,13 +41,13 @@ head(concat.test)
 ```
 
 ```
-    Name     Likes                   Siblings    Hates
-1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;
-2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;
-3   Dana 1,2,4,5,6                     Pierce       2;
-4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;
-5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;
-6 Kelley   1,2,5,6          James , Roxanne ,     1;4;
+##     Name     Likes                   Siblings    Hates
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;
+## 3   Dana 1,2,4,5,6                     Pierce       2;
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;
+## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;
+## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;
 ```
 
 
@@ -65,20 +65,20 @@ head(concat.split(concat.test, 2))
 ```
 
 ```
-    Name     Likes                   Siblings    Hates Likes_1 Likes_2 Likes_3
-1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;       1       1      NA
-2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA
-3   Dana 1,2,4,5,6                     Pierce       2;       1       1      NA
-4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;       1       1      NA
-5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;       1       1      NA
-6 Kelley   1,2,5,6          James , Roxanne ,     1;4;       1       1      NA
-  Likes_4 Likes_5 Likes_6
-1       1       1       1
-2       1       1       1
-3       1       1       1
-4       1       1       1
-5      NA       1       1
-6      NA       1       1
+##     Name     Likes                   Siblings    Hates Likes_1 Likes_2 Likes_3
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;       1       1      NA
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA
+## 3   Dana 1,2,4,5,6                     Pierce       2;       1       1      NA
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;       1       1      NA
+## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;       1       1      NA
+## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;       1       1      NA
+##   Likes_4 Likes_5 Likes_6
+## 1       1       1       1
+## 2       1       1       1
+## 3       1       1       1
+## 4       1       1       1
+## 5      NA       1       1
+## 6      NA       1       1
 ```
 
 ```r
@@ -87,20 +87,20 @@ head(concat.split(concat.test, "Likes", drop.col=TRUE))
 ```
 
 ```
-    Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
-1   Boyd Reynolds , Albert , Ortega     2;4;       1       1      NA       1
-2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA       1
-3   Dana                     Pierce       2;       1       1      NA       1
-4 Carole Colon , Michelle , Ballard     1;4;       1       1      NA       1
-5 Ramona           Snyder , Joann ,   1;2;3;       1       1      NA      NA
-6 Kelley          James , Roxanne ,     1;4;       1       1      NA      NA
-  Likes_5 Likes_6
-1       1       1
-2       1       1
-3       1       1
-4       1       1
-5       1       1
-6       1       1
+##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
+## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       1      NA       1
+## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA       1
+## 3   Dana                     Pierce       2;       1       1      NA       1
+## 4 Carole Colon , Michelle , Ballard     1;4;       1       1      NA       1
+## 5 Ramona           Snyder , Joann ,   1;2;3;       1       1      NA      NA
+## 6 Kelley          James , Roxanne ,     1;4;       1       1      NA      NA
+##   Likes_5 Likes_6
+## 1       1       1
+## 2       1       1
+## 3       1       1
+## 4       1       1
+## 5       1       1
+## 6       1       1
 ```
 
 ```r
@@ -109,13 +109,13 @@ head(concat.split(concat.test, "Hates", sep=";", drop.col=TRUE))
 ```
 
 ```
-    Name     Likes                   Siblings Hates_1 Hates_2 Hates_3 Hates_4
-1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega      NA       1      NA       1
-2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1       1       1
-3   Dana 1,2,4,5,6                     Pierce      NA       1      NA      NA
-4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1      NA      NA       1
-5 Ramona   1,2,5,6           Snyder , Joann ,       1       1       1      NA
-6 Kelley   1,2,5,6          James , Roxanne ,       1      NA      NA       1
+##     Name     Likes                   Siblings Hates_1 Hates_2 Hates_3 Hates_4
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega      NA       1      NA       1
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1       1       1
+## 3   Dana 1,2,4,5,6                     Pierce      NA       1      NA      NA
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1      NA      NA       1
+## 5 Ramona   1,2,5,6           Snyder , Joann ,       1       1       1      NA
+## 6 Kelley   1,2,5,6          James , Roxanne ,       1      NA      NA       1
 ```
 
 ```r
@@ -124,20 +124,20 @@ head(concat.split(concat.test, 2, mode="value", drop.col=TRUE))
 ```
 
 ```
-    Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
-1   Boyd Reynolds , Albert , Ortega     2;4;       1       2      NA       4
-2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       2      NA       4
-3   Dana                     Pierce       2;       1       2      NA       4
-4 Carole Colon , Michelle , Ballard     1;4;       1       2      NA       4
-5 Ramona           Snyder , Joann ,   1;2;3;       1       2      NA      NA
-6 Kelley          James , Roxanne ,     1;4;       1       2      NA      NA
-  Likes_5 Likes_6
-1       5       6
-2       5       6
-3       5       6
-4       5       6
-5       5       6
-6       5       6
+##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
+## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       2      NA       4
+## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       2      NA       4
+## 3   Dana                     Pierce       2;       1       2      NA       4
+## 4 Carole Colon , Michelle , Ballard     1;4;       1       2      NA       4
+## 5 Ramona           Snyder , Joann ,   1;2;3;       1       2      NA      NA
+## 6 Kelley          James , Roxanne ,     1;4;       1       2      NA      NA
+##   Likes_5 Likes_6
+## 1       5       6
+## 2       5       6
+## 3       5       6
+## 4       5       6
+## 5       5       6
+## 6       5       6
 ```
 
 ```r
@@ -146,13 +146,13 @@ head(concat.split(concat.test, 3, drop.col=TRUE))
 ```
 
 ```
-    Name     Likes    Hates Siblings_1 Siblings_2 Siblings_3
-1   Boyd 1,2,4,5,6     2;4;   Reynolds     Albert     Ortega
-2  Rufus 1,2,4,5,6 1;2;3;4;      Cohen       Bert Montgomery
-3   Dana 1,2,4,5,6       2;     Pierce       <NA>       <NA>
-4 Carole 1,2,4,5,6     1;4;      Colon   Michelle    Ballard
-5 Ramona   1,2,5,6   1;2;3;     Snyder      Joann       <NA>
-6 Kelley   1,2,5,6     1;4;      James    Roxanne       <NA>
+##     Name     Likes    Hates Siblings_1 Siblings_2 Siblings_3
+## 1   Boyd 1,2,4,5,6     2;4;   Reynolds     Albert     Ortega
+## 2  Rufus 1,2,4,5,6 1;2;3;4;      Cohen       Bert Montgomery
+## 3   Dana 1,2,4,5,6       2;     Pierce       <NA>       <NA>
+## 4 Carole 1,2,4,5,6     1;4;      Colon   Michelle    Ballard
+## 5 Ramona   1,2,5,6   1;2;3;     Snyder      Joann       <NA>
+## 6 Kelley   1,2,5,6     1;4;      James    Roxanne       <NA>
 ```
 
 ```r
@@ -161,13 +161,13 @@ head(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE))
 ```
 
 ```
-    Name     Likes                   Siblings    Hates    Likes_list
-1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4; 1, 2, 4, 5, 6
-2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4; 1, 2, 4, 5, 6
-3   Dana 1,2,4,5,6                     Pierce       2; 1, 2, 4, 5, 6
-4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4; 1, 2, 4, 5, 6
-5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;    1, 2, 5, 6
-6 Kelley   1,2,5,6          James , Roxanne ,     1;4;    1, 2, 5, 6
+##     Name     Likes                   Siblings    Hates    Likes_list
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4; 1, 2, 4, 5, 6
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4; 1, 2, 4, 5, 6
+## 3   Dana 1,2,4,5,6                     Pierce       2; 1, 2, 4, 5, 6
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4; 1, 2, 4, 5, 6
+## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;    1, 2, 5, 6
+## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;    1, 2, 5, 6
 ```
 
 ```r
@@ -178,19 +178,19 @@ str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
 ```
 
 ```
-'data.frame':	10 obs. of  2 variables:
- $ Likes     : Factor w/ 5 levels "1,2,3,4,5","1,2,4,5",..: 3 3 3 3 5 5 3 3 3 4
- $ Likes_list:List of 10
-  ..$ : num  1 2 4 5 6
-  ..$ : num  1 2 4 5 6
-  ..$ : num  1 2 4 5 6
-  ..$ : num  1 2 4 5 6
-  ..$ : num  1 2 5 6
-  ..$ : num  1 2 5 6
-  ..$ : num  1 2 4 5 6
-  ..$ : num  1 2 4 5 6
-  ..$ : num  1 2 4 5 6
-  ..$ : num  1 2 5
+## 'data.frame':	10 obs. of  2 variables:
+##  $ Likes     : Factor w/ 5 levels "1,2,3,4,5","1,2,4,5",..: 3 3 3 3 5 5 3 3 3 4
+##  $ Likes_list:List of 10
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 5 6
+##   ..$ : num  1 2 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 4 5 6
+##   ..$ : num  1 2 5
 ```
 
 
@@ -228,20 +228,20 @@ head(do.call(cbind, c(concat.test[1],
 ```
 
 ```
-    Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
-1   Boyd       1       1      NA       1       1       1   Reynolds     Albert
-2  Rufus       1       1      NA       1       1       1      Cohen       Bert
-3   Dana       1       1      NA       1       1       1     Pierce       <NA>
-4 Carole       1       1      NA       1       1       1      Colon   Michelle
-5 Ramona       1       1      NA      NA       1       1     Snyder      Joann
-6 Kelley       1       1      NA      NA       1       1      James    Roxanne
-  Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
-1     Ortega      NA       1      NA       1
-2 Montgomery       1       1       1       1
-3       <NA>      NA       1      NA      NA
-4    Ballard       1      NA      NA       1
-5       <NA>       1       1       1      NA
-6       <NA>       1      NA      NA       1
+##     Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
+## 1   Boyd       1       1      NA       1       1       1   Reynolds     Albert
+## 2  Rufus       1       1      NA       1       1       1      Cohen       Bert
+## 3   Dana       1       1      NA       1       1       1     Pierce       <NA>
+## 4 Carole       1       1      NA       1       1       1      Colon   Michelle
+## 5 Ramona       1       1      NA      NA       1       1     Snyder      Joann
+## 6 Kelley       1       1      NA      NA       1       1      James    Roxanne
+##   Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
+## 1     Ortega      NA       1      NA       1
+## 2 Montgomery       1       1       1       1
+## 3       <NA>      NA       1      NA      NA
+## 4    Ballard       1      NA      NA       1
+## 5       <NA>       1       1       1      NA
+## 6       <NA>       1      NA      NA       1
 ```
 
 ```r
@@ -253,20 +253,20 @@ head(do.call(cbind, c(concat.test[1],
 ```
 
 ```
-    Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
-1   Boyd       1       2      NA       4       5       6   Reynolds     Albert
-2  Rufus       1       2      NA       4       5       6      Cohen       Bert
-3   Dana       1       2      NA       4       5       6     Pierce       <NA>
-4 Carole       1       2      NA       4       5       6      Colon   Michelle
-5 Ramona       1       2      NA      NA       5       6     Snyder      Joann
-6 Kelley       1       2      NA      NA       5       6      James    Roxanne
-  Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
-1     Ortega      NA       2      NA       4
-2 Montgomery       1       2       3       4
-3       <NA>      NA       2      NA      NA
-4    Ballard       1      NA      NA       4
-5       <NA>       1       2       3      NA
-6       <NA>       1      NA      NA       4
+##     Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Likes_6 Siblings_1 Siblings_2
+## 1   Boyd       1       2      NA       4       5       6   Reynolds     Albert
+## 2  Rufus       1       2      NA       4       5       6      Cohen       Bert
+## 3   Dana       1       2      NA       4       5       6     Pierce       <NA>
+## 4 Carole       1       2      NA       4       5       6      Colon   Michelle
+## 5 Ramona       1       2      NA      NA       5       6     Snyder      Joann
+## 6 Kelley       1       2      NA      NA       5       6      James    Roxanne
+##   Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4
+## 1     Ortega      NA       2      NA       4
+## 2 Montgomery       1       2       3       4
+## 3       <NA>      NA       2      NA      NA
+## 4    Ballard       1      NA      NA       4
+## 5       <NA>       1       2       3      NA
+## 6       <NA>       1      NA      NA       4
 ```
 
 ```r
@@ -278,13 +278,13 @@ head(do.call(cbind, c(concat.test[1],
 ```
 
 ```
-    Name    Likes_list            Siblings_list Hates_list
-1   Boyd 1, 2, 4, 5, 6 Reynolds, Albert, Ortega       2, 4
-2  Rufus 1, 2, 4, 5, 6  Cohen, Bert, Montgomery 1, 2, 3, 4
-3   Dana 1, 2, 4, 5, 6                   Pierce          2
-4 Carole 1, 2, 4, 5, 6 Colon, Michelle, Ballard       1, 4
-5 Ramona    1, 2, 5, 6            Snyder, Joann    1, 2, 3
-6 Kelley    1, 2, 5, 6           James, Roxanne       1, 4
+##     Name    Likes_list            Siblings_list Hates_list
+## 1   Boyd 1, 2, 4, 5, 6 Reynolds, Albert, Ortega       2, 4
+## 2  Rufus 1, 2, 4, 5, 6  Cohen, Bert, Montgomery 1, 2, 3, 4
+## 3   Dana 1, 2, 4, 5, 6                   Pierce          2
+## 4 Carole 1, 2, 4, 5, 6 Colon, Michelle, Ballard       1, 4
+## 5 Ramona    1, 2, 5, 6            Snyder, Joann    1, 2, 3
+## 6 Kelley    1, 2, 5, 6           James, Roxanne       1, 4
 ```
 
 
