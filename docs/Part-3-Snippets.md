@@ -440,7 +440,7 @@ CBIND(test2)
 ```
 
 
-## Generate Random Names Using an Online Random Name Generator
+## Generate Random Names With an Online Service
 
 This function uses the random name generator from the [*Random Name Generator*](http://random-name-generator.info/) website^[See: [http://random-name-generator.info/](http://random-name-generator.info/)]. This is included here mostly for "fun", and to show how we can use form input parameters from some websites in our R scripts.
 
