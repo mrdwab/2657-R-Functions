@@ -1,13 +1,11 @@
 ## USEFUL SNIPPETS
 
 ## @knitr scriptsanddata
-load.scripts.and.data <- function(path,
-                                 pattern=list(scripts = "*.R$",
-                                              data = "*.rda$|*.Rdata$"), 
-                                 ignore.case=TRUE) {
-  # Reads all the data files and scripts from specified directories.
-  #     In general, should only need to specify the directories.
-  #     Specify directories without trailing slashes.
+load.scripts.and.data <- function(path, pattern = list(scripts = "*.R$",
+                          data = "*.rda$|*.Rdata$"), ignore.case=TRUE) {
+  # Reads all the data files and scripts from specified directories. In 
+  #   general, should only need to specify the directories. Specify 
+  #   directories without trailing slashes.
   #
   # === EXAMPLE ===
   #
@@ -31,7 +29,7 @@ unlist.dfs <- function(data) {
 }
 
 ## @knitr dfcolslist
-dfcols.list <- function(data, vectorize=FALSE) {
+dfcols.list <- function(data, vectorize = FALSE) {
   # Specify the unquoted name of the data.frame to convert
   if (isTRUE(vectorize)) {
     dat.list = sapply(1:ncol(data), function(x) data[x])
@@ -63,7 +61,8 @@ tidyHTML <- function(URL, saveTidy = TRUE) {
   require(XML)
   URL1 = gsub("/", "%2F", URL)
   URL1 = gsub(":", "%3A", URL1)
-  URL1 = paste("http://services.w3.org/tidy/tidy?docAddr=", URL1, "&indent=on", sep = "")
+  URL1 = paste("http://services.w3.org/tidy/tidy?docAddr=", 
+               URL1, "&indent=on", sep = "")
   Parsed = htmlParse(URL1)
   if (isTRUE(saveTidy)) saveXML(Parsed, file = basename(URL))
   Parsed
@@ -103,9 +102,9 @@ CBIND <- function(datalist) {
 randomNamesOnline <- function(number = 100, gender = "both", type = "rare") {
   gender <- tolower(gender); type <- tolower(type)
   gender <- switch(gender, both = "&g=1", male = "&g=2", female = "&g=3",
-                   stop('"gender" must be either "male", "female", or, "both"'))
+            stop('"gender" must be either "male", "female", or, "both"'))
   type <- switch(type, rare = "&st=3", average = "&st=2", common = "&st=1", 
-                 stop('"type" must be either "rare", "average", or "common"'))
+          stop('"type" must be either "rare", "average", or "common"'))
   tempURL <- paste("http://random-name-generator.info/random/?n=", 
                    number, gender, type, sep = "", collapse = "")
   temp <- suppressWarnings(readLines(tempURL))

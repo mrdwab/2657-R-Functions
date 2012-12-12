@@ -30,13 +30,13 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
                         sep=",", drop.col=FALSE) {
   # Takes a column with multiple values, splits the values into 
   #   separate columns, and returns a new data.frame.
-  # 'data' is the source data.frame; 'split.col' is the variable that 
-  #   needs to be split; 'to.list' is whether the split output should
+  # --data-- is the source data.frame; --split.col-- is the variable that 
+  #   needs to be split; --to.list-- is whether the split output should
   #   be added as a single variable list (defaults to "FALSE"); 
-  #   mode' can be either 'binary' or 'value' (where 'binary' is 
-  #   default and it recodes values to 1 or NA); 'sep' is the 
-  #   character separating each value (defaults to ','); 
-  #   and 'drop.col' is logical (whether to remove the original 
+  #   --mode-- can be either --binary-- or --value-- (where --binary-- is 
+  #   default and it recodes values to 1 or NA); --sep-- is the 
+  #   character separating each value (defaults to --,--); 
+  #   and --drop.col-- is logical (whether to remove the original 
   #   variable from the output or not.
   #
   # === EXAMPLES ===
@@ -125,13 +125,13 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
 
 
 ```r
-df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE ) {
-  # Sorts a data.frame by columns or rows or both.
-  # Can also subset the data columns by using 'var.order'.
-  # Can refer to variables either by names or number.
-  # If referring to variable by number, and sorting both the order
-  #   of variables and the sorting within variables, refer to the
-  #   variable numbers of the final data.frame.
+df.sorter <- function(data, var.order=names(data), 
+                      col.sort=NULL, at.start=TRUE ) {
+  # Sorts a data.frame by columns or rows or both. Can also subset the 
+  #   data columns by using --var.order--. Can refer to variables either 
+  #   by names or number. If referring to variable by number, and sorting
+  #   both the order of variables and the sorting within variables, 
+  #   refer to the variable numbers of the final data.frame.
   #
   # === EXAMPLES ===
   #
@@ -176,10 +176,9 @@ df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE )
 
 
 ```r
-multi.freq.table = function(data, sep="", boolean=TRUE, 
-                            factors=NULL, 
-                            NAto0=TRUE, basic=FALSE, 
-                            dropzero=TRUE, clean=TRUE) {
+multi.freq.table <- function(data, sep = "", boolean = TRUE, factors = NULL,
+                             NAto0 = TRUE, basic = FALSE, dropzero=TRUE, 
+                             clean=TRUE) {
   # Takes multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #
@@ -300,9 +299,9 @@ multi.freq.table = function(data, sep="", boolean=TRUE,
 ```r
 RandomNames <- function(N = 100, cat = NULL, gender = NULL, 
                         MFprob = NULL, dataset = NULL) {
-  # Generates a `data.frame` of random names with the following columns:
+  # Generates a "data.frame" of random names with the following columns:
   #   "Gender", "FirstName", and "Surname". All arguments have preset
-  #   defaults, so the function can be run simply by typing `RandomNames()`,
+  #   defaults, so the function can be run simply by typing RandomNames(),
   #   which will generate 100 random male and female names.
   #
   # === EXAMPLES ===
@@ -322,9 +321,9 @@ RandomNames <- function(N = 100, cat = NULL, gender = NULL,
         load("CensusNames.RData")
       } else {
         ans = readline("
-'CensusNames.RData' dataset not found in working directory.
-'CensusNames1990' object not found in workspace. \n
-Load the dataset now? (y/n) -- ")
+    CensusNames.RData dataset not found in working directory.
+    CensusNames1990 object not found in workspace. \n
+    Download and load the dataset now? (y/n) ")
         if (ans != "y")
           return(invisible())
         require(RCurl)
@@ -396,10 +395,10 @@ Load the dataset now? (y/n) -- ")
 
 ```r
 row.extractor = function(data, extract.by, what="all") {
-  # Extracts rows with min, median, and max values, or by quantiles.
-  # Values for "what" can be "min", "median", "max", "all", or a
-  #   vector specifying the desired quantiles.
-  # Values for "extract.by" can be the variable name or number.
+  # Extracts rows with min, median, and max values, or by quantiles. Values 
+  #   for --what-- can be "min", "median", "max", "all", or a vector 
+  #   specifying the desired quantiles. Values for --extract.by-- can be 
+  #   the variable name or number.
   #
   # === EXAMPLES ===
   #
@@ -479,20 +478,18 @@ row.extractor = function(data, extract.by, what="all") {
 
 
 ```r
-sample.size = function(population, samp.size=NULL, c.lev=95, 
-                       c.int=NULL, what = "sample", 
-                       distribution=50) {
-  # Returns a data.frame of sample sizes or confidence
-  #   intervals for different conditions provided by 
-  #   the following arguments.
+sample.size <- function(population, samp.size = NULL, c.lev = 95, 
+                        c.int = NULL, what = "sample", distribution=50) {
+  # Returns a data.frame of sample sizes or confidence intervals for 
+  #   different conditions provided by the following arguments.
   #
-  # populaton: Population size
-  # samp.size: Sample size
-  # c.lev: Confidence level
-  # c.int: Confidence interval (+/-)
-  # what: Whether sample size or confidence interval
-  #       is being calculated.
-  # distribution: Response distribution
+  # --> populaton     Population size
+  # --> samp.size     Sample size
+  # --> c.lev         Confidence level
+  # --> c.int         Confidence interval (+/-)
+  # --> what          Whether sample size or confidence interval
+  #                     is being calculated.
+  # --> distribution  Response distribution
   # 
   # === EXAMPLES ===
   #
@@ -507,14 +504,14 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
       c.int = 5
       
       message("NOTE! Confidence interval set to 5.
-      To override, set c.int to desired value.\n")
+      To override, set >> c.int << to desired value.\n")
       
     } else if (!is.null(c.int) == 1) {
       c.int = c.int
     }
     
     if (!is.null(samp.size)) {
-      message("NOTE! 'samp.size' value provided but ignored.
+      message("NOTE! >> samp.size << value provided but ignored.
       See output for actual sample size(s).\n")
     }
     
@@ -524,10 +521,10 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
     
   } else if (identical(what, "confidence")) {
     if (is.null(samp.size)) {
-      stop("Missing 'samp.size' with no default value.")
+      stop("Missing >> samp.size << with no default value.")
     }
     if (!is.null(c.int)) {
-      message("NOTE! 'c.int' value provided but ignored.
+      message("NOTE! >> c.int << value provided but ignored.
       See output for actual confidence interval value(s).\n")
     }
     
@@ -536,7 +533,7 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
       (1-(distribution/100)))/ss)*100, digits = 2)
     
   } else if (what %in% c("sample", "confidence") == 0) {
-    stop("'what' must be either 'sample' or 'confidence'")
+    stop(">> what << must be either -sample- or -confidence-")
   }
   
   RES = data.frame(population = population,
@@ -556,12 +553,11 @@ sample.size = function(population, samp.size=NULL, c.lev=95,
 
 ```r
 stringseed.sampling <- function(seedbase, N, n, write.output = FALSE) {
-  # Designed for batch sampling scenarios using alpha-numeric strings
-  #   as a `seedbase`. `N` represents the "population", and `n`, the
-  #   sample size needed. A vector is supplied for each argument (or,
-  #   alternatively, a data.frame with the required information).
-  #   Optionally, the function can write the output of the function
-  #   to a file.
+  # Designed for batch sampling scenarios using alpha-numeric strings as a 
+  #   --seedbase--. --N-- represents the "population", and --n--, the sample
+  #   size needed. A vector is supplied for each argument (or, alternatively, 
+  #   a data.frame with the required information). Optionally, the function 
+  #   can write the output of the function to a file.
   #
   # === EXAMPLE ===
   #
@@ -577,30 +573,24 @@ stringseed.sampling <- function(seedbase, N, n, write.output = FALSE) {
   
   temp <- data.frame(seedbase, N, n, seeds)
   if (length(seedbase) == 1) {
-    set.seed(temp$seeds)
-    sample.list <- sample(temp$N, temp$n)
+    set.seed(temp$seeds); sample.list <- sample(temp$N, temp$n)
   } else {
     sample.list <- setNames(
-      apply(temp[-1], 1, 
-            function(x) {set.seed(x[3]); sample(x[1], x[2])} ), 
-      temp[, 1])
+      apply(temp[-1], 1, function(x) 
+        {set.seed(x[3]); sample(x[1], x[2])} ), temp[, 1])
   }
   
-  rm(.Random.seed, envir=globalenv()) # This is important!
-  
-  temp <- list(input = data.frame(seedbase = seedbase,
-                                  populations = N,
-                                  samplesizes = n,
-                                  seeds = seeds), 
-               samples = sample.list)
+  temp <- list(
+    input = data.frame(seedbase = seedbase, populations = N,
+                       samplesizes = n, seeds = seeds),
+    samples = sample.list)
   if(isTRUE(write.output)) {
-    write.csv(temp[[1]], 
-              file=paste("Sample frame generated on", 
-                         Sys.Date(), ".csv", collapse=""))
-    capture.output(temp[[2]], 
-                   file=paste("Samples generated on", 
+    write.csv(temp[[1]], file=paste("Sample frame generated on",
+                                    Sys.Date(), ".csv", collapse=""))
+    capture.output(temp[[2]], file=paste("Samples generated on", 
                               Sys.Date(), ".txt", collapse=""))
   }
+  rm(.Random.seed, envir=globalenv()) # "resets" the seed
   temp
 }
 ```

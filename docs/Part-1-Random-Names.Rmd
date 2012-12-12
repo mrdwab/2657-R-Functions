@@ -8,7 +8,7 @@
 
 ```{r set-options, echo=FALSE, cache=FALSE}
 options(width=80)
-opts_chunk$set(comment = "##", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
+opts_chunk$set(comment = "##", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small", cache.path = "cache/randomnames/")
 read_chunk("../scripts/random.names.R")
 ```
 

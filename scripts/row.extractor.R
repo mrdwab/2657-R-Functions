@@ -1,9 +1,9 @@
 ## @knitr rowextractor
 row.extractor = function(data, extract.by, what="all") {
-  # Extracts rows with min, median, and max values, or by quantiles.
-  # Values for "what" can be "min", "median", "max", "all", or a
-  #   vector specifying the desired quantiles.
-  # Values for "extract.by" can be the variable name or number.
+  # Extracts rows with min, median, and max values, or by quantiles. Values 
+  #   for --what-- can be "min", "median", "max", "all", or a vector 
+  #   specifying the desired quantiles. Values for --extract.by-- can be 
+  #   the variable name or number.
   #
   # === EXAMPLES ===
   #

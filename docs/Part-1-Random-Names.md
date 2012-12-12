@@ -43,27 +43,27 @@ RandomNames(N = 20)
 ```
 
 ```
-##    Gender FirstName  Surnames
-## 1       F     Sasha Vedovelli
-## 2       F       Luz    Collon
-## 3       M      Gino     Early
-## 4       F     Hilde   Bridger
-## 5       M      Aldo  Scouller
-## 6       F     Yvone Baldasaro
-## 7       M     Amado  Dunovant
-## 8       M  Kendrick    Ghazal
-## 9       F  Valencia   Kannady
-## 10      F  Pearlene     Tully
-## 11      M       Mac      Hamp
-## 12      M    Benton   Krejcik
-## 13      M Ferdinand   Boswell
-## 14      M   Arnoldo   Ikehara
-## 15      F   Maybell    Crimin
-## 16      M    Julian      Mari
-## 17      M     Bruce  Maytubby
-## 18      F Clemencia    Pedaci
-## 19      F     Cheri       Mor
-## 20      M      Jose    Welles
+##    Gender FirstName   Surnames
+## 1       M       Jon    Cranmer
+## 2       M     Jamal Handelsman
+## 3       F  Lashawna      Kolbe
+## 4       M    Cletus    Custeau
+## 5       F    Lenora      Abbot
+## 6       F   Maryann     Mossor
+## 7       M Guillermo    Baillio
+## 8       M   Zackary  Hovsepian
+## 9       M   Horacio     Lagoni
+## 10      M     Donny Lamantagne
+## 11      M      Seth        Abe
+## 12      M      Carl     Sandos
+## 13      F    Adelle   Letendre
+## 14      M Francesco   Piccione
+## 15      M    Lyndon     Rippin
+## 16      M    Barney      Detro
+## 17      M   Agustin      Mudie
+## 18      M    Jayson     Resler
+## 19      M    Jarred      Savio
+## 20      M    Norris    Aadland
 ```
 
 ```r
@@ -116,16 +116,16 @@ RandomNames(N = 10, cat = c("common", "rare"))
 
 ```
 ##    Gender FirstName  Surnames
-## 1       M     James   Inskeep
-## 2       M   Alfredo  Birkline
-## 3       M    Carlos     Oller
-## 4       M    Ronald    Maiers
-## 5       M    Jarred    Haeder
-## 6       M     Ricky    Geryol
-## 7       M     Ruben Muldowney
-## 8       M      Erik     Raehl
-## 9       F     Wanda    Rossow
-## 10      M     Milan  Rochelle
+## 1       F    Vashti Deschenes
+## 2       F    Phoebe   Kampner
+## 3       M   Freddie    Banker
+## 4       F    Audrie    Walper
+## 5       F   Dolores  Jandreau
+## 6       F       Liz   Pavlick
+## 7       M     Chong  Patellis
+## 8       M    Emmitt   Lenahan
+## 9       F   Lekisha    Heyman
+## 10      M     Danny  Moorhead
 ```
 
 ```r
@@ -144,17 +144,17 @@ RandomNames(N = 10, gender = "female")
 ```
 
 ```
-##    Gender  FirstName   Surnames
-## 1       F     Blythe     Hayter
-## 2       F      Sofia      Lelle
-## 3       F   Candance     Buhler
-## 4       F     Kiyoko    Kilduff
-## 5       F     Serena Breitbarth
-## 6       F     Justin    Risberg
-## 7       F  Chantelle      Anand
-## 8       F       Reva       Arko
-## 9       F   Vivienne     Bascom
-## 10      F Georgeanna    Hurndon
+##    Gender FirstName     Surnames
+## 1       F     Ninfa      Moscato
+## 2       F      Chae        Arney
+## 3       F  Annmarie         Jens
+## 4       F     Ciera      Bassani
+## 5       F   Merlene   Ferrandino
+## 6       F   Classie       Burnes
+## 7       F  Charlott      Onorati
+## 8       F      Veda   Carrithers
+## 9       F    Imelda Winterholler
+## 10      F   Majorie        Devol
 ```
 
 
@@ -195,7 +195,22 @@ RandomNames(N = 15, dataset = myCustomNames)
 ```
 
 ```
-## Error: could not find function "RandomNames"
+##    Gender FirstName Surnames
+## 1       M         a        X
+## 2       M         j        O
+## 3       M         i        E
+## 4       F         q        W
+## 5       M         j        D
+## 6       M         g        Z
+## 7       F         z        K
+## 8       F         r        W
+## 9       F         k        J
+## 10      F         p        V
+## 11      M         a        Q
+## 12      F         q        A
+## 13      M         d        M
+## 14      F         m        H
+## 15      F         w        B
 ```
 
 

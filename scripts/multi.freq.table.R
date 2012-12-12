@@ -1,8 +1,7 @@
 ## @knitr multifreqtable
-multi.freq.table = function(data, sep="", boolean=TRUE, 
-                            factors=NULL, 
-                            NAto0=TRUE, basic=FALSE, 
-                            dropzero=TRUE, clean=TRUE) {
+multi.freq.table <- function(data, sep = "", boolean = TRUE, factors = NULL,
+                             NAto0 = TRUE, basic = FALSE, dropzero=TRUE, 
+                             clean=TRUE) {
   # Takes multiple-response data and tabulates it according
   #   to the possible combinations of each variable.
   #

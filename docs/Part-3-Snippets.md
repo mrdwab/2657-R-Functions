@@ -10,13 +10,11 @@
 
 
 ```r
-load.scripts.and.data <- function(path,
-                                 pattern=list(scripts = "*.R$",
-                                              data = "*.rda$|*.Rdata$"), 
-                                 ignore.case=TRUE) {
-  # Reads all the data files and scripts from specified directories.
-  #     In general, should only need to specify the directories.
-  #     Specify directories without trailing slashes.
+load.scripts.and.data <- function(path, pattern = list(scripts = "*.R$",
+                          data = "*.rda$|*.Rdata$"), ignore.case=TRUE) {
+  # Reads all the data files and scripts from specified directories. In 
+  #   general, should only need to specify the directories. Specify 
+  #   directories without trailing slashes.
   #
   # === EXAMPLE ===
   #
@@ -118,7 +116,7 @@ temp_2
 
 
 ```r
-dfcols.list <- function(data, vectorize=FALSE) {
+dfcols.list <- function(data, vectorize = FALSE) {
   # Specify the unquoted name of the data.frame to convert
   if (isTRUE(vectorize)) {
     dat.list = sapply(1:ncol(data), function(x) data[x])
@@ -227,7 +225,8 @@ tidyHTML <- function(URL, saveTidy = TRUE) {
   require(XML)
   URL1 = gsub("/", "%2F", URL)
   URL1 = gsub(":", "%3A", URL1)
-  URL1 = paste("http://services.w3.org/tidy/tidy?docAddr=", URL1, "&indent=on", sep = "")
+  URL1 = paste("http://services.w3.org/tidy/tidy?docAddr=", 
+               URL1, "&indent=on", sep = "")
   Parsed = htmlParse(URL1)
   if (isTRUE(saveTidy)) saveXML(Parsed, file = basename(URL))
   Parsed
@@ -458,9 +457,9 @@ This function uses the random name generator from the [*Random Name Generator*](
 randomNamesOnline <- function(number = 100, gender = "both", type = "rare") {
   gender <- tolower(gender); type <- tolower(type)
   gender <- switch(gender, both = "&g=1", male = "&g=2", female = "&g=3",
-                   stop('"gender" must be either "male", "female", or, "both"'))
+            stop('"gender" must be either "male", "female", or, "both"'))
   type <- switch(type, rare = "&st=3", average = "&st=2", common = "&st=1", 
-                 stop('"type" must be either "rare", "average", or "common"'))
+          stop('"type" must be either "rare", "average", or "common"'))
   tempURL <- paste("http://random-name-generator.info/random/?n=", 
                    number, gender, type, sep = "", collapse = "")
   temp <- suppressWarnings(readLines(tempURL))
@@ -478,9 +477,10 @@ randomNamesOnline(10)
 ```
 
 ```
-##  [1] "Janeen Puckett"  "Maribel Whipple" "Valeri Cushman"  "Luanna Beers"   
-##  [5] "Elisha Duval"    "Odis Neeley"     "Kristel Bottoms" "Barbie Muncy"   
-##  [9] "Shenika Maes"    "Mirtha Woodruff"
+##  [1] "Rod Casper"        "Elina Escobar"     "Rodrick Vickers"  
+##  [4] "Alejandra Townes"  "Shad Barela"       "Jackson Thurston" 
+##  [7] "Darline Greenwood" "Tera Griswold"     "Alonso Deleon"    
+## [10] "Junko Ferraro"
 ```
 
 ```r
@@ -488,9 +488,9 @@ randomNamesOnline(10, gender = "both", type = "common")
 ```
 
 ```
-##  [1] "Julie Rivera"    "Timothy Johnson" "Lois Price"      "Jessica Torres" 
-##  [5] "Mark Ross"       "Andrea Martinez" "Bonnie Thompson" "Samuel Cook"    
-##  [9] "Patrick Jones"   "Thomas Simmons"
+##  [1] "Nancy Anderson"   "Jesse Hall"       "Kathleen Flores"  "Larry Reed"      
+##  [5] "Thomas Rodriguez" "Roger Garcia"     "Linda Henderson"  "Nicole Ward"     
+##  [9] "Martin Walker"    "Brandon Diaz"
 ```
 
 ```r
@@ -498,10 +498,9 @@ randomNamesOnline(10, "male", "average")
 ```
 
 ```
-##  [1] "Miguel Meyer"      "Raymond Griffith"  "Morris Ellis"     
-##  [4] "Randolph Mitchell" "Justin Brewer"     "Terrell Freeman"  
-##  [7] "Victor Dixon"      "Daryl Blair"       "Paul Mullins"     
-## [10] "Pete Fitzgerald"
+##  [1] "Alejandro Becker" "Charles Black"    "Eddie Lewis"      "Alfred Soto"     
+##  [5] "Joseph Rodriguez" "Eugene Walton"    "Ignacio Jordan"   "Ray Payne"       
+##  [9] "Orville Wong"     "Edgar Jimenez"
 ```
 
 

@@ -1,11 +1,11 @@
 ## @knitr dfsorter
-df.sorter = function(data, var.order=names(data), col.sort=NULL, at.start=TRUE ) {
-  # Sorts a data.frame by columns or rows or both.
-  # Can also subset the data columns by using 'var.order'.
-  # Can refer to variables either by names or number.
-  # If referring to variable by number, and sorting both the order
-  #   of variables and the sorting within variables, refer to the
-  #   variable numbers of the final data.frame.
+df.sorter <- function(data, var.order=names(data), 
+                      col.sort=NULL, at.start=TRUE ) {
+  # Sorts a data.frame by columns or rows or both. Can also subset the 
+  #   data columns by using --var.order--. Can refer to variables either 
+  #   by names or number. If referring to variable by number, and sorting
+  #   both the order of variables and the sorting within variables, 
+  #   refer to the variable numbers of the final data.frame.
   #
   # === EXAMPLES ===
   #

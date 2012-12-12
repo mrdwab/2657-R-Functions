@@ -2,9 +2,9 @@
 
 RandomNames <- function(N = 100, cat = NULL, gender = NULL, 
                         MFprob = NULL, dataset = NULL) {
-  # Generates a `data.frame` of random names with the following columns:
+  # Generates a "data.frame" of random names with the following columns:
   #   "Gender", "FirstName", and "Surname". All arguments have preset
-  #   defaults, so the function can be run simply by typing `RandomNames()`,
+  #   defaults, so the function can be run simply by typing RandomNames(),
   #   which will generate 100 random male and female names.
   #
   # === EXAMPLES ===
@@ -24,9 +24,9 @@ RandomNames <- function(N = 100, cat = NULL, gender = NULL,
         load("CensusNames.RData")
       } else {
         ans = readline("
-'CensusNames.RData' dataset not found in working directory.
-'CensusNames1990' object not found in workspace. \n
-Load the dataset now? (y/n) -- ")
+    CensusNames.RData dataset not found in working directory.
+    CensusNames1990 object not found in workspace. \n
+    Download and load the dataset now? (y/n) ")
         if (ans != "y")
           return(invisible())
         require(RCurl)

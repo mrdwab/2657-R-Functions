@@ -3,13 +3,13 @@ concat.split = function(data, split.col, to.list=FALSE, mode=NULL,
                         sep=",", drop.col=FALSE) {
   # Takes a column with multiple values, splits the values into 
   #   separate columns, and returns a new data.frame.
-  # 'data' is the source data.frame; 'split.col' is the variable that 
-  #   needs to be split; 'to.list' is whether the split output should
+  # --data-- is the source data.frame; --split.col-- is the variable that 
+  #   needs to be split; --to.list-- is whether the split output should
   #   be added as a single variable list (defaults to "FALSE"); 
-  #   mode' can be either 'binary' or 'value' (where 'binary' is 
-  #   default and it recodes values to 1 or NA); 'sep' is the 
-  #   character separating each value (defaults to ','); 
-  #   and 'drop.col' is logical (whether to remove the original 
+  #   --mode-- can be either --binary-- or --value-- (where --binary-- is 
+  #   default and it recodes values to 1 or NA); --sep-- is the 
+  #   character separating each value (defaults to --,--); 
+  #   and --drop.col-- is logical (whether to remove the original 
   #   variable from the output or not.
   #
   # === EXAMPLES ===
