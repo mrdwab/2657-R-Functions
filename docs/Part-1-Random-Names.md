@@ -21,7 +21,7 @@ The `RandomNames()` function uses data from the *Genealogy Data: Frequently Occu
 
 ## Dataset Details
 
-This function samples from a provided dataset of names. By default, it uses the data from the *Genealogy Data: Frequently Occurring Surnames from Census 1990--Names Files* web page. Those data have been converted to `list` named "`CensusNames1990`" containing three `data.frame`s (named `"surnames"`, `"malenames"`, and `"femalenames"`) and saved as an `.RData` file named `CensusNames.RData`. The data file (approximately 615 kb) can be manually downloaded from [Github](https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData)^[See: [https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData](https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData)] and loaded to your workspace; however, provided an internet session is active during your R session, the function will automatically download the dataset for you if it is not found in your workspace or working directory.
+This function samples from a provided dataset of names. By default, it uses the data from the *Genealogy Data: Frequently Occurring Surnames from Census 1990--Names Files* web page. Those data have been converted to `list` named "`CensusNames1990`" containing three `data.frame`s (named `"surnames"`, `"malenames"`, and `"femalenames"`) and saved as an `.RData` file named `CensusNames.RData`. The data file (approximately 615 kb) can be manually downloaded from [Github](https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData)^[See: [https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData](https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData)] and loaded to your workspace. The function will perform some basic checking to see if either the `CensusNames.RData` file or the `CensusNames1990` objects are available in your workspace or working directory. If neither is found and an internet connection is active during your R session, the function will offer you the option to automatically download the dataset and add it to your *current* session.
 
 Alternatively, you may provide your own data in a `list` formatted according to the following specifications (see the "`myCustomNames`" data in the "*Examples*" section). *Please remember that R is case sensitive!*
 
@@ -43,27 +43,27 @@ RandomNames(N = 20)
 ```
 
 ```
-##    Gender  FirstName   Surnames
-## 1       M        Rex Grossetete
-## 2       M      Elvin     Oshima
-## 3       M    Jamison    Tankard
-## 4       M       Hong      Adger
-## 5       M    Clinton     Lingel
-## 6       M     Connie      Abeta
-## 7       M     Dexter    Stelter
-## 8       F   Christie    Debraga
-## 9       M    Barrett    Wehmann
-## 10      M   Napoleon       Gagg
-## 11      M    Delbert    Lofland
-## 12      F   Estefana    Degroot
-## 13      M     Michel  Masterman
-## 14      M      Cyrus      Farve
-## 15      M       Cody   Roginson
-## 16      M    Bennett      Bashi
-## 17      M      Duane      Vidra
-## 18      F     Stevie     Romane
-## 19      M     Alonzo     Torris
-## 20      M Kristopher     Kinsel
+##    Gender FirstName  Surnames
+## 1       F     Sasha Vedovelli
+## 2       F       Luz    Collon
+## 3       M      Gino     Early
+## 4       F     Hilde   Bridger
+## 5       M      Aldo  Scouller
+## 6       F     Yvone Baldasaro
+## 7       M     Amado  Dunovant
+## 8       M  Kendrick    Ghazal
+## 9       F  Valencia   Kannady
+## 10      F  Pearlene     Tully
+## 11      M       Mac      Hamp
+## 12      M    Benton   Krejcik
+## 13      M Ferdinand   Boswell
+## 14      M   Arnoldo   Ikehara
+## 15      F   Maybell    Crimin
+## 16      M    Julian      Mari
+## 17      M     Bruce  Maytubby
+## 18      F Clemencia    Pedaci
+## 19      F     Cheri       Mor
+## 20      M      Jose    Welles
 ```
 
 ```r
@@ -116,16 +116,16 @@ RandomNames(N = 10, cat = c("common", "rare"))
 
 ```
 ##    Gender FirstName  Surnames
-## 1       F      Lila     Zullo
-## 2       M      Cory    Proulx
-## 3       M    Jordon Lassetter
-## 4       M     Dario  Ankersen
-## 5       F     Twila    Gruner
-## 6       M    Alfred       Aho
-## 7       M     Toney   Pardall
-## 8       F     Elene     Geise
-## 9       M    Jessie   Yessios
-## 10      F     Myrta   Shawler
+## 1       M     James   Inskeep
+## 2       M   Alfredo  Birkline
+## 3       M    Carlos     Oller
+## 4       M    Ronald    Maiers
+## 5       M    Jarred    Haeder
+## 6       M     Ricky    Geryol
+## 7       M     Ruben Muldowney
+## 8       M      Erik     Raehl
+## 9       F     Wanda    Rossow
+## 10      M     Milan  Rochelle
 ```
 
 ```r
@@ -144,17 +144,17 @@ RandomNames(N = 10, gender = "female")
 ```
 
 ```
-##    Gender FirstName  Surnames
-## 1       F     Terri     Bayon
-## 2       F  Kimberly      Situ
-## 3       F   Rosenda   Schmeer
-## 4       F   Caroyln     Monti
-## 5       F     Elyse Schlobohm
-## 6       F   Ethelyn     Plake
-## 7       F     Janet Furgerson
-## 8       F   Romelia   Mazingo
-## 9       F      Kina    Washor
-## 10      F    Ashlie     Galaz
+##    Gender  FirstName   Surnames
+## 1       F     Blythe     Hayter
+## 2       F      Sofia      Lelle
+## 3       F   Candance     Buhler
+## 4       F     Kiyoko    Kilduff
+## 5       F     Serena Breitbarth
+## 6       F     Justin    Risberg
+## 7       F  Chantelle      Anand
+## 8       F       Reva       Arko
+## 9       F   Vivienne     Bascom
+## 10      F Georgeanna    Hurndon
 ```
 
 
@@ -203,10 +203,5 @@ RandomNames(N = 15, dataset = myCustomNames)
 
 * Inspired by the online Random Name Generator ([http://random-name-generator.info/](http://random-name-generator.info/)). 
 * Uses data from the 1990 US Census ([http://www.census.gov/genealogy/www/data/1990surnames/names_files.html](http://www.census.gov/genealogy/www/data/1990surnames/names_files.html))
-
-## To Do
-
-* Make function look for the `CensusNames.RData` file in the current working directory before downloading it.
-* Rewrite the function to use `exists()` instead.
 
 \cleardoublepage

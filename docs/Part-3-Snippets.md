@@ -478,9 +478,9 @@ randomNamesOnline(10)
 ```
 
 ```
-##  [1] "Sidney Ashmore"   "Olen Stein"       "Nelia Power"      "Tillie Sheffield"
-##  [5] "Elsy Gonsalves"   "Santos Cotter"    "Nigel Greenberg"  "Paz Mosier"      
-##  [9] "Katina Rountree"  "Coreen Hawks"
+##  [1] "Janeen Puckett"  "Maribel Whipple" "Valeri Cushman"  "Luanna Beers"   
+##  [5] "Elisha Duval"    "Odis Neeley"     "Kristel Bottoms" "Barbie Muncy"   
+##  [9] "Shenika Maes"    "Mirtha Woodruff"
 ```
 
 ```r
@@ -488,9 +488,9 @@ randomNamesOnline(10, gender = "both", type = "common")
 ```
 
 ```
-##  [1] "Virginia Martin" "Thomas Young"    "Kelly Turner"    "Judith James"   
-##  [5] "Jason Perez"     "Shawn Morgan"    "Nancy Rogers"    "Carolyn Wood"   
-##  [9] "Linda Mitchell"  "Jesse Brooks"
+##  [1] "Julie Rivera"    "Timothy Johnson" "Lois Price"      "Jessica Torres" 
+##  [5] "Mark Ross"       "Andrea Martinez" "Bonnie Thompson" "Samuel Cook"    
+##  [9] "Patrick Jones"   "Thomas Simmons"
 ```
 
 ```r
@@ -498,10 +498,10 @@ randomNamesOnline(10, "male", "average")
 ```
 
 ```
-##  [1] "Wm Rogers"            "Alejandro Hall"       "Francis Logan"       
-##  [4] "Pat Baker"            "Bobby Gonzales"       "Jon Spencer"         
-##  [7] "Lionel Hammond"       "Clinton Graham"       "Reginald Christensen"
-## [10] "Shaun Holt"
+##  [1] "Miguel Meyer"      "Raymond Griffith"  "Morris Ellis"     
+##  [4] "Randolph Mitchell" "Justin Brewer"     "Terrell Freeman"  
+##  [7] "Victor Dixon"      "Daryl Blair"       "Paul Mullins"     
+## [10] "Pete Fitzgerald"
 ```
 
 

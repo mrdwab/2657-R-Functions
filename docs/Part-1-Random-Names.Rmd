@@ -26,7 +26,7 @@ The `RandomNames()` function uses data from the *Genealogy Data: Frequently Occu
 
 ## Dataset Details
 
-This function samples from a provided dataset of names. By default, it uses the data from the *Genealogy Data: Frequently Occurring Surnames from Census 1990--Names Files* web page. Those data have been converted to `list` named "`CensusNames1990`" containing three `data.frame`s (named `"surnames"`, `"malenames"`, and `"femalenames"`) and saved as an `.RData` file named `CensusNames.RData`. The data file (approximately 615 kb) can be manually downloaded from [Github](https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData)^[See: [https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData](https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData)] and loaded to your workspace; however, provided an internet session is active during your R session, the function will automatically download the dataset for you if it is not found in your workspace or working directory.
+This function samples from a provided dataset of names. By default, it uses the data from the *Genealogy Data: Frequently Occurring Surnames from Census 1990--Names Files* web page. Those data have been converted to `list` named "`CensusNames1990`" containing three `data.frame`s (named `"surnames"`, `"malenames"`, and `"femalenames"`) and saved as an `.RData` file named `CensusNames.RData`. The data file (approximately 615 kb) can be manually downloaded from [Github](https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData)^[See: [https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData](https://github.com/mrdwab/2657-R-Functions/blob/master/data/CensusNames.RData)] and loaded to your workspace. The function will perform some basic checking to see if either the `CensusNames.RData` file or the `CensusNames1990` objects are available in your workspace or working directory. If neither is found and an internet connection is active during your R session, the function will offer you the option to automatically download the dataset and add it to your *current* session.
 
 Alternatively, you may provide your own data in a `list` formatted according to the following specifications (see the "`myCustomNames`" data in the "*Examples*" section). *Please remember that R is case sensitive!*
 
@@ -86,10 +86,5 @@ RandomNames(N = 15, dataset = myCustomNames)
 
 * Inspired by the online Random Name Generator ([http://random-name-generator.info/](http://random-name-generator.info/)). 
 * Uses data from the 1990 US Census ([http://www.census.gov/genealogy/www/data/1990surnames/names_files.html](http://www.census.gov/genealogy/www/data/1990surnames/names_files.html))
-
-## To Do
-
-* Make function look for the `CensusNames.RData` file in the current working directory before downloading it.
-* Rewrite the function to use `exists()` instead.
 
 \cleardoublepage
