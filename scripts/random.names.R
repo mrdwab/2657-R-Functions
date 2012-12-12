@@ -18,15 +18,26 @@ RandomNames <- function(N = 100, cat = NULL, gender = NULL,
   #   - http://random-name-generator.info/
   
   if (is.null(dataset)) {
-    if (isTRUE("CensusNames1990" %in% ls(envir=.GlobalEnv) == FALSE)) {
-      require(RCurl)
-      baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
-      temp = getBinaryURL(paste0(baseURL, "data/CensusNames.RData"))
-      load(rawConnection(temp), envir=.GlobalEnv)
-      message("CensusNames1990 data downloaded from \n",
-              paste0(baseURL, "data/CensusNames.RData"), 
-              " and added to your workspace\n\n")
-      rm(temp, baseURL)
+    if (!exists("CensusNames1990", where = 1)) {
+      if (isTRUE(list.files(
+        pattern = "^CensusNames.RData$") == "CensusNames.RData")) {
+        load("CensusNames.RData")
+      } else {
+        ans = readline("
+'CensusNames.RData' dataset not found in working directory.
+'CensusNames1990' object not found in workspace. \n
+Load the dataset now? (y/n) -- ")
+        if (ans != "y")
+          return(invisible())
+        require(RCurl)
+        baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+        temp = getBinaryURL(paste0(baseURL, "data/CensusNames.RData"))
+        load(rawConnection(temp), envir=.GlobalEnv)
+        message("CensusNames1990 data downloaded from \n",
+                paste0(baseURL, "data/CensusNames.RData \n"), 
+                "and added to your workspace\n\n")
+        rm(temp, baseURL)
+      }
     }
     dataset <- CensusNames1990
   }
@@ -72,8 +83,8 @@ RandomNames <- function(N = 100, cat = NULL, gender = NULL,
     firstnames <- sample(malenames, N, replace = TRUE)
   }
   
-  Surname <- sample(surnames, N, replace = TRUE)
+  Surnames <- sample(surnames, N, replace = TRUE)
   temp <- setNames(data.frame(do.call(rbind, strsplit(firstnames, "-"))),
                    c("Gender", "FirstName"))
-  cbind(temp, Surname)
+  cbind(temp, Surnames)
 }
