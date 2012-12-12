@@ -1,4 +1,11 @@
 
+```{r echo=FALSE, eval=FALSE}
+# This document depends on `CensusName.RData` being in the
+#   same folder from which the "knitting" is being done.
+```
+
+
+
 ```{r set-options, echo=FALSE, cache=FALSE}
 options(width=80)
 opts_chunk$set(comment = "##", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
