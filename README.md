@@ -16,6 +16,10 @@ Functions include:
 1. `multi.freq.table.R`
 
     >> Takes columns from a `data.frame` containing Boolean multiple-response data and tabulates the output.
+    
+1. `RandomNames.R`
+
+    >> Uses data from the [*Genealogy Data: Frequently Occurring Surnames from Census 1990--Names Files* web page](http://www.census.gov/genealogy/www/data/1990surnames/names_files.html) to generate a `data.frame` with random names.
 
 1. `row.extractor.R`
 
@@ -24,6 +28,10 @@ Functions include:
 1. `sample.size.R`
 
     >> Use to determine the desired sample size of a given population, or the confidence interval for a given population and sample. 
+    
+1. `stringseed.sampling.R`
+
+    >> The `stringseed.sampling()` function is designed as a batch sampling function that allows the user to specify any alphanumeric input as the seed per sample in the batch.
 
 ## Extras
 
@@ -46,3 +54,24 @@ Snippets include:
 1. `mv`
 
     >> Renames objects in the workspace in one step, instead of having to copy the object and remove the original object.
+    
+1. `tidyHTML`
+
+    >> Reformats a web page using HTML Tidy (the online service) and uses the XML package to parse the resulting file. Can optionally save the reformatted page.
+
+1. `round2`
+
+    >> Rounds numbers according to the rule you might have learned in school, not according to "round to even" (which is less biased and is used by R).
+    
+1. `CBIND`
+
+    >> Binds (by columns) `data.frame`s with differing number of rows, filling the extra rows with `NA` values. 
+    
+1. `randomNamesOnline`
+
+    >> Like the `RandomNames()` function, but uses an online service ([http://random-name-generator.info/](http://random-name-generator.info/)) to generate the names.
+    
+1. `stringseed.basic`
+
+    >> Like the `stringseed.sampling()` function, but uses a much more basic approach to generating the seed. Also known as `TDASample.R`.
+    
