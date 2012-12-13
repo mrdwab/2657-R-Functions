@@ -4,10 +4,12 @@
 
 \textsc{\huge 2657 R Functions}\\[1.25cm]
 
-% Author and supervisor
 \large
 \emph{Maintained by}\\
 Ananda Mahto
+
+\emph{Last updated}\\
+\today
 
 \vfill
 \textsc{\Large 2657 Productions}\\
@@ -30,38 +32,49 @@ Ananda Mahto
 
 \newpage
 
-The scripts and documentation within this collection \copyright\ 2012 by Ananda Mahto under a "Creative Commons *Attribution-ShareAlike* license" [See: \url{http://creativecommons.org/licenses/by-sa/3.0/}].
+\small
 
-Partial script contributions by:
+The scripts and documentation within this collection \copyright\ 2012--\the\year\ by Ananda Mahto under a "Creative Commons *Attribution-ShareAlike* license". See \url{http://creativecommons.org/licenses/by-sa/3.0/}.
 
-* Ben Bolker \url{http://www.math.mcmaster.ca/~bolker}, \url{http://stackoverflow.com/users/190277/ben-bolker}: `stringseed.sampling`
-* cbeleites \url{http://stackoverflow.com/users/755257/cbeleites}: `which.quantile` funtion in `row.extractor`
-* Justin \url{http://stackoverflow.com/users/906490/justin}: `multi.freq.table`
+\vspace{.5 cm}
 
-Relevant questions or answers on Stack Overflow:
+\scriptsize
+\begin{sloppypar}
+\flushleft
+\begin{itemize} \itemsep1pt \parskip0pt \parsep0pt
+    \item Partial script contributions by:
+    \begin{itemize}
+        \item Ben Bolker \url{http://www.math.mcmaster.ca/~bolker}, \url{http://stackoverflow.com/users/190277/ben-bolker}: \verb=stringseed.sampling=
+        \item cbeleites \url{http://stackoverflow.com/users/755257/cbeleites}: \verb=which.quantile= funtion in \verb=row.extractor=
+        \item Justin \url{http://stackoverflow.com/users/906490/justin}: \verb=multi.freq.table=
+    \end{itemize}
 
-* `concat.split`: \url{http://stackoverflow.com/q/10100887/1270695}
-* `multi.freq.table`: \url{http://stackoverflow.com/q/11348391/1270695}; \url{http://stackoverflow.com/a/11623623/1270695}
-* `row.extractor`: \url{http://stackoverflow.com/q/10256503/1270695}
-* `stringseed.sampling`: \url{http://stackoverflow.com/q/10910698/1270695}
+    \item Relevant questions or answers on Stack Overflow:
+    \begin{itemize}
+        \item \verb=concat.split=: \url{http://stackoverflow.com/q/10100887/1270695}
+        \item \verb=multi.freq.table=: \url{http://stackoverflow.com/q/11348391/1270695}; \url{http://stackoverflow.com/a/11623623/1270695}
+        \item \verb=row.extractor=: \url{http://stackoverflow.com/q/10256503/1270695}
+        \item \verb=stringseed.sampling=: \url{http://stackoverflow.com/q/10910698/1270695}
+    \end{itemize}
 
-"Borrowed" functions:
-
-* `LinearizeNestedList` function (loaded automatically when the `CBIND` function is run) by Akhil S Bhel: \url{https://sites.google.com/site/akhilsbehl/geekspace/articles/r/linearize_nested_lists_in_r}
-* `mv` function by Rolf Turner: (\url{https://stat.ethz.ch/pipermail/r-help/2008-March/156035.html})
-* `round2` function by an anonymous commenter at the *Statistically Significant* blog (see: \url{http://www.webcitation.org/68djeLBtJ}). See also: \url{http://stackoverflow.com/q/12688717/1270695}
-
-
+    \item ``Borrowed'' functions:
+    \begin{itemize}
+        \item \verb=LinearizeNestedList= function (loaded automatically when the \verb=CBIND= function is run) by Akhil S Bhel: \url{https://sites.google.com/site/akhilsbehl/geekspace/articles/r/linearize_nested_lists_in_r}
+        \item \verb=mv= function by Rolf Turner: (\url{https://stat.ethz.ch/pipermail/r-help/2008-March/156035.html})
+        \item \verb=round2= function by an anonymous commenter at the \emph{Statistically Significant} blog (see: \url{http://www.webcitation.org/68djeLBtJ}). See also: \url{http://stackoverflow.com/q/12688717/1270695}
+    \end{itemize}
+\end{itemize}
+\end{sloppypar}
 
 \vfill
-\begin{flushleft} \large
+\begin{flushright} \large
 \textsc{\normalsize Ananda Mahto}\\
 \textup{\scriptsize \url{http://news.mrdwab.com}}\\
 \textup{\scriptsize \url{http://stackoverflow.com/users/1270695/ananda-mahto}}\\
 \textup{\scriptsize \url{https://github.com/mrdwab}}\\
 \textup{\scriptsize E-mail: ananda@mahto.info}\\
-\end{flushleft}
-
+\end{flushright}
+\normalsize
 
 \newpage
 
