@@ -160,7 +160,14 @@ randomNamesOnline(10, gender = "both", type = "common")
 randomNamesOnline(10, "male", "average")
 ```
 
+## Use strings to set seed when generating a random sample
 
+The `stringseed.basic()` function is a more simplified (but less robust) seed generator and random sampling function, similar to the `stringseed.sampling()` function. Unlike `stringseed.sampling()`, this function does not require loading any extra packages for generating the seed, but uses basic methods such as letter substitutions and basic numeric transformations to create some "noise" before assigning a seed.
+
+The function was originally written for students at the Tata-Dhan Academy (and named `TDASample()`)to help them draw samples during their fieldwork. See the Appendix for a more detailed concept note on how the function works and how it was expected to be used.
+
+```{r stringseedbasic}
+```
 
 
 \newpage
