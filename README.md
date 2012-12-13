@@ -1,7 +1,17 @@
 2657-R-Functions
 ================
 
-Selected functions I've written for use with R.
+Selected functions I've written for use with R. Full documentation available in the "`docs`" folder (or as a [PDF](https://github.com/mrdwab/2657-R-Functions/blob/master/docs/2657-Functions.pdf?raw=true)). 
+
+All functions can be downloaded from the "`scripts`" folder.
+
+Alternatively, if you have the "RCurl" package installed, you can use:
+
+    library(RCurl)
+    baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+    source(textConnection(getURL(paste0(baseURL, "scripts/---script-name---.R"))))
+    
+All scripts mentioned in the `snippets` section are found in a single `snippets.R` script.
 
 Functions include:
     
