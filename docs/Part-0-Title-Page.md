@@ -46,12 +46,13 @@ The scripts and documentation within this collection \copyright\ 2012--\the\year
     \begin{itemize}
         \item Ben Bolker \url{http://www.math.mcmaster.ca/~bolker}, \url{http://stackoverflow.com/users/190277/ben-bolker}: \verb=stringseed.sampling=
         \item cbeleites \url{http://stackoverflow.com/users/755257/cbeleites}: \verb=which.quantile= funtion in \verb=row.extractor=
+        \item David Winsemius \url{http://stackoverflow.com/users/1855677/dwin}: \verb=concat.split=
         \item Justin \url{http://stackoverflow.com/users/906490/justin}: \verb=multi.freq.table=
     \end{itemize}
 
     \item Relevant questions or answers on Stack Overflow:
     \begin{itemize}
-        \item \verb=concat.split=: \url{http://stackoverflow.com/q/10100887/1270695}
+        \item \verb=concat.split=: \url{http://stackoverflow.com/q/10100887/1270695}; \url{http://stackoverflow.com/a/13912721/1270695}
         \item \verb=multi.freq.table=: \url{http://stackoverflow.com/q/11348391/1270695}; \url{http://stackoverflow.com/a/11623623/1270695}
         \item \verb=row.extractor=: \url{http://stackoverflow.com/q/10256503/1270695}
         \item \verb=stringseed.sampling=: \url{http://stackoverflow.com/q/10910698/1270695}
