@@ -8,12 +8,21 @@ The `concat.split` function takes a column with multiple values, splits the valu
 
 ## Arguments
 
+mode = NULL, drop.col = FALSE, fixed = FALSE)
+
 * `data`: the source `data.frame`.
 * `split.col`: the variable that needs to be split; can be specified either by the column number or the variable name.
-* `to.list`: logical; should the split column be returned as a single variable list (named "original-variable_list") or multiple new variables? If `to.list` is `TRUE`, the `mode` argument is ignored and a list of the original values are returned.
-* `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`, like Boolean, but without assuming `0` when data is not available).
-* `sep`: the character separating each value (defaults to `","`).
+* `sep`: the character separating each value (defaults to `","`). 
+
+    > ***Note***: *If using `structure = "compact"`, the value for `sep` can only be a single character. See the "Advanced Usage" example of how to specify multiple characters for batch conversion of columns.*
+
+* `structure`: Can be either `"compact"`, `"expanded"`, or `"list"`. Defaults to `"compact"`.
+    * `"compact"` creates as many columns as the maximum *length* of the resulting split. This is the most useful general-case application of this function.
+    * When the input is numeric, `"expanded"` creates as many columns as the maximum *value* of the input data. This is most useful when converting to `mode = "binary"`.
+    * `"list"` creates a single new column that is structurally a `list` within a `data.frame`.
+* `mode`: can be either `binary` or `value` (where `binary` is default and it recodes values to `1` or `NA`, like Boolean data, but without assuming `0` when data is not available). This setting only applies when `structure = "expanded"`; an warning message will be issued if used with other structures.
 * `drop.col`: logical (whether to remove the original variable from the output or not; defaults to `TRUE`).
+* `fixed`: Is the input for the `sep` value *fixed*, or a *regular expression*? When `structure = "expanded"` or `structure = "list"`, it is possible to supply a a regular expression containing the characters to split on. For example, to split on `","`, `";"`, or `"|"`, you can set `sep = ",|;|\\|"` or `sep = "[,;|]"`, and `fixed = FALSE` to split on *any* of those characters. 
 
 ## Examples
 
@@ -66,61 +75,96 @@ head(concat.split(concat.test, 2))
 
 ```
 ##     Name     Likes                   Siblings    Hates Likes_1 Likes_2 Likes_3
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;       1       1      NA
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA
-## 3   Dana 1,2,4,5,6                     Pierce       2;       1       1      NA
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;       1       1      NA
-## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;       1       1      NA
-## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;       1       1      NA
-##   Likes_4 Likes_5 Likes_6
-## 1       1       1       1
-## 2       1       1       1
-## 3       1       1       1
-## 4       1       1       1
-## 5      NA       1       1
-## 6      NA       1       1
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega     2;4;       1       2       4
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery 1;2;3;4;       1       2       4
+## 3   Dana 1,2,4,5,6                     Pierce       2;       1       2       4
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard     1;4;       1       2       4
+## 5 Ramona   1,2,5,6           Snyder , Joann ,   1;2;3;       1       2       5
+## 6 Kelley   1,2,5,6          James , Roxanne ,     1;4;       1       2       5
+##   Likes_4 Likes_5
+## 1       5       6
+## 2       5       6
+## 3       5       6
+## 4       5       6
+## 5       6      NA
+## 6       6      NA
 ```
 
 ```r
 # ... or by name, and drop the offensive first column
-head(concat.split(concat.test, "Likes", drop.col=TRUE))
+head(concat.split(concat.test, "Likes", drop.col = TRUE))
 ```
 
 ```
 ##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
-## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       1      NA       1
-## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       1      NA       1
-## 3   Dana                     Pierce       2;       1       1      NA       1
-## 4 Carole Colon , Michelle , Ballard     1;4;       1       1      NA       1
-## 5 Ramona           Snyder , Joann ,   1;2;3;       1       1      NA      NA
-## 6 Kelley          James , Roxanne ,     1;4;       1       1      NA      NA
-##   Likes_5 Likes_6
-## 1       1       1
-## 2       1       1
-## 3       1       1
-## 4       1       1
-## 5       1       1
-## 6       1       1
+## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       2       4       5
+## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       2       4       5
+## 3   Dana                     Pierce       2;       1       2       4       5
+## 4 Carole Colon , Michelle , Ballard     1;4;       1       2       4       5
+## 5 Ramona           Snyder , Joann ,   1;2;3;       1       2       5       6
+## 6 Kelley          James , Roxanne ,     1;4;       1       2       5       6
+##   Likes_5
+## 1       6
+## 2       6
+## 3       6
+## 4       6
+## 5      NA
+## 6      NA
 ```
 
 ```r
 # The "Hates" column uses a different separator:
-head(concat.split(concat.test, "Hates", sep=";", drop.col=TRUE))
+head(concat.split(concat.test, "Hates", sep = ";", drop.col = TRUE))
 ```
 
 ```
 ##     Name     Likes                   Siblings Hates_1 Hates_2 Hates_3 Hates_4
-## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega      NA       1      NA       1
-## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       1       1       1
-## 3   Dana 1,2,4,5,6                     Pierce      NA       1      NA      NA
-## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1      NA      NA       1
-## 5 Ramona   1,2,5,6           Snyder , Joann ,       1       1       1      NA
-## 6 Kelley   1,2,5,6          James , Roxanne ,       1      NA      NA       1
+## 1   Boyd 1,2,4,5,6 Reynolds , Albert , Ortega       2       4      NA      NA
+## 2  Rufus 1,2,4,5,6  Cohen , Bert , Montgomery       1       2       3       4
+## 3   Dana 1,2,4,5,6                     Pierce       2      NA      NA      NA
+## 4 Carole 1,2,4,5,6 Colon , Michelle , Ballard       1       4      NA      NA
+## 5 Ramona   1,2,5,6           Snyder , Joann ,       1       2       3      NA
+## 6 Kelley   1,2,5,6          James , Roxanne ,       1       4      NA      NA
+##   Hates_5
+## 1      NA
+## 2      NA
+## 3      NA
+## 4      NA
+## 5      NA
+## 6      NA
 ```
 
 ```r
-# Retain the original values
-head(concat.split(concat.test, 2, mode="value", drop.col=TRUE))
+# You'll get a warning here, when trying to retain the original values
+head(concat.split(concat.test, 2, mode = "value", drop.col = TRUE))
+```
+
+```
+## Warning: 'mode' supplied but ignored.  'mode' setting only applicable when
+## structure='expanded'.
+```
+
+```
+##     Name                   Siblings    Hates Likes_1 Likes_2 Likes_3 Likes_4
+## 1   Boyd Reynolds , Albert , Ortega     2;4;       1       2       4       5
+## 2  Rufus  Cohen , Bert , Montgomery 1;2;3;4;       1       2       4       5
+## 3   Dana                     Pierce       2;       1       2       4       5
+## 4 Carole Colon , Michelle , Ballard     1;4;       1       2       4       5
+## 5 Ramona           Snyder , Joann ,   1;2;3;       1       2       5       6
+## 6 Kelley          James , Roxanne ,     1;4;       1       2       5       6
+##   Likes_5
+## 1       6
+## 2       6
+## 3       6
+## 4       6
+## 5      NA
+## 6      NA
+```
+
+```r
+# Try again. Notice the differing number of resulting columns
+head(concat.split(concat.test, 2, structure = "expanded", 
+                  mode = "value", drop.col = TRUE))
 ```
 
 ```
@@ -142,22 +186,22 @@ head(concat.split(concat.test, 2, mode="value", drop.col=TRUE))
 
 ```r
 # Let's try splitting some strings... Same syntax
-head(concat.split(concat.test, 3, drop.col=TRUE))
+head(concat.split(concat.test, 3, drop.col = TRUE))
 ```
 
 ```
-##     Name     Likes    Hates Siblings_1 Siblings_2 Siblings_3
-## 1   Boyd 1,2,4,5,6     2;4;   Reynolds     Albert     Ortega
-## 2  Rufus 1,2,4,5,6 1;2;3;4;      Cohen       Bert Montgomery
-## 3   Dana 1,2,4,5,6       2;     Pierce       <NA>       <NA>
-## 4 Carole 1,2,4,5,6     1;4;      Colon   Michelle    Ballard
-## 5 Ramona   1,2,5,6   1;2;3;     Snyder      Joann       <NA>
-## 6 Kelley   1,2,5,6     1;4;      James    Roxanne       <NA>
+##     Name     Likes    Hates Siblings_1 Siblings_2  Siblings_3
+## 1   Boyd 1,2,4,5,6     2;4;  Reynolds     Albert       Ortega
+## 2  Rufus 1,2,4,5,6 1;2;3;4;     Cohen       Bert   Montgomery
+## 3   Dana 1,2,4,5,6       2;     Pierce                       
+## 4 Carole 1,2,4,5,6     1;4;     Colon   Michelle      Ballard
+## 5 Ramona   1,2,5,6   1;2;3;    Snyder      Joann             
+## 6 Kelley   1,2,5,6     1;4;     James    Roxanne
 ```
 
 ```r
 # Split up the "Likes column" into a list variable; retain original column
-head(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE))
+head(concat.split(concat.test, 2, structure = "list", drop.col=FALSE))
 ```
 
 ```
@@ -174,7 +218,8 @@ head(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE))
 # View the structure of the output for the first 10 rows to verify 
 # that the new column is a list; note the difference between "Likes"
 # and "Likes_list".
-str(concat.split(concat.test, 2, to.list=TRUE, drop.col=FALSE)[1:10, c(2, 5)])
+str(concat.split(concat.test, 2, structure = "list", 
+                 drop.col=FALSE)[1:10, c(2, 5)])
 ```
 
 ```
@@ -200,31 +245,73 @@ It is also possible to use `concat.split` to split multiple columns at once. Thi
 
 
 ```r
-do.call(cbind, c(concat.test[1],
-                 lapply(lapply(2:ncol(concat.test),
-                               function(x) concat.test[x]),
-                        concat.split, split.col=1, drop=TRUE, sep=";|,")))
+do.call(cbind, 
+        c(concat.test[1], 
+          lapply(1:(ncol(concat.test)-1), 
+                 function(x) {
+                   splitchars = c(",", ",", ";")
+                   concat.split(concat.test[-1][x], 1,
+                                splitchars[x],
+                                drop.col=TRUE)
+                 })))
 ```
 
 
-In the example above (working from the inside of the function outwards):
+In the example above:
 
-* First, `lapply(2:ncol(concat.test), ...)` splits the columns of the `data.frame` into a list. 
-* Second, `lapply(lapply(...))` does the splitting work.
-    * Note the use of `sep=";|,"` to match multiple separators on which to split; if further separators are required, they can be specified by using the pipe symbol (`|`) *with no leading or trailing spaces*.
-* Finally, `do.call(cbind, ...)` is evaluated last, "binding" the data together by columns. In this case, the data being bound together is the first column from the `concat.test` dataset, and the splitted output of the remaining columns. 
-
-Alternatively, a similar approach can be taken using the function `dfcols.list` (see the "Snippets and Tips" section of this manual for the `dfcols.list` function).
-
-
-
+* The `lapply()` function is applied to each column in the `data.frame` except the first one.
+* Before applying the `concat.split` function, we enter a vector of the characters on which we should split, in the same order as the columns. Here, the first two columns are separated by commas, and the third is separated by a semicolon.
+* The `concat.split` function arguments can then be included as you would if splitting a single column.
+* We use `do.call(cbind, ...)` to "bind" the data together by columns. Since we had dropped the first column for the `lapply` step, we add that back in at this stage.
 
 
 ```r
+# Show just the first few lines, compact structure
+# Note that the split characters must be specified
+#   in the same order that lapply will encounter them
+head(do.call(cbind, 
+        c(concat.test[1], 
+          lapply(1:(ncol(concat.test)-1), 
+                 function(x) {
+                   splitchars = c(",", ",", ";")
+                   concat.split(concat.test[-1][x], 1,
+                                splitchars[x],
+                                drop.col=TRUE)
+                 }))))
+```
+
+```
+##     Name Likes_1 Likes_2 Likes_3 Likes_4 Likes_5 Siblings_1 Siblings_2
+## 1   Boyd       1       2       4       5       6  Reynolds     Albert 
+## 2  Rufus       1       2       4       5       6     Cohen       Bert 
+## 3   Dana       1       2       4       5       6     Pierce           
+## 4 Carole       1       2       4       5       6     Colon   Michelle 
+## 5 Ramona       1       2       5       6      NA    Snyder      Joann 
+## 6 Kelley       1       2       5       6      NA     James    Roxanne 
+##    Siblings_3 Hates_1 Hates_2 Hates_3 Hates_4 Hates_5
+## 1      Ortega       2       4      NA      NA      NA
+## 2  Montgomery       1       2       3       4      NA
+## 3                   2      NA      NA      NA      NA
+## 4     Ballard       1       4      NA      NA      NA
+## 5                   1       2       3      NA      NA
+## 6                   1       4      NA      NA      NA
+```
+
+```r
+
 # Show just the first few lines, Boolean mode
-head(do.call(cbind, c(concat.test[1],
-                      lapply(dfcols.list(concat.test[-1]),
-                             concat.split, split.col=1, drop=TRUE, sep=";|,"))))
+# Note the use of a regular expression for sep
+#   and the setting of fixed to FALSE
+head(do.call(cbind, 
+        c(concat.test[1], 
+          lapply(1:(ncol(concat.test)-1), 
+                 function(x) {
+                   concat.split(concat.test[-1][x], 1,
+                                sep = "[,;]",
+                                structure = "expanded",
+                                fixed = FALSE,
+                                drop.col=TRUE)
+                 }))))
 ```
 
 ```
@@ -245,11 +332,20 @@ head(do.call(cbind, c(concat.test[1],
 ```
 
 ```r
+
+
 # Show just the first few lines, value mode
-head(do.call(cbind, c(concat.test[1],
-                      lapply(dfcols.list(concat.test[-1]),
-                             concat.split, split.col=1, drop=TRUE, 
-                             sep=";|,", mode="value"))))
+head(do.call(cbind, 
+        c(concat.test[1], 
+          lapply(1:(ncol(concat.test)-1), 
+                 function(x) {
+                   concat.split(concat.test[-1][x], 1,
+                                sep = "[,;]",
+                                structure = "expanded",
+                                mode = "value",
+                                fixed = FALSE,
+                                drop.col=TRUE)
+                 }))))
 ```
 
 ```
@@ -270,11 +366,18 @@ head(do.call(cbind, c(concat.test[1],
 ```
 
 ```r
+
 # Show just the first few lines, list output mode
-head(do.call(cbind, c(concat.test[1],
-                      lapply(dfcols.list(concat.test[-1]),
-                             concat.split, split.col=1, drop=TRUE, 
-                             sep=";|,", to.list=TRUE))))
+head(do.call(cbind, 
+        c(concat.test[1], 
+          lapply(1:(ncol(concat.test)-1), 
+                 function(x) {
+                   concat.split(concat.test[-1][x], 1,
+                                sep = "[,;]",
+                                structure = "list",
+                                fixed = FALSE,
+                                drop.col=TRUE)
+                 }))))
 ```
 
 ```
@@ -290,6 +393,7 @@ head(do.call(cbind, c(concat.test[1],
 
 ## References
 
-See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10100887/1270695)
+See: [http://stackoverflow.com/q/10100887/1270695](http://stackoverflow.com/q/10100887/1270695)    
+The `"condensed"` setting was inspired by an answer from David Winsemius (@DWin) to a question at Stack Overflow. See: [http://stackoverflow.com/a/13924245/1270695](http://stackoverflow.com/a/13924245/1270695) 
 
 \cleardoublepage
