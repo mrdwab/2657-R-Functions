@@ -20,7 +20,7 @@ sample(50, 10)
 ```
 
 ```
-##  [1]  9 46 20 17 49  2 26 41 16 35
+##  [1] 33  2 42 26 39 24 25 22 45 38
 ```
 
 ```r
@@ -28,7 +28,7 @@ sample(50, 10)
 ```
 
 ```
-##  [1] 15  7 11 28  4 14 40 43 17  8
+##  [1] 13 41 34 24 48  2 29  9 45 40
 ```
 
 ```r
@@ -188,7 +188,7 @@ list.files(pattern="Sample from")
 ```
 
 ```
-## [1] "Sample from 2012-12-13 .txt"
+## [1] "Sample from 2012-12-15 .txt"
 ```
 
 ```r
@@ -198,7 +198,7 @@ noquote(readLines(list.files(pattern="Sample from")[1]))
 ```
 ##  [1]                                                                                 
 ##  [2]                                                                                 
-##  [3]             The sample was drawn on: 2012-12-13 15:36:59.                       
+##  [3]             The sample was drawn on: 2012-12-15 17:15:43.                       
 ##  [4]                  The seed input was: 'A Umarani, JAN Vijayabharathi'            
 ##  [5]  The total number of households was: 120.                                       
 ##  [6]   The desired number of samples was: 30.                                        
@@ -268,7 +268,7 @@ myListOfPlaces
 ```
 
 
-To batch generate the samples, you can use `lapply()`, specifying the column numbers to be used for each argument. For instance, `inString` is represented by the first column (`x[1]`), `N` by the second (`x[2]`), and `n` by the third (`x[3]`).
+To batch generate the samples, you can use `apply()`, specifying the column numbers to be used for each argument. For instance, `inString` is represented by the first column (`x[1]`), `N` by the second (`x[2]`), and `n` by the third (`x[3]`).
 
 
 ```r

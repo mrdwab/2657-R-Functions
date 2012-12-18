@@ -105,7 +105,7 @@ myListOfPlaces <- data.frame(
 myListOfPlaces
 ```
 
-To batch generate the samples, you can use `lapply()`, specifying the column numbers to be used for each argument. For instance, `inString` is represented by the first column (`x[1]`), `N` by the second (`x[2]`), and `n` by the third (`x[3]`).
+To batch generate the samples, you can use `apply()`, specifying the column numbers to be used for each argument. For instance, `inString` is represented by the first column (`x[1]`), `N` by the second (`x[2]`), and `n` by the third (`x[3]`).
 
 ```{r tidy=FALSE}
 setNames(apply(myListOfPlaces, 1, function(x) 
