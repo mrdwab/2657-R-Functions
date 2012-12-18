@@ -16,11 +16,11 @@ read_chunk("../scripts/snippets.R")
 
 # Where to Get the Functions
 
-The most current source code for the functions described in this document follow.
+The most current source code for the functions described in this document follow. It is recommended that you *do not* copy-and-paste the functions from this document since there may be errors resulting from poorly parsed quotation marks and so on; instead, load the functions directly from the 2657 R Functions page at github.
 
 To load the functions, you can directly source them from the 2657 R Functions page at github: [https://github.com/mrdwab/2657-R-Functions](https://github.com/mrdwab/2657-R-Functions)
 
-You should be able to load the functions using the following (replace `-----------` with the function name^[The "snippets" in Part III of this document can all be loaded from the script `snippets.R`.]):
+You should be able to load the functions using the following (replace `-----------` with the function name^[The "snippets" in Part III of this document can all be loaded from a single script, `snippets.R`.]):
 
 ```{r rcurl_load_scripts, eval=FALSE}
 require(RCurl)
