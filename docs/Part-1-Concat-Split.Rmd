@@ -12,8 +12,6 @@ The `concat.split` function takes a column with multiple values, splits the valu
 
 ## Arguments
 
-mode = NULL, drop.col = FALSE, fixed = FALSE)
-
 * `data`: the source `data.frame`.
 * `split.col`: the variable that needs to be split; can be specified either by the column number or the variable name.
 * `sep`: the character separating each value (defaults to `","`). 
