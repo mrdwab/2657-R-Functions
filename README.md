@@ -37,7 +37,11 @@ Functions include:
 
 1. `sample.size.R`
 
-    >> Use to determine the desired sample size of a given population, or the confidence interval for a given population and sample. 
+    >> Used to determine the desired sample size of a given population, or the confidence interval for a given population and sample. 
+    
+1. `stratified.R`
+
+    >> Used to sample from a `data.frame` according to a grouping (or *stratification*) variable.
     
 1. `stringseed.sampling.R`
 
