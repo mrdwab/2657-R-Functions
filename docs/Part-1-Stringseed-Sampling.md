@@ -6,7 +6,7 @@
 
 The `stringseed.sampling` function is designed as a batch sampling function that allows the user to specify any alphanumeric input as the seed *per sample in the batch*.
 
-## The Arguments
+## Arguments
 
 * `seedbase`: A vector of seeds to be used for sampling.
 * `N`: The "population" from which to draw the sample.

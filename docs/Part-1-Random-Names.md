@@ -11,7 +11,7 @@
 
 The `RandomNames()` function uses data from the *Genealogy Data: Frequently Occurring Surnames from Census 1990--Names Files* web page^[See [http://www.census.gov/genealogy/www/data/1990surnames/names_files.html](http://www.census.gov/genealogy/www/data/1990surnames/names_files.html)] to generate a `data.frame` with random names.
 
-## The Arguments
+## Arguments
 
 * `N`: The number of random names you want. Defaults to 100.
 * `cat`: Do you want `"common"` names, `"rare"` names, names with an `"average"` frequency, or some combination of these? Should be specified as a character vector (for example, `c("rare", "common")`). Defaults to `NULL`, in which case all names are used as the sample frame.
@@ -43,27 +43,27 @@ RandomNames(N = 20)
 ```
 
 ```
-##    Gender FirstName   Surnames
-## 1       M       Jon    Cranmer
-## 2       M     Jamal Handelsman
-## 3       F  Lashawna      Kolbe
-## 4       M    Cletus    Custeau
-## 5       F    Lenora      Abbot
-## 6       F   Maryann     Mossor
-## 7       M Guillermo    Baillio
-## 8       M   Zackary  Hovsepian
-## 9       M   Horacio     Lagoni
-## 10      M     Donny Lamantagne
-## 11      M      Seth        Abe
-## 12      M      Carl     Sandos
-## 13      F    Adelle   Letendre
-## 14      M Francesco   Piccione
-## 15      M    Lyndon     Rippin
-## 16      M    Barney      Detro
-## 17      M   Agustin      Mudie
-## 18      M    Jayson     Resler
-## 19      M    Jarred      Savio
-## 20      M    Norris    Aadland
+##    Gender FirstName    Surnames
+## 1       F    Dalila     Cordrey
+## 2       M    Raymon       Selic
+## 3       M    Wilber        Rife
+## 4       M  Federico      Helena
+## 5       M       Rey Vanderroest
+## 6       M   Maynard    Madhavan
+## 7       M   Agustin       Queja
+## 8       M   Gregory    Woollard
+## 9       F    Kazuko      Feasel
+## 10      M     Gavin      Musolf
+## 11      M      Huey   Dominique
+## 12      M   Tristan    Anzualda
+## 13      M      Neil    Gasbarro
+## 14      F   Lashawn      Deland
+## 15      M   Jamison      Brucki
+## 16      F    Sharyl     Martinz
+## 17      F   Eugenie      Sifers
+## 18      M     Galen     Fabozzi
+## 19      F   Suzette    Camareno
+## 20      M    Harlan Suellentrop
 ```
 
 ```r
@@ -115,17 +115,17 @@ RandomNames(N = 10, cat = c("common", "rare"))
 ```
 
 ```
-##    Gender FirstName  Surnames
-## 1       F    Vashti Deschenes
-## 2       F    Phoebe   Kampner
-## 3       M   Freddie    Banker
-## 4       F    Audrie    Walper
-## 5       F   Dolores  Jandreau
-## 6       F       Liz   Pavlick
-## 7       M     Chong  Patellis
-## 8       M    Emmitt   Lenahan
-## 9       F   Lekisha    Heyman
-## 10      M     Danny  Moorhead
+##    Gender FirstName    Surnames
+## 1       F     Flora        Todt
+## 2       F    Willie        Dehl
+## 3       F    Ingrid      Fetter
+## 4       F    Emilie      Gnagey
+## 5       F      Elli      Fahner
+## 6       F   Gregory     Linsley
+## 7       F    Marisa      Dewees
+## 8       F   Jeanice Bloomstrand
+## 9       F     Kyoko      Watral
+## 10      M    Rafael      Farria
 ```
 
 ```r
@@ -144,17 +144,17 @@ RandomNames(N = 10, gender = "female")
 ```
 
 ```
-##    Gender FirstName     Surnames
-## 1       F     Ninfa      Moscato
-## 2       F      Chae        Arney
-## 3       F  Annmarie         Jens
-## 4       F     Ciera      Bassani
-## 5       F   Merlene   Ferrandino
-## 6       F   Classie       Burnes
-## 7       F  Charlott      Onorati
-## 8       F      Veda   Carrithers
-## 9       F    Imelda Winterholler
-## 10      F   Majorie        Devol
+##    Gender FirstName Surnames
+## 1       F     Julie  Lenberg
+## 2       F  Trinidad Killings
+## 3       F     Terri    Alier
+## 4       F  Donnetta Golanski
+## 5       F    Cindie   Helder
+## 6       F    Shayna  Stepien
+## 7       F      Geri  Gostlin
+## 8       F     James   Missey
+## 9       F   Rosenda Scroggin
+## 10      F   Rosella  Lantrip
 ```
 
 
@@ -196,21 +196,21 @@ RandomNames(N = 15, dataset = myCustomNames)
 
 ```
 ##    Gender FirstName Surnames
-## 1       M         a        X
-## 2       M         j        O
-## 3       M         i        E
-## 4       F         q        W
-## 5       M         j        D
-## 6       M         g        Z
-## 7       F         z        K
-## 8       F         r        W
-## 9       F         k        J
-## 10      F         p        V
-## 11      M         a        Q
-## 12      F         q        A
-## 13      M         d        M
-## 14      F         m        H
-## 15      F         w        B
+## 1       M         f        J
+## 2       M         d        U
+## 3       F         s        K
+## 4       F         w        L
+## 5       M         h        Y
+## 6       F         x        C
+## 7       M         i        B
+## 8       M         b        L
+## 9       M         c        J
+## 10      M         a        J
+## 11      M         c        E
+## 12      F         m        J
+## 13      M         h        N
+## 14      F         r        H
+## 15      M         c        M
 ```
 
 

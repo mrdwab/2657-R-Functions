@@ -16,7 +16,7 @@ read_chunk("../scripts/random.names.R")
 
 The `RandomNames()` function uses data from the *Genealogy Data: Frequently Occurring Surnames from Census 1990--Names Files* web page^[See [http://www.census.gov/genealogy/www/data/1990surnames/names_files.html](http://www.census.gov/genealogy/www/data/1990surnames/names_files.html)] to generate a `data.frame` with random names.
 
-## The Arguments
+## Arguments
 
 * `N`: The number of random names you want. Defaults to 100.
 * `cat`: Do you want `"common"` names, `"rare"` names, names with an `"average"` frequency, or some combination of these? Should be specified as a character vector (for example, `c("rare", "common")`). Defaults to `NULL`, in which case all names are used as the sample frame.
@@ -67,7 +67,7 @@ RandomNames(N = 10, gender = "female")
 
 As mentioned, it is possible to use your own list of names as the basis for generating the random names (though this is perhaps unnecessary, given the number of random names possible with the provided dataset). The following is an example of how your dataset must be structured. Note that the dataset name in the `dataset` argument is *not* quoted.
 
-```{r randomnames_example_custom}
+```{r randomnames_example_custom, cache=TRUE}
 myCustomNames <- list(
   surnames = data.frame(
     Name = LETTERS[1:26], 

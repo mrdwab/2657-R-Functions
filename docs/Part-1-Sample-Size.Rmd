@@ -9,7 +9,7 @@ read_chunk("../scripts/sample.size.R")
 
 The `sample.size` function either calculates the optimum survey sample size when provided with a population size, or the confidence interval of using a certain sample size with a given population. It can be used to generate tables (`data.frame`s) of different combinations of inputs of the following arguments, which can be useful for showing the effect of each of these in sample size calculation.
 
-## The Arguments
+## Arguments
 
 * `population`: The population size for which a sample size needs to be calculated.
 * `samp.size`: The sample size. 
