@@ -1,0 +1,74 @@
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width=80)
+opts_chunk$set(comment = "##", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
+read_chunk("../scripts/concat.split.R")
+read_chunk("../scripts/snippets.R")
+```
+
+# stratified
+
+The `stratified` function samples from a `data.frame` in which one of the columns represents an "identifier" variable and one of the columns represents a "stratification" or "grouping" variable. The result is a new `data.frame` with the specified number of samples from each group.
+
+## Arguments
+
+* `df`: The source `data.frame`.
+* `id`: Your "ID" variable.
+* `group`: Your grouping variable.
+* `size`: The desired sample size. If `size` is a decimal, a proportionate sample would be drawn. If `size` is a positive integer, it will be assumed that you want the same number of samples from each group.
+
+    > ***Note***: Because of how computers deal with floating-point arithmetic, and because R uses a "round to even" approach, the `size` per strata that results when specifying a proportionate sample may be slightly higher or lower per strata than you might have expected.
+
+* `seed`: The seed that you want to use (using `set.seed()`), if any. Defaults to `NULL`. 
+
+    > ***Note***: This is different from using `set.seed()` before using the function. This method uses the same seed before sampling from each group. 
+    
+* `...`: Further arguments to be passed to the `sample()` function.
+
+## Examples
+
+First, let's make up some data. In the dataset below, we can treat variables "A" and "D" as potential grouping variables.
+
+```{r}
+# Generate some sample data to play with
+set.seed(1)
+dat = data.frame(ID = 1:100, 
+                 A = sample(c("AA", "BB", "CC", "DD", "EE"), 100, replace=T),
+                 B = rnorm(100), C = abs(round(rnorm(100), digits=1)),
+                 D = sample(c("CA", "NY", "TX"), 100, replace=T))
+
+# What do the data look like in general?
+summary(dat)
+```
+
+Now, let's try different settings applying the `stratified` function.
+
+```{r}
+# Load the function!
+require(RCurl)
+baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+source(textConnection(getURL(paste0(baseURL, "scripts/stratified.R"))))
+
+# Let's take a 10% sample from all -A- groups, seed = 1
+stratified(dat, "ID", "A", .1, seed = 1)
+
+# Let's take 5 samples from all -D- groups, seed = 1, specified by column number
+stratified(dat, 1, 5, 5, 1)
+```
+
+## To Do
+
+* Error handling for when fixed sample size is specified but some strata have fewer observations than specified sample size.
+* Option to specify vector of required samples
+
+## References
+
+The evolution of this function can be found at the following URLs: 
+
+1. [http://news.mrdwab.com/2011/05/15/stratified-random-sampling-in-r-beta/](http://news.mrdwab.com/2011/05/15/stratified-random-sampling-in-r-beta/)
+1. [http://news.mrdwab.com/2011/05/20/stratified-random-sampling-in-r-from-a-data-frame/](http://news.mrdwab.com/2011/05/20/stratified-random-sampling-in-r-from-a-data-frame/)
+1. [http://stackoverflow.com/a/9714207/1270695](http://stackoverflow.com/a/9714207/1270695)
+
+The version here is entirely reworked and does not require an additional package to be loaded.
+
+\cleardoublepage
