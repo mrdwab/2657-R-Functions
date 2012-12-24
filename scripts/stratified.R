@@ -3,7 +3,7 @@
 stratified <- function(df, id, group, size, seed = NULL, ...) {
   # Returns a stratified random subset of a data.frame.
   #
-  # --> df:     The source data.frame
+  # --> df      The source data.frame
   # --> id      Your "ID" variable
   # --> group   Your grouping variable
   # --> size    The desired sample size. If size is a decimal, a proportionate
@@ -27,7 +27,8 @@ stratified <- function(df, id, group, size, seed = NULL, ...) {
   
   k <- split(df[[id]], df[[group]])
   ifelse(size < 1, 
-         n <- ceiling(sapply(k, length) * size), 
+         n <- setNames(
+           round(table(df[[group]]) * size, digits = 0), names(k)),
          n <- setNames(rep(size, length.out = length(k)), names(k)))
   seedme <- ifelse(is.null(seed), "No", "Yes")
   
@@ -42,6 +43,8 @@ stratified <- function(df, id, group, size, seed = NULL, ...) {
     data.frame(unlist(temp, use.names = FALSE),
                rep(names(temp), times = n)),
     c(names(df[id]), names(df[group])))
+  
+  rm(.Random.seed, envir=.GlobalEnv) # "resets" the seed
   
   w <- merge(df, temp)[, names(df)]
   w[order(w[[group]]), ]
