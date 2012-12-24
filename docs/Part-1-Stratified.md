@@ -11,13 +11,13 @@ The `stratified` function samples from a `data.frame` in which one of the column
 * `df`: The source `data.frame`.
 * `id`: Your "ID" variable.
 * `group`: Your grouping variable.
-* `size`: The desired sample size. If `size` is a decimal, a proportionate sample would be drawn. If `size` is a positive integer, it will be assumed that you want the same number of samples from each group.
+* `size`: The desired sample size. If `size` is a decimal less than 1, a proportionate sample would be drawn. If `size` is a positive integer, it will be assumed that you want the same number of samples from each group.
 
     > ***Note***: Because of how computers deal with floating-point arithmetic, and because R uses a "round to even" approach, the `size` per strata that results when specifying a proportionate sample may be slightly higher or lower per strata than you might have expected.
 
 * `seed`: The seed that you want to use (using `set.seed()`), if any. Defaults to `NULL`. 
 
-    > ***Note***: This is different from using `set.seed()` before using the function. This method uses the same seed before sampling from each group. 
+    > ***Note***: This is different from using `set.seed()` before using the function. Setting a seed using this argument is equivalent to using `set.seed(seed)` each time that you go to take a sample from a different group (in other words, the same seed is used for each group).  
     
 * `...`: Further arguments to be passed to the `sample()` function.
 
@@ -106,6 +106,7 @@ stratified(dat, 1, 5, 5, 1)
 
 * Error handling for when fixed sample size is specified but some strata have fewer observations than specified sample size.
 * Option to specify vector of required samples
+* set.seed examples
 
 ## References
 
