@@ -3,7 +3,7 @@
 
 # Sample Generator for Students at the Tata-Dhan Academy
 
-> **Abstract**: This note^[This concept note was written on 10 December 2012 by Ananda Mahto and relates to V1.0 of the `TDASample()` function. Please consider using the `stringseed.basic()` function (which may be more up-to-date) or the `stringseed.sampling()` function (which uses a more robust method for generating seeds). Both can be found at the [2657-R-Functions Github page](https://github.com/mrdwab/2657-R-Functions): [https://github.com/mrdwab/2657-R-Functions](https://github.com/mrdwab/2657-R-Functions).] describes a function written to assist students at the Tata-Dhan Academy to generate random samples in a systematic and reproducible (and, thus, verifiable) manner. A common method for reproducible random samples is to use the *seed* function available in major statistics and data analysis software packages. To minimize researcher bias, even the choice of seed must be justified. The function described in this note obfuscates the seed setting process but still results in output that is reproducible. Furthermore, the seed used for generating the sample is included in the output to allow others to independently validate the results.
+> **Abstract**: This note^[This concept note was written on 24 December 2012 by Ananda Mahto and relates to V1.1 of the `TDASample()` function. Please consider using the `stringseed.basic()` function (which may be more up-to-date) or the `stringseed.sampling()` function (which uses a more robust method for generating seeds). Both can be found at the [2657-R-Functions Github page](https://github.com/mrdwab/2657-R-Functions): [https://github.com/mrdwab/2657-R-Functions](https://github.com/mrdwab/2657-R-Functions).] describes a function written to assist students at the Tata-Dhan Academy to generate random samples in a systematic and reproducible (and, thus, verifiable) manner. A common method for reproducible random samples is to use the *seed* function available in major statistics and data analysis software packages. To minimize researcher bias, even the choice of seed must be justified. The function described in this note obfuscates the seed setting process but still results in output that is reproducible. Furthermore, the seed used for generating the sample is included in the output to allow others to independently validate the results.
 
 
 
@@ -20,7 +20,7 @@ sample(50, 10)
 ```
 
 ```
-##  [1] 33  2 42 26 39 24 25 22 45 38
+##  [1] 30 35 22 46  5 37 49 31 47 15
 ```
 
 ```r
@@ -28,7 +28,7 @@ sample(50, 10)
 ```
 
 ```
-##  [1] 13 41 34 24 48  2 29  9 45 40
+##  [1] 41 35 33 47 44  8 43 37  1 34
 ```
 
 ```r
@@ -76,41 +76,43 @@ The following code can be copied and pasted into an R session to make the functi
 
 ```r
 TDASample <- function(inString, N, n, toFile = FALSE) {
-    if (is.factor(inString)) inString <- as.character(inString)    
-    if (nchar(inString) <= 3) stop("inString must be > 3 characters")
-    string1 <- "jnt3g127rbfeqixkos 586d90pyal4chzmvwu"
-    string2 <- "2dyn0uxq ovalrpksieb3fhjw584cm9t7z16g"
-    instring <- chartr(string1, string2, tolower(inString))
-    t1 <- sd(c(suppressWarnings(sapply(strsplit(instring, ""),
-                                       as.numeric))), na.rm = TRUE)
-    t2 <- c(sapply(strsplit(instring, " "), nchar))
-    t3 <- c(na.omit(sapply(strsplit(instring, ""), match, letters)))
-    seed <- floor(sum(t1, sd(t2), mean(t2), prod(fivenum(t3)),
-                      mean(t3), sd(t3), na.rm=TRUE))
-    
-    set.seed(seed)
-    temp0 <- sample(N, n)
-    temp1 <- list(SeedUsed = seed, FinalSample = temp0,
-                  FinalSample_sorted = sort(temp0))
-    
-    rm(.Random.seed, envir=globalenv())
-    
-    if (isTRUE(toFile)) {
-    cat(
-        sprintf("\n\n            The sample was drawn on: %s.", Sys.time()), "\n",
-        sprintf("                The seed input was: '%s'", inString), "\n",
-        sprintf("The total number of households was: %d.", N), "\n",
-        sprintf(" The desired number of samples was: %d.", n), "\n\n\n", 
-        file = paste("Sample from", Sys.Date(), ".txt", collapse=""), append = TRUE)
-    capture.output(temp1, file = paste("Sample from", Sys.Date(), ".txt", collapse=""),
+  if (is.factor(inString)) inString <- as.character(inString)    
+  if (nchar(inString) <= 3) stop("inString must be > 3 characters")
+  string1 <- "jnt3g127rbfeqixkos 586d90pyal4chzmvwu"
+  string2 <- "2dyn0uxq ovalrpksieb3fhjw584cm9t7z16g"
+  instring <- chartr(string1, string2, tolower(inString))
+  t1 <- sd(c(suppressWarnings(sapply(strsplit(instring, ""),
+                                     as.numeric))), na.rm = TRUE)
+  t2 <- c(sapply(strsplit(instring, " "), nchar))
+  t3 <- c(na.omit(sapply(strsplit(instring, ""), match, letters)))
+  seed <- floor(sum(t1, sd(t2), mean(t2), prod(fivenum(t3)),
+                    mean(t3), sd(t3), na.rm=TRUE))
+  
+  set.seed(seed)
+  temp0 <- sample(N, n)
+  
+  temp1 <- list(
+    Metadata = 
+      noquote(c(sprintf("           The sample was drawn on: %s.", 
+                        Sys.time()),
+                sprintf("                The seed input was: '%s'", 
+                        inString),
+                sprintf("The total number of households was: %d.", N),
+                sprintf(" The desired number of samples was: %d.", n))),
+    SeedUsed = seed, 
+    FinalSample = temp0,
+    FinalSample_sorted = sort(temp0))
+  
+  rm(.Random.seed, envir=globalenv())
+  
+  if (isTRUE(toFile)) {
+    capture.output(temp1, 
+                   file = paste("Sample from", 
+                                Sys.Date(), ".txt", 
+                                collapse=""),
                    append = TRUE)
-    }
-    message(
-        sprintf("\n\n            The sample was drawn on: %s.", Sys.time()), "\n",
-        sprintf("                The seed input was: '%s'", inString), "\n",
-        sprintf("The total number of households was: %d.", N), "\n",
-        sprintf(" The desired number of samples was: %d.", n), "\n\n\n")
-    temp1
+  }
+  temp1
 }
 ```
 
@@ -133,6 +135,12 @@ TDASample("A Umarani, JAN Vijayabharathi", 120, 30)
 ```
 
 ```
+## $Metadata
+## [1]            The sample was drawn on: 2012-12-24 11:39:15.           
+## [2]                 The seed input was: 'A Umarani, JAN Vijayabharathi'
+## [3] The total number of households was: 120.                           
+## [4]  The desired number of samples was: 30.                            
+## 
 ## $SeedUsed
 ## [1] 171640
 ## 
@@ -170,6 +178,12 @@ TDASample("A Umarani, JAN Vijayabharathi", 120, 30, toFile=TRUE)
 ```
 
 ```
+## $Metadata
+## [1]            The sample was drawn on: 2012-12-24 11:39:15.           
+## [2]                 The seed input was: 'A Umarani, JAN Vijayabharathi'
+## [3] The total number of households was: 120.                           
+## [4]  The desired number of samples was: 30.                            
+## 
 ## $SeedUsed
 ## [1] 171640
 ## 
@@ -188,33 +202,30 @@ list.files(pattern="Sample from")
 ```
 
 ```
-## [1] "Sample from 2012-12-15 .txt"
+## [1] "Sample from 2012-12-24 .txt"
 ```
 
 ```r
-noquote(readLines(list.files(pattern="Sample from")[1]))
+cat(noquote(readLines(list.files(pattern="Sample from")[1])), sep="\n")
 ```
 
 ```
-##  [1]                                                                                 
-##  [2]                                                                                 
-##  [3]             The sample was drawn on: 2012-12-15 17:15:43.                       
-##  [4]                  The seed input was: 'A Umarani, JAN Vijayabharathi'            
-##  [5]  The total number of households was: 120.                                       
-##  [6]   The desired number of samples was: 30.                                        
-##  [7]                                                                                 
-##  [8]                                                                                 
-##  [9] $SeedUsed                                                                       
-## [10] [1] 171640                                                                      
-## [11]                                                                                 
-## [12] $FinalSample                                                                    
-## [13]  [1]   1  75  49  53 119 105  20  71  55  12  95  62 113  18   2  50  99  22 110
-## [14] [20]  46  26  85  15  54  70 118   5  83  78  60                                
-## [15]                                                                                 
-## [16] $FinalSample_sorted                                                             
-## [17]  [1]   1   2   5  12  15  18  20  22  26  46  49  50  53  54  55  60  62  70  71
-## [18] [20]  75  78  83  85  95  99 105 110 113 118 119                                
-## [19]
+## $Metadata
+## [1]            The sample was drawn on: 2012-12-24 11:39:15.           
+## [2]                 The seed input was: 'A Umarani, JAN Vijayabharathi'
+## [3] The total number of households was: 120.                           
+## [4]  The desired number of samples was: 30.                            
+## 
+## $SeedUsed
+## [1] 171640
+## 
+## $FinalSample
+##  [1]   1  75  49  53 119 105  20  71  55  12  95  62 113  18   2  50  99  22 110
+## [20]  46  26  85  15  54  70 118   5  83  78  60
+## 
+## $FinalSample_sorted
+##  [1]   1   2   5  12  15  18  20  22  26  46  49  50  53  54  55  60  62  70  71
+## [20]  75  78  83  85  95  99 105 110 113 118 119
 ```
 
 ```r
@@ -224,6 +235,12 @@ TDASample("Melakkal", 120, 30)
 ```
 
 ```
+## $Metadata
+## [1]            The sample was drawn on: 2012-12-24 11:39:15.
+## [2]                 The seed input was: 'Melakkal'          
+## [3] The total number of households was: 120.                
+## [4]  The desired number of samples was: 30.                 
+## 
 ## $SeedUsed
 ## [1] 6032
 ## 
@@ -279,6 +296,12 @@ setNames(apply(myListOfPlaces, 1, function(x)
 
 ```
 ## $Melakkal
+## $Melakkal$Metadata
+## [1]            The sample was drawn on: 2012-12-24 11:39:15.
+## [2]                 The seed input was: 'Melakkal'          
+## [3] The total number of households was: 120.                
+## [4]  The desired number of samples was: 30.                 
+## 
 ## $Melakkal$SeedUsed
 ## [1] 6032
 ## 
@@ -292,6 +315,12 @@ setNames(apply(myListOfPlaces, 1, function(x)
 ## 
 ## 
 ## $Sholavandan
+## $Sholavandan$Metadata
+## [1]            The sample was drawn on: 2012-12-24 11:39:15.
+## [2]                 The seed input was: 'Sholavandan'       
+## [3] The total number of households was: 130.                
+## [4]  The desired number of samples was: 25.                 
+## 
 ## $Sholavandan$SeedUsed
 ## [1] 26909
 ## 
@@ -305,6 +334,12 @@ setNames(apply(myListOfPlaces, 1, function(x)
 ## 
 ## 
 ## $`T. Malaipatti`
+## $`T. Malaipatti`$Metadata
+## [1]            The sample was drawn on: 2012-12-24 11:39:15.
+## [2]                 The seed input was: 'T. Malaipatti'     
+## [3] The total number of households was: 140.                
+## [4]  The desired number of samples was: 12.                 
+## 
 ## $`T. Malaipatti`$SeedUsed
 ## [1] 482178
 ## 

@@ -115,8 +115,6 @@ randomNamesOnline <- function(number = 100, gender = "both", type = "rare") {
 ## @knitr stringseedbasic
 
 stringseed.basic <- function(inString, N, n, toFile = FALSE) {
-  # Uses string input as the basis for generating seeds before sampling
-  
   if (is.factor(inString)) inString <- as.character(inString)    
   if (nchar(inString) <= 3) stop("inString must be > 3 characters")
   string1 <- "jnt3g127rbfeqixkos 586d90pyal4chzmvwu"
@@ -131,25 +129,27 @@ stringseed.basic <- function(inString, N, n, toFile = FALSE) {
   
   set.seed(seed)
   temp0 <- sample(N, n)
-  temp1 <- list(SeedUsed = seed, FinalSample = temp0,
-                FinalSample_sorted = sort(temp0))
+  
+  temp1 <- list(
+    Metadata = 
+      noquote(c(sprintf("           The sample was drawn on: %s.", 
+                        Sys.time()),
+                sprintf("                The seed input was: '%s'", 
+                        inString),
+                sprintf("The total number of households was: %d.", N),
+                sprintf(" The desired number of samples was: %d.", n))),
+    SeedUsed = seed, 
+    FinalSample = temp0,
+    FinalSample_sorted = sort(temp0))
   
   rm(.Random.seed, envir=globalenv())
   
   if (isTRUE(toFile)) {
-    cat(
-      sprintf("\n\n            The sample was drawn on: %s.", Sys.time()), "\n",
-      sprintf("                The seed input was: '%s'", inString), "\n",
-      sprintf("The total number of households was: %d.", N), "\n",
-      sprintf(" The desired number of samples was: %d.", n), "\n\n\n", 
-      file = paste("Sample from", Sys.Date(), ".txt", collapse=""), append = TRUE)
-    capture.output(temp1, file = paste("Sample from", Sys.Date(), ".txt", collapse=""),
+    capture.output(temp1, 
+                   file = paste("Sample from", 
+                                Sys.Date(), ".txt", 
+                                collapse=""),
                    append = TRUE)
   }
-  message(
-    sprintf("\n\n            The sample was drawn on: %s.", Sys.time()), "\n",
-    sprintf("                The seed input was: '%s'", inString), "\n",
-    sprintf("The total number of households was: %d.", N), "\n",
-    sprintf(" The desired number of samples was: %d.", n), "\n\n\n")
   temp1
 }

@@ -3,7 +3,7 @@
 
 # Sample Generator for Students at the Tata-Dhan Academy
 
-> **Abstract**: This note^[This concept note was written on 10 December 2012 by Ananda Mahto and relates to V1.0 of the `TDASample()` function. Please consider using the `stringseed.basic()` function (which may be more up-to-date) or the `stringseed.sampling()` function (which uses a more robust method for generating seeds). Both can be found at the [2657-R-Functions Github page](https://github.com/mrdwab/2657-R-Functions): [https://github.com/mrdwab/2657-R-Functions](https://github.com/mrdwab/2657-R-Functions).] describes a function written to assist students at the Tata-Dhan Academy to generate random samples in a systematic and reproducible (and, thus, verifiable) manner. A common method for reproducible random samples is to use the *seed* function available in major statistics and data analysis software packages. To minimize researcher bias, even the choice of seed must be justified. The function described in this note obfuscates the seed setting process but still results in output that is reproducible. Furthermore, the seed used for generating the sample is included in the output to allow others to independently validate the results.
+> **Abstract**: This note^[This concept note was written on 24 December 2012 by Ananda Mahto and relates to V1.1 of the `TDASample()` function. Please consider using the `stringseed.basic()` function (which may be more up-to-date) or the `stringseed.sampling()` function (which uses a more robust method for generating seeds). Both can be found at the [2657-R-Functions Github page](https://github.com/mrdwab/2657-R-Functions): [https://github.com/mrdwab/2657-R-Functions](https://github.com/mrdwab/2657-R-Functions).] describes a function written to assist students at the Tata-Dhan Academy to generate random samples in a systematic and reproducible (and, thus, verifiable) manner. A common method for reproducible random samples is to use the *seed* function available in major statistics and data analysis software packages. To minimize researcher bias, even the choice of seed must be justified. The function described in this note obfuscates the seed setting process but still results in output that is reproducible. Furthermore, the seed used for generating the sample is included in the output to allow others to independently validate the results.
 
 ```{r set-options, echo=FALSE, cache=FALSE}
 options(width=80)
@@ -76,7 +76,7 @@ list.files(pattern="Sample from")
 TDASample("A Umarani, JAN Vijayabharathi", 120, 30, toFile=TRUE)
 # Check again
 list.files(pattern="Sample from")
-noquote(readLines(list.files(pattern="Sample from")[1]))
+cat(noquote(readLines(list.files(pattern="Sample from")[1])), sep="\n")
 # Try a different string, 
 #   for example a seed based on a village name
 TDASample("Melakkal", 120, 30)
