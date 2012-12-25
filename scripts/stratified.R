@@ -26,10 +26,30 @@ stratified <- function(df, id, group, size, seed = NULL, ...) {
   #   stratified(dat, "A", "B", 5)
   
   k <- split(df[[id]], df[[group]])
-  ifelse(size < 1, 
-         n <- setNames(
-           round(table(df[[group]]) * size, digits = 0), names(k)),
-         n <- setNames(rep(size, length.out = length(k)), names(k)))
+  
+  if (length(size) > 1) {
+    if (length(size) != length(k)) stop("Number of groups is ", length(k), 
+                                        " but number of sizes supplied is ", 
+                                        length(size))
+    if (is.null(names(size))) {
+      n <- setNames(size, names(k))
+      message(sQuote("size"), " vector entered as:\n\nsize = structure(c(", 
+              paste(n, collapse = ", "), "),\n.Names = c(",
+              paste(shQuote(names(n)), collapse = ", "), ")) \n\n")
+    } else {
+      ifelse(all(names(size) %in% names(k)), n <- size[names(k)], 
+             stop("Named vector supplied with names ", 
+                  paste(names(size), collapse = ", "),
+                  "\n but the names for the group levels are ", 
+                  paste(names(k), collapse = ", ")))
+    } 
+  } else {
+    ifelse(size < 1, 
+           n <- setNames(
+             round(table(df[[group]]) * size, digits = 0), names(k)),
+           n <- setNames(rep(size, length.out = length(k)), names(k)))
+  }
+  
   seedme <- ifelse(is.null(seed), "No", "Yes")
   
   temp <- switch(
