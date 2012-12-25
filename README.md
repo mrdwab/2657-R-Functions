@@ -39,7 +39,7 @@ Functions include:
 
     >> Used to determine the desired sample size of a given population, or the confidence interval for a given population and sample. 
     
-1. `stratified.R`
+1. [`stratified.R`](/blob/master/scripts/stratified.R)
 
     >> Used to sample from a `data.frame` according to a grouping (or *stratification*) variable.
     
