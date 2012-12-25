@@ -47,7 +47,18 @@ stratified <- function(df, id, group, size, seed = NULL, ...) {
     ifelse(size < 1, 
            n <- setNames(
              round(table(df[[group]]) * size, digits = 0), names(k)),
-           n <- setNames(rep(size, length.out = length(k)), names(k)))
+           ifelse(all(sapply(k, length) >= size), 
+                  n <- setNames(rep(size, length.out = length(k)), names(k)),
+{
+  temp <- sapply(k, length)
+  message(
+    "Some groups---", 
+    paste(names(temp[temp < size]), collapse = ", "),
+    "---\ncontain fewer observations than desired number of samples.\n",
+    "All observations have been returned from those groups.")
+  n <- c(sapply(temp[temp >= size], function(x) x = size),
+         temp[temp < size])[names(k)]
+}))
   }
   
   seedme <- ifelse(is.null(seed), "No", "Yes")
