@@ -15,41 +15,41 @@ All scripts mentioned in the `snippets` section are found in a single `snippets.
 
 Functions include:
     
-1. `concat.split.R`
+1. [`concat.split.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/concat.split.R)
 
     >> Use to split cells which contain concatenated data into separate columns. Works with string and numeric data. For numeric data, the splitted output can retain original values or be recoded as "1" and "NA" to facilitate frequency calculations. Can also split data into a `list` within a `data.frame`.
     
-1. `df.sorter.R`
+1. [`df.sorter.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/df.sorter.R)
 
     >> Sort a `data.frame` by rows, columns, or both. Can also be used to subset data.
     
-1. `multi.freq.table.R`
+1. [`multi.freq.table.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/multi.freq.table.R)
 
     >> Takes columns from a `data.frame` containing Boolean multiple-response data and tabulates the output.
     
-1. `RandomNames.R`
+1. [`RandomNames.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/RandomNames.R)
 
     >> Uses data from the [*Genealogy Data: Frequently Occurring Surnames from Census 1990--Names Files* web page](http://www.census.gov/genealogy/www/data/1990surnames/names_files.html) to generate a `data.frame` with random names.
 
-1. `row.extractor.R`
+1. [`row.extractor.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/row.extractor.R)
 
     >> Use to extract rows which contan a specified column's `min`, `median`, or `max` values, or to extract rows with specified quantiles.
 
-1. `sample.size.R`
+1. [`sample.size.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/sample.size.R)
 
     >> Used to determine the desired sample size of a given population, or the confidence interval for a given population and sample. 
     
-1. [`stratified.R`](/blob/master/scripts/stratified.R)
+1. [`stratified.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/stratified.R)
 
     >> Used to sample from a `data.frame` according to a grouping (or *stratification*) variable.
     
-1. `stringseed.sampling.R`
+1. [`stringseed.sampling.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/stringseed.sampling.R)
 
     >> The `stringseed.sampling()` function is designed as a batch sampling function that allows the user to specify any alphanumeric input as the seed per sample in the batch.
 
 ## Extras
 
-The `snippets.R` script includes several small "utility" functions. In cases where they are functions I've found online, I've mentioned the source in the head of the function.
+The [`snippets.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/snippets.R) script includes several small "utility" functions. In cases where they are functions I've found online, I've mentioned the source in the head of the function.
 
 Snippets include:
 
