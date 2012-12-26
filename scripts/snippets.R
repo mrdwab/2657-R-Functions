@@ -153,3 +153,30 @@ stringseed.basic <- function(inString, N, n, toFile = FALSE) {
   }
   temp1
 }
+
+## @knitr stratasampling
+
+strata.sampling <- function(data, group, size, method = NULL) {
+  #  USE: 
+  #   * Specify a data.frame and grouping variable.
+  #   * Decide on your sample size. For a sample proportional to the 
+  #     population, enter "size" as a decimal. For an equal number of 
+  #     samples from each group, enter "size" as a whole number. For
+  #     a specific number of samples from each group, enter the numbers
+  #     required as a vector.
+  
+  require(sampling)
+  if (is.null(method)) method <- "srswor"
+  if (!method %in% c("srswor", "srswr")) 
+    stop('method must be "srswor" or "srswr"')
+  temp <- data[order(data[[group]]), ]
+  ifelse(length(size) > 1,
+         size <- size, 
+         ifelse(size < 1,
+                size <- round(table(temp[group]) * size),
+                size <- rep(size, times=length(table(temp[group])))))
+  strat = strata(temp, stratanames = names(temp[group]), 
+                 size = size, method = method)
+  getdata(temp, strat)
+}
+
