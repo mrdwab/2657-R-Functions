@@ -53,7 +53,7 @@ stratified <- function(df, group, size, seed = NULL, ...) {
                     names(df.split))
     } else {
       message(
-        "Some groups---", 
+        "Some groups\n---", 
         paste(names(df.table[df.table < size]), collapse = ", "),
         "---\ncontain fewer observations",
         " than desired number of samples.\n",
