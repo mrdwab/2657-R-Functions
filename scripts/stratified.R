@@ -24,44 +24,43 @@ stratified <- function(df, group, size, seed = NULL, ...) {
   #   stratified(dat, group = "E", size = .1, seed = 1)
   #   stratified(dat, "B", 5)
   
-  temp0 <- table(df[[group]])
-  temp1 <- split(df, df[[group]])
+  df.interaction <- interaction(df[group])
+  df.split <- split(df, df.interaction)
   
   if (length(size) > 1) {
-    if (length(size) != length(temp1))
-      stop("Number of groups is ", length(temp1),
+    if (length(size) != length(df.split))
+      stop("Number of groups is ", length(df.split),
            " but number of sizes supplied is ", length(size))
     if (is.null(names(size))) {
-      n <- setNames(size, names(temp1))
+      n <- setNames(size, names(df.split))
       message(sQuote("size"), " vector entered as:\n\nsize = structure(c(", 
               paste(n, collapse = ", "), "),\n.Names = c(",
               paste(shQuote(names(n)), collapse = ", "), ")) \n\n")
     } else {
-      ifelse(all(names(size) %in% names(temp1)), 
-             n <- size[names(temp1)], 
+      ifelse(all(names(size) %in% names(df.split)), 
+             n <- size[names(df.split)], 
              stop("Named vector supplied with names ", 
                   paste(names(size), collapse = ", "),
                   "\n but the names for the group levels are ", 
-                  paste(names(temp1), collapse = ", ")))
+                  paste(names(df.split), collapse = ", ")))
     } 
-  } else {
-    ifelse(size < 1, 
-           n <- setNames(
-             round(temp0 * size, digits = 0), names(temp1)),
-           ifelse(
-             all(sapply(temp1, length) >= size),
-             n <- setNames(rep(size, length.out = length(temp1)),
-                           names(temp1)),
-{
-  temp <- sapply(temp1, length)
-  message(
-    "Some groups---", 
-    paste(names(temp[temp < size]), collapse = ", "),
-    "---\ncontain fewer observations than desired number of samples.\n",
-    "All observations have been returned from those groups.")
-  n <- c(sapply(temp[temp >= size], function(x) x = size),
-         temp[temp < size])[names(temp1)]
-}))
+  } else if (size < 1) {
+    n <- round(table(df.interaction) * size, digits = 0)
+  } else if (size >= 1) {
+    temp <- table(df.interaction)
+    if (all(temp >= size)) {
+      n <- setNames(rep(size, length.out = length(df.split)),
+                    names(df.split))
+    } else {
+      message(
+        "Some groups---", 
+        paste(names(temp[temp < size]), collapse = ", "),
+        "---\ncontain fewer observations",
+        " than desired number of samples.\n",
+        "All observations have been returned from those groups.")
+      n <- c(sapply(temp[temp >= size], function(x) x = size),
+             temp[temp < size])[names(df.split)]
+    }
   }
   
   seedme <- ifelse(is.null(seed), "No", "Yes")
@@ -69,12 +68,14 @@ stratified <- function(df, group, size, seed = NULL, ...) {
   temp <- switch(
     seedme,
     No = { temp <- lapply(
-      names(temp1), 
-      function(x) temp1[[x]][sample(temp0[x], n[x], ...), ]) },
+      names(df.split), 
+      function(x) df.split[[x]][sample(table(df.interaction)[x], 
+                                       n[x], ...), ]) },
     Yes = { temp <- lapply(
-      names(temp1),
+      names(df.split),
       function(x) { set.seed(seed)
-                    temp1[[x]][sample(temp0[x], n[x], ...), ] })})
+                    df.split[[x]][sample(df.interaction[x], 
+                                         n[x], ...), ] }) })
   
   rm(.Random.seed, envir=.GlobalEnv) # "resets" the seed
   do.call("rbind", temp)
