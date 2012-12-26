@@ -5,9 +5,9 @@ stratified <- function(df, group, size, seed = NULL, ...) {
   #
   # --> df      The source data.frame
   # --> group   Your grouping variable
-  # --> size    The desired sample size. If size is a decimal, a proportionate
-  #             sample would be drawn. If it is >= 1, a sample will be taken
-  #             of that specified size
+  # --> size    The desired sample size. If -size- is a decimal, 
+  #             a proportionate sample is drawn. If it is >= 1, 
+  #             a sample will be taken of that specified size
   # --> seed    The seed that you want to use, if any
   # --> ...     Further arguments to the sample function
   #
