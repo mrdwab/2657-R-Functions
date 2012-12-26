@@ -25,6 +25,7 @@ stratified <- function(df, group, size, seed = NULL, ...) {
   #   stratified(dat, "B", 5)
   
   df.interaction <- interaction(df[group])
+  df.table <- table(df.interaction)
   df.split <- split(df, df.interaction)
   
   if (length(size) > 1) {
@@ -45,21 +46,20 @@ stratified <- function(df, group, size, seed = NULL, ...) {
                   paste(names(df.split), collapse = ", ")))
     } 
   } else if (size < 1) {
-    n <- round(table(df.interaction) * size, digits = 0)
+    n <- round(df.table * size, digits = 0)
   } else if (size >= 1) {
-    temp <- table(df.interaction)
-    if (all(temp >= size)) {
+    if (all(df.table >= size)) {
       n <- setNames(rep(size, length.out = length(df.split)),
                     names(df.split))
     } else {
       message(
         "Some groups---", 
-        paste(names(temp[temp < size]), collapse = ", "),
+        paste(names(df.table[df.table < size]), collapse = ", "),
         "---\ncontain fewer observations",
         " than desired number of samples.\n",
         "All observations have been returned from those groups.")
-      n <- c(sapply(temp[temp >= size], function(x) x = size),
-             temp[temp < size])[names(df.split)]
+      n <- c(sapply(df.table[df.table >= size], function(x) x = size),
+             df.table[df.table < size])
     }
   }
   
@@ -69,12 +69,12 @@ stratified <- function(df, group, size, seed = NULL, ...) {
     seedme,
     No = { temp <- lapply(
       names(df.split), 
-      function(x) df.split[[x]][sample(table(df.interaction)[x], 
+      function(x) df.split[[x]][sample(df.table[x], 
                                        n[x], ...), ]) },
     Yes = { temp <- lapply(
       names(df.split),
       function(x) { set.seed(seed)
-                    df.split[[x]][sample(df.interaction[x], 
+                    df.split[[x]][sample(df.table[x], 
                                          n[x], ...), ] }) })
   
   rm(.Random.seed, envir=.GlobalEnv) # "resets" the seed
