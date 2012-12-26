@@ -554,6 +554,126 @@ stringseed.basic <- function(inString, N, n, toFile = FALSE) {
 ```
 
 
+## Draw a stratified random sample from a `data.frame`
+
+The `strata.sampling()` function is a wrapper around the `strata()` and `getdata()` functions from the "sampling" package that allows you to quickly draw a stratified random sample from a `data.frame` after specifying a single grouping variable. The sample sizes can be proportionate to the number of observations in each strata, a uniform size from all groups, or a vector specifying the number of samples to take from each group. 
+
+A very similar function (but one which does not depend on other packages) is the `stratified()` function.
+
+
+```r
+strata.sampling <- function(data, group, size, method = NULL) {
+  #  USE: 
+  #   * Specify a data.frame and grouping variable.
+  #   * Decide on your sample size. For a sample proportional to the 
+  #     population, enter "size" as a decimal. For an equal number of 
+  #     samples from each group, enter "size" as a whole number. For
+  #     a specific number of samples from each group, enter the numbers
+  #     required as a vector.
+  
+  require(sampling)
+  if (is.null(method)) method <- "srswor"
+  if (!method %in% c("srswor", "srswr")) 
+    stop('method must be "srswor" or "srswr"')
+  temp <- data[order(data[[group]]), ]
+  ifelse(length(size) > 1,
+         size <- size, 
+         ifelse(size < 1,
+                size <- round(table(temp[group]) * size),
+                size <- rep(size, times=length(table(temp[group])))))
+  strat = strata(temp, stratanames = names(temp[group]), 
+                 size = size, method = method)
+  getdata(temp, strat)
+}
+```
+
+
+### Examples
+
+
+```r
+# Generate a couple of sample data.frames to play with
+set.seed(1)
+dat1 <- data.frame(ID = 1:100,
+                   A = sample(c("AA", "BB", "CC", "DD", "EE"), 100, replace=T),
+                   B = rnorm(100), C = abs(round(rnorm(100), digits=1)),
+                   D = sample(c("CA", "NY", "TX"), 100, replace=T))
+
+# Let's take a 10% sample from all -A- groups in dat1
+strata.sampling(dat1, "A", .1)
+```
+
+```
+##      ID       B   C  D  A ID_unit    Prob Stratum
+## 88   88 -0.5283 1.2 NY AA      11 0.07692       1
+## 11   11  2.4016 0.4 TX BB      17 0.08000       2
+## 89   89 -0.6521 1.1 TX BB      37 0.08000       2
+## 67   67 -0.3200 0.3 CA CC      53 0.10526       3
+## 97   97  2.0872 0.5 NY CC      56 0.10526       3
+## 37   37  1.0631 1.5 NY DD      66 0.11538       4
+## 39   39  0.3700 0.4 CA DD      67 0.11538       4
+## 100 100 -1.6406 1.0 NY DD      83 0.11538       4
+## 6     6  1.9804 1.1 TX EE      85 0.11765       5
+## 99   99 -1.2863 0.2 NY EE     100 0.11765       5
+```
+
+```r
+
+# Let's take 5 samples from all -D- groups in dat1, 
+#   specified by column number
+strata.sampling(dat1, group = 5, size = 5)
+```
+
+```
+##    ID  A        B   C  D ID_unit   Prob Stratum
+## 39 39 DD  0.37002 0.4 CA       8 0.2174       1
+## 46 46 DD  0.55849 1.0 CA      11 0.2174       1
+## 53 53 CC -0.91092 1.6 CA      12 0.2174       1
+## 58 58 CC  0.91017 0.5 CA      14 0.2174       1
+## 87 87 DD -0.30098 0.6 CA      22 0.2174       1
+## 4   4 EE -1.12936 0.9 NY      26 0.1190       2
+## 12 12 AA -0.03924 0.2 NY      30 0.1190       2
+## 31 31 CC -0.56867 1.2 NY      37 0.1190       2
+## 40 40 CC  0.26710 0.9 NY      41 0.1190       2
+## 61 61 EE -0.63574 0.2 NY      48 0.1190       2
+## 11 11 BB  2.40162 0.4 TX      70 0.1429       3
+## 21 21 EE  0.47551 2.3 TX      73 0.1429       3
+## 27 27 AA -0.44329 0.8 TX      76 0.1429       3
+## 51 51 CC -0.62037 0.4 TX      83 0.1429       3
+## 80 80 EE -0.32427 0.3 TX      95 0.1429       3
+```
+
+```r
+
+# Let's take a sample from all -A- groups in dat1 
+#   where we specify the number wanted from each group
+strata.sampling(dat1, "A", size = c(3, 5, 4, 5, 2))
+```
+
+```
+##    ID        B   C  D  A ID_unit   Prob Stratum
+## 27 27 -0.44329 0.8 TX AA       4 0.2308       1
+## 47 47 -1.27659 1.4 TX AA       7 0.2308       1
+## 56 56  1.76729 2.5 NY AA       9 0.2308       1
+## 22 22 -0.70995 0.1 TX BB      20 0.2000       2
+## 26 26  0.29145 0.0 TX BB      22 0.2000       2
+## 57 57  0.71671 0.7 CA BB      26 0.2000       2
+## 78 78 -0.03763 1.6 NY BB      33 0.2000       2
+## 86 86 -1.53645 0.1 NY BB      36 0.2000       2
+## 16 16  0.18879 2.2 CA CC      40 0.2105       3
+## 40 40  0.26710 0.9 NY CC      44 0.2105       3
+## 48 48 -0.57327 1.0 NY CC      47 0.2105       3
+## 75 75 -0.10019 1.2 TX CC      54 0.2105       3
+## 9   9  0.56972 1.4 TX DD      59 0.1923       4
+## 23 23  0.61073 0.5 NY DD      64 0.1923       4
+## 65 65 -0.20738 1.0 TX DD      74 0.1923       4
+## 68 68 -0.27911 1.3 NY DD      75 0.1923       4
+## 85 85  0.30656 0.1 NY DD      78 0.1923       4
+## 18 18  1.46555 1.4 NY EE      87 0.1176       5
+## 94 94 -0.46353 0.9 NY EE      99 0.1176       5
+```
+
+
 
 \newpage
 
