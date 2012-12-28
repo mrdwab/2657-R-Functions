@@ -45,7 +45,8 @@ concat.split = function(data, split.col, sep = ",", structure = "compact",
         compact = {
             t1 <- read.table(text = a, sep = sep, fill = TRUE,
                              row.names = NULL, header = FALSE,
-                             blank.lines.skip = FALSE)
+                             blank.lines.skip = FALSE, 
+                             strip.white = TRUE)
             names(t1) <- paste(names(data[split.col]), 
                                seq(ncol(t1)), sep="_")
             if (!is.null(mode)) 
