@@ -1,0 +1,97 @@
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width=80)
+opts_chunk$set(comment = "##", warning = FALSE, message = FALSE, echo = TRUE, tidy = FALSE, size="small")
+read_chunk("../scripts/table2df.R")
+```
+
+# table2df
+
+The `table2df` function takes an object of class `table`, `ftable`, and `xtabs` and converts them to `data.frame`s, retaining as many of the name details as possible.
+
+## Arguments
+
+* `mytable`: The table object you want to convert into a `data.frame`. This can be a saved object or you can make the call to `table`, `ftable`, or `xtabs` as the `mytable` argument to this function.
+* `as.multitable`: Logical; defaults to `FALSE`. Some methods, for instance `xtabs` and `table`, will create an array of tables as the output when more than two variables are being tabulated. 
+    * If `as.multitable` is `TRUE`, the function will return a list of `data.frame`s. 
+    * If `as.multitable` is `FALSE`, the function will convert the object to an `ftable` object before performing the transformation.
+* `direction`: Can be either `"long"` or `"wide"`. 
+    * If `"long"`, the frequencies will all be tabulated into a single column. This is the same behavior you will generally get if you used `as.data.frame()` on a `table` object.
+    * If `"wide"`, the tabular format is retained.
+
+## Examples
+
+First, we will create a dataset containing information about a person's gender; whether they are left handed, right handed, or ambidextrous; their favorite colors and favorite shapes; and the operating system on their computer.
+
+```{r table2df_data}
+set.seed(1)
+handedness <- data.frame(
+  gender = sample(c("Female", "Male", "Unknown"), 200, replace = TRUE),
+  handedness = sample(c("Right", "Left", "Ambidextrous"), 
+                      200, replace = TRUE, prob = c(.7, .2, .1)),
+  fav.col = sample(c("Red", "Orange", "Yellow", "Green", "Blue", 
+                     "Indigo", "Violet", "Black", "White"), 
+                   200, replace = TRUE),
+  fav.shape = sample(c("Triangle", "Circle", "Square", "Pentagon", "Hexagon",
+                       "Oval", "Octagon", "Rhombus", "Trapezoid"),
+                     200, replace = TRUE),
+  computer = sample(c("Win", "Mac", "Lin"), 200, replace = TRUE,
+                    prob = c(.5, .25, .25)))
+
+# Preview the data
+list(head(handedness), tail(handedness))
+```
+```{r table2df_examples}
+# Load the function!
+require(RCurl)
+baseURL = c("https://raw.github.com/mrdwab/2657-R-Functions/master/")
+source(textConnection(getURL(paste0(baseURL, "scripts/table2df.R"))))
+
+# A very basic table
+HT1 <- with(handedness, table(gender, handedness))
+HT1
+table2df(HT1)
+table2df(HT1, direction = "long")
+
+# Another basic table
+HT2 <- with(handedness, table(fav.col, computer))
+HT2
+table2df(HT2)
+
+# This will create multiple tables, one for each possible computer value
+HT3 <- with(handedness, table(gender, fav.col, computer))
+HT3
+# Default settings
+table2df(HT3)
+# As a list of data.frames
+table2df(HT3, as.multitable = TRUE)
+# As above, but with the output in long format
+#   Only showing the first three lines of each data.frame
+lapply(table2df(HT3, as.multitable = TRUE, direction = "long"), head, 3)
+
+# Applied to an ftable
+HT4 <- ftable(handedness, 
+              col.vars="fav.col", 
+              row.vars=c("gender", "computer"))
+HT4
+table2df(HT4)
+```
+
+### Other examples
+
+Here are a few other examples to try using some of the inbuilt datasets available in R.
+
+```{r eval=FALSE}
+table2df(xtabs(cbind(ncases, ncontrols) ~ ., data = esoph))
+table2df(xtabs(cbind(ncases, ncontrols) ~ ., data = esoph), 
+         direction = "long")
+table2df(xtabs(cbind(ncases, ncontrols) ~ ., data = esoph), 
+         as.multitable = TRUE, direction = "long")
+table2df(xtabs(cbind(ncases, ncontrols) ~ ., data = esoph), 
+         as.multitable = TRUE, direction = "wide")
+table2df(ftable(Sex ~ Class + Age, data = x))
+```
+
+## References
+
+The `expand.grid` method for remaking the columns from an `ftable` was described by Kohske at [http://stackoverflow.com/a/6463137/1270695](http://stackoverflow.com/a/6463137/1270695).
