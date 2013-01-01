@@ -48,6 +48,7 @@ The scripts and documentation within this collection \copyright\ 2012--\the\year
         \item cbeleites \url{http://stackoverflow.com/users/755257/cbeleites}: \verb=which.quantile= funtion in \verb=row.extractor=
         \item David Winsemius \url{http://stackoverflow.com/users/1855677/dwin}: \verb=concat.split=
         \item Justin \url{http://stackoverflow.com/users/906490/justin}: \verb=multi.freq.table=
+        \item kohske \url{http://stackoverflow.com/users/314020/kohske}: \verb=table2df=
     \end{itemize}
 
     \item Relevant questions or answers on Stack Overflow:
@@ -56,6 +57,7 @@ The scripts and documentation within this collection \copyright\ 2012--\the\year
         \item \verb=multi.freq.table=: \url{http://stackoverflow.com/q/11348391/1270695}; \url{http://stackoverflow.com/a/11623623/1270695}
         \item \verb=row.extractor=: \url{http://stackoverflow.com/q/10256503/1270695}
         \item \verb=stringseed.sampling=: \url{http://stackoverflow.com/q/10910698/1270695}
+        \item \verb=table2df=: \url{http://stackoverflow.com/a/6463137/1270695}
     \end{itemize}
 
     \item ``Borrowed'' functions:
