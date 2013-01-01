@@ -26,8 +26,9 @@ table2df <- function(mytable, as.multitable = FALSE, direction = "wide") {
     temp <- dim(dataset)[-c(1, 2)]
     temp1 <- capture.output(dataset)
     tempnames <- gsub(", , ", "", temp1[grep(", , ", temp1)])
-    tempnames <- sapply(strsplit(tempnames, " = |, "), 
-                        function(x) paste(x[1:length(x) %% 2 == 0], collapse = "."))
+    tempnames <- sapply(
+      strsplit(tempnames, " = |, "), 
+      function(x) paste(x[1:length(x) %% 2 == 0], collapse = "."))
     combinations <- expand.grid(lapply(temp, seq))
     tempsets <- apply(combinations, 1, function(x)
       paste(y, "[ , , ", paste(x, collapse = ", "), "]"))
