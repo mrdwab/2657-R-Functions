@@ -46,6 +46,10 @@ Functions include:
 1. [`stringseed.sampling.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/stringseed.sampling.R)
 
     >> The `stringseed.sampling()` function is designed as a batch sampling function that allows the user to specify any alphanumeric input as the seed per sample in the batch.
+    
+1. [`table2df.R`](https://github.com/mrdwab/2657-R-Functions/blob/master/scripts/table2df.R)
+
+    >> The `table2df()` function takes an object of class `table`, `ftable`, or `xtabs` and converts it to a `data.frame` or a `list` of `data.frame`s.
 
 ## Extras
 
